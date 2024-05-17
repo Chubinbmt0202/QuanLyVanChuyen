@@ -1,5 +1,6 @@
 // src/Services/userService.js
 const userModel = require("../Models/userModel");
+const { findUserByUsername } = require("../Models/userModel");
 
 const getUsers = async () => {
   try {
@@ -32,7 +33,26 @@ const registerUser = async ({ Username, PassWord, SDT, ID_role }) => {
   }
 };
 
+const loginUser = async ({ Username, PassWord }) => {
+  if (!Username || !PassWord) {
+    throw new Error("Username and password are required.");
+  }
+
+  const user = await findUserByUsername(Username);
+  if (!user) {
+    throw new Error("Invalid username or password.");
+  }
+
+  if (PassWord !== user.PassWord) {
+    throw new Error("Invalid username or password.");
+  }
+
+  // Return user details or a token (if you are using JWT for authentication)
+  return { id: user.id, Username: user.Username, SDT: user.SDT, ID_role: user.ID_role };
+};
+
 module.exports = {
   getUsers,
   registerUser,
+  loginUser
 };

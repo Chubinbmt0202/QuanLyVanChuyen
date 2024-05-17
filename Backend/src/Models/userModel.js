@@ -11,7 +11,13 @@ const addUser = async (user) => {
     return result.insertId;
 };
 
+const findUserByUsername = async (username) => {
+    const [rows] = await db.query('SELECT * FROM taikhoan WHERE Username = ?', [username]);
+    return rows[0];
+  };
+
 module.exports = {
     getAllUsers,
-    addUser
+    addUser,
+    findUserByUsername,
 };

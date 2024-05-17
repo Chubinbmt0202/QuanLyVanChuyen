@@ -1,6 +1,6 @@
 // src/Controllers/userController.js
 const userService = require("../Services/userService");
-const { registerUser } = require("../Services/userService");
+const { registerUser, loginUser } = require("../Services/userService");
 
 const getUsers = async (req, res) => {
   try {
@@ -49,7 +49,32 @@ const createUser = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  try {
+    const { Username, PassWord } = req.query;
+    console.log("Logging in user:", req.query);
+
+    const user = await loginUser({ Username, PassWord });
+
+    res.status(200).json({
+      success: true,
+      message: "User logged in successfully",
+      user: user,
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
+
+    // Handling specific validation errors
+    if (error.message === 'Username and password are required.' || error.message === 'Invalid username or password.') {
+      res.status(400).json({ success: false, message: error.message });
+    } else {
+      // Handling other errors
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  }
+};
 module.exports = {
   getUsers,
   createUser,
+  login
 };

@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
 const database = require("./Configs/database");
-const { createUser } = require("./Controllers/UserController");
+const { createUser, login } = require("./Controllers/UserController.js");
 
+app.use(express.json());
 
 // Database connection
 try {
@@ -14,4 +15,7 @@ try {
 
 // Middlewares
 app.post("/api/register", createUser);
+app.post("/api/login", login);
+
+
 module.exports = app;
