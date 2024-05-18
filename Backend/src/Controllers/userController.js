@@ -13,9 +13,18 @@ const getUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    console.log("Registering user:", req.query);
+    console.log("Registering user:", req.body);
 
-    const { Username, PassWord, SDT, ID_role } = req.query;
+    const { Username, PassWord, SDT, ID_role } = req.body;
+
+    // Validation checks
+    if (!Username || !PassWord || !SDT) {
+      throw new Error("Username, password, and SDT are required.");
+    }
+
+    if (PassWord.length < 6) {
+      throw new Error("Password must be at least 6 characters long.");
+    }
 
     const userId = await registerUser({
       Username: Username,
@@ -31,28 +40,25 @@ const createUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error during registration:", error);
-    console.error("Error during registration:", error);
 
-    // Handling specific validation errors
     if (error.message === "Username, password, and SDT are required.") {
       res.status(400).json({ success: false, message: error.message });
-    } else if (
-      error.message === "Password must be at least 6 characters long."
-    ) {
+    } else if (error.message === "Password must be at least 6 characters long.") {
       res.status(400).json({ success: false, message: error.message });
     } else {
-      // Handling other errors
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
+      res.status(500).json({ success: false, message: "Internal server error" });
     }
   }
 };
 
 const login = async (req, res) => {
   try {
-    const { Username, PassWord } = req.query;
-    console.log("Logging in user:", req.query);
+    const { Username, PassWord } = req.body;
+    console.log("Logging in user:", req.body);
+
+    if (!Username || !PassWord) {
+      throw new Error("Username and password are required.");
+    }
 
     const user = await loginUser({ Username, PassWord });
 
@@ -64,15 +70,14 @@ const login = async (req, res) => {
   } catch (error) {
     console.error("Error during login:", error);
 
-    // Handling specific validation errors
     if (error.message === 'Username and password are required.' || error.message === 'Invalid username or password.') {
       res.status(400).json({ success: false, message: error.message });
     } else {
-      // Handling other errors
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   }
 };
+
 module.exports = {
   getUsers,
   createUser,

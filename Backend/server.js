@@ -1,7 +1,7 @@
 const app = require('./src/app');
 
-const server = app.listen(3000, () => {
-    console.log('Express running → PORT 3000');
+const server = app.listen(3001, () => {
+    console.log('Express running → PORT 3001');
     });
 
 process.on('SIGINT', () => {
