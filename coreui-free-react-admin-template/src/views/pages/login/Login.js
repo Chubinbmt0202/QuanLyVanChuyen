@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -16,35 +17,33 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import axios from 'axios'
 
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [Username, setUsername] = useState('')
+  const [PassWord, setPassword] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const queryParams = new URLSearchParams({ username, password })
-      const response = await fetch(`localhost:3000/api/login?${queryParams}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // You can include other headers or options as needed
-        // body: JSON.stringify({ username, password }), // If you're sending JSON data
+      const res = await axios.post('http://localhost:3001/api/login', {
+        Username: Username,
+        PassWord: PassWord
       })
-      if (response.ok) {
-        dispatch({ type: 'login' })
-        navigate('/dashboard')
+      if (res.data.error) {
+        alert(res.data.error)
       } else {
-        // Handle unsuccessful login
-        alert('Invalid credentials')
+        localStorage.setItem('username', res.data.user.Username)
+        dispatch({ type: 'SET_USER', payload: res.data.user })
+        dispatch({ type: 'login' }) // Dispatch login action
+        console.log('Navigating to dashboard')  // Debugging statement
+        navigate('/dashboard')
       }
     } catch (error) {
-      console.error('Login error:', error)
-      // Handle error
+      console.error(error)
+      alert('Login failed. Please check your credentials and try again.')
     }
   }
 
@@ -66,7 +65,7 @@ const Login = () => {
                       <CFormInput
                         placeholder="Username"
                         autoComplete="username"
-                        value={username}
+                        value={Username}
                         onChange={(e) => setUsername(e.target.value)}
                       />
                     </CInputGroup>
@@ -78,7 +77,7 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
-                        value={password}
+                        value={PassWord}
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </CInputGroup>
