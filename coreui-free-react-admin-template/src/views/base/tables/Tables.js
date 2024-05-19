@@ -13,6 +13,11 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+  CDropdownDivider,
 } from '@coreui/react'
 import { DocsExample } from 'src/components'
 
@@ -70,25 +75,7 @@ const Tables = () => {
   //   setCurrentPage(newPage);
   // };
 
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
-  const handleDropdownToggle = (orderId) => {
-    console.log("Action click")
-    setShowDropdown(!showDropdown);
-    setSelectedOrderId(orderId);
-  };
-
-  const handleDropdownOptionClick = (option) => {
-    if (option === 'Chỉnh sửa') {
-      // Chỉnh sửa đơn hàng
-      console.log('Chỉnh sửa đơn hàng', selectedOrderId);
-    } else if (option === 'Xóa') {
-      // Xóa đơn hàng
-      console.log('Xóa đơn hàng', selectedOrderId);
-    }
-    setShowDropdown(false);
-  };
 
   return (
     <CRow>
@@ -119,90 +106,18 @@ const Tables = () => {
                   <CTableDataCell>1235235000</CTableDataCell>
                   <CTableDataCell><a href='#'>Xem chi tiết</a></CTableDataCell>
                   <CTableDataCell>
-                    {/* // truyền vào id giá trị của dòng đó */}
-                    <button onClick={() => handleDropdownToggle(2)}>Tùy chọn</button>
-                    {showDropdown && selectedOrderId === 2 && (
-                      <div className="dropdown" >
-                        <ul>
-                          <li onClick={() => handleDropdownOptionClick('Chỉnh sửa')}>Chỉnh sửa</li>
-                          <li onClick={() => handleDropdownOptionClick('Xóa')}>Xóa</li>
-                        </ul>
-                      </div>
-                    )}
+                    <CDropdown>
+                      <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
+                      <CDropdownMenu>
+                        <CDropdownItem>Xem chi tiết</CDropdownItem>
+                        <CDropdownItem>Chỉnh sửa</CDropdownItem>
+                      </CDropdownMenu>
+                    </CDropdown>
                   </CTableDataCell>
                 </CTableRow>
-                <CTableRow>
-                  <CTableDataCell>Công ty Lai Châu</CTableDataCell>
-                  <CTableDataCell>045896521472</CTableDataCell>
-                  <CTableDataCell>2024-04-05 08:29</CTableDataCell>
-                  <CTableDataCell>1235235000</CTableDataCell>
-                  <CTableDataCell><a href='#'>Xem chi tiết</a></CTableDataCell>
-                  <CTableDataCell>
-                    <button onClick={() => handleDropdownToggle(2)}>Tùy chọn</button>
-                    {showDropdown && selectedOrderId === 2 && (
-                      <div className="dropdown" >
-                        <ul>
-                          <li onClick={() => handleDropdownOptionClick('Chỉnh sửa')} >Chỉnh sửa</li>
-                          <li onClick={() => handleDropdownOptionClick('Xóa')}>Xóa</li>
-                        </ul>
-                      </div>
-                    )}
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell>Công ty Lai Châu</CTableDataCell>
-                  <CTableDataCell>045896521472</CTableDataCell>
-                  <CTableDataCell>2024-04-05 08:29</CTableDataCell>
-                  <CTableDataCell>1235235000</CTableDataCell>
-                  <CTableDataCell><a href='#'>Xem chi tiết</a></CTableDataCell>
-                  <CTableDataCell>
-                    <button onClick={() => handleDropdownToggle(2)}>Tùy chọn</button>
-                    {showDropdown && selectedOrderId === 2 && (
-                      <div className="dropdown" >
-                        <ul>
-                          <li onClick={() => handleDropdownOptionClick('Chỉnh sửa')}>Chỉnh sửa</li>
-                          <li onClick={() => handleDropdownOptionClick('Xóa')}>Xóa</li>
-                        </ul>
-                      </div>
-                    )}
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell>Công ty Lai Châu</CTableDataCell>
-                  <CTableDataCell>045896521472</CTableDataCell>
-                  <CTableDataCell>2024-04-05 08:29</CTableDataCell>
-                  <CTableDataCell>1235235000</CTableDataCell>
-                  <CTableDataCell><a href='#'>Xem chi tiết</a></CTableDataCell>
-                  <CTableDataCell>
-                    <button onClick={() => handleDropdownToggle(2)}>Tùy chọn</button>
-                    {showDropdown && selectedOrderId === 2 && (
-                      <div className="dropdown" >
-                        <ul>
-                          <li onClick={() => handleDropdownOptionClick('Chỉnh sửa')}>Chỉnh sửa</li>
-                          <li onClick={() => handleDropdownOptionClick('Xóa')}>Xóa</li>
-                        </ul>
-                      </div>
-                    )}
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell>Công ty Lai Châu</CTableDataCell>
-                  <CTableDataCell>045896521472</CTableDataCell>
-                  <CTableDataCell>2024-04-05 08:29</CTableDataCell>
-                  <CTableDataCell>1235235000</CTableDataCell>
-                  <CTableDataCell><a href='#'>Xem chi tiết</a></CTableDataCell>
-                  <CTableDataCell>
-                    <button onClick={() => handleDropdownToggle(2)}>Tùy chọn</button>
-                    {showDropdown && selectedOrderId === 2 && (
-                      <div className="dropdown" >
-                        <ul>
-                          <li onClick={() => handleDropdownOptionClick('Chỉnh sửa')}>Chỉnh sửa</li>
-                          <li onClick={() => handleDropdownOptionClick('Xóa')}>Xóa</li>
-                        </ul>
-                      </div>
-                    )}
-                  </CTableDataCell>
-                </CTableRow>
+
+
+
               </CTableBody>
             </CTable>
 
