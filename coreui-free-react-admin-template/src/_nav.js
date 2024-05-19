@@ -60,7 +60,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Danh Sách Khách Hàng',
-        to: '/base/breadcrumbs',
+        to: '/base/tables',
       },
       {
         component: CNavItem,
