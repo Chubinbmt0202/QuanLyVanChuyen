@@ -45,6 +45,23 @@ import ReactImg from 'src/assets/images/react.jpg'
 import axios from 'axios'
 
 const Cards = () => {
+
+
+  const dataFake = {
+    "PK_Id_Xe": 1,
+    "ID_LoaiXe": null,
+    "Bien_so": "47AB - 82421",
+    "Suc_Chua": 213,
+    "Tinh_Trang": "Đang chờ",
+    "Chieu_dai": 1412,
+    "Ngay_DK": "2024-05-01T17:00:00.000Z",
+    "Ngay_Het_DK": "2024-05-15T17:00:00.000Z",
+    "Chieu_rong": 231,
+    "Chieu_cao": 231,
+    "ten_loai_xe": "Xe tải lớn",
+    "Hang_xe": "Suzuki"
+}
+
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
   const [visibleDetailModal, setVisibleDetailModal] = useState(false)
@@ -94,8 +111,8 @@ const Cards = () => {
 
   const fetchTrafficDetails = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
-      setSelectedVehicle(response.data)
+     // const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
+      //setSelectedVehicle(response.data)
       setVisibleDetailModal(true)
     } catch (error) {
       console.error('Error fetching traffic details:', error)
@@ -178,31 +195,31 @@ const Cards = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {filteredData.map((item, index) => (
-                    <CTableRow key={item.id}>
-                      <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                      <CTableDataCell>{item.Bien_so}</CTableDataCell>
-                      <CTableDataCell>{item.route}</CTableDataCell>
-                      <CTableDataCell>{item.distance}</CTableDataCell>
-                      <CTableDataCell>{item.estimatedTime}</CTableDataCell>
+                  {/* {dataFake.map((item, index) => ( */}
+                    <CTableRow >
+                      <CTableHeaderCell scope="row">{dataFake.PK_Id_Xe}</CTableHeaderCell>
+                      <CTableDataCell>{dataFake.Bien_so}</CTableDataCell>
+                      <CTableDataCell>{dataFake.route}</CTableDataCell>
+                      <CTableDataCell>{dataFake.distance}</CTableDataCell>
+                      <CTableDataCell>{dataFake.estimatedTime}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:
-                            item.Tinh_Trang === 'Đang giao'
+                          dataFake.Tinh_Trang === 'Đang giao'
                               ? 'green'
-                              : item.Tinh_Trang === 'Bảo trì'
+                              : dataFake.Tinh_Trang === 'Bảo trì'
                                 ? 'red'
                                 : 'gray',
                         }}
                       >
-                        {item.Tinh_Trang}
+                        {dataFake.Tinh_Trang}
                       </CTableDataCell>
-                      <CTableDataCell>{item.completionDate}</CTableDataCell>
+                      <CTableDataCell>{dataFake.completionDate}</CTableDataCell>
                       <CTableDataCell>
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
+                            <CDropdownItem onClick={() => fetchTrafficDetails(dataFake.PK_Id_Xe)}>
                               Xem chi tiết
                             </CDropdownItem>
                             <CDropdownItem>Chỉnh sửa</CDropdownItem>
@@ -212,7 +229,7 @@ const Cards = () => {
                         </CDropdown>
                       </CTableDataCell>
                     </CTableRow>
-                  ))}
+                  {/* ))} */}
                 </CTableBody>
               </CTable>
             </CCardBody>
@@ -342,50 +359,50 @@ const Cards = () => {
         <CModalHeader closeButton>
           <CModalTitle id="DetailVehicleModal">Chi tiết phương tiện</CModalTitle>
         </CModalHeader>
-        {selectedVehicle && (
+        {dataFake && (
           <CModalBody>
             <CRow>
               <CCol md="6">
                 <div className="detail-info-column">
                   <p>
-                    <strong>Biển số:</strong> {selectedVehicle.Bien_so}
+                    <strong>Biển số:</strong> {dataFake.Bien_so}
                   </p>
                   <p>
-                    <strong>Sức chứa:</strong> {selectedVehicle.Suc_Chua}
+                    <strong>Sức chứa:</strong> {dataFake.Suc_Chua}
                   </p>
                   <p>
-                    <strong>Loại xe:</strong> {selectedVehicle.ten_loai_xe}
+                    <strong>Loại xe:</strong> {dataFake.ten_loai_xe}
                   </p>
                   <p>
-                    <strong>Hãng xe:</strong> {selectedVehicle.Hang_xe}
+                    <strong>Hãng xe:</strong> {dataFake.Hang_xe}
                   </p>
                   <p>
                     <strong>Ngày đăng kiểm:</strong>{' '}
-                    {selectedVehicle.Ngay_DK ? selectedVehicle.Ngay_DK.split('T')[0] : ''}
+                    {dataFake.Ngay_DK ? dataFake.Ngay_DK.split('T')[0] : ''}
                   </p>
                   <p>
                     <strong>Ngày hết hạn đăng kiểm:</strong>{' '}
-                    {selectedVehicle.Ngay_Het_DK ? selectedVehicle.Ngay_Het_DK.split('T')[0] : ''}
+                    {dataFake.Ngay_Het_DK ? dataFake.Ngay_Het_DK.split('T')[0] : ''}
                   </p>
                 </div>
               </CCol>
               <CCol md="6">
                 <div className="detail-info-column">
                   <p>
-                    <strong>Tình trạng:</strong> {selectedVehicle.Tinh_Trang}
+                    <strong>Tình trạng:</strong> {dataFake.Tinh_Trang}
                   </p>
                   <p>
                     <strong>Kích thước xe:</strong>
                   </p>
                   <ul>
                     <li>
-                      <strong>Chiều dài:</strong> {selectedVehicle.Chieu_dai} m
+                      <strong>Chiều dài:</strong> {dataFake.Chieu_dai} m
                     </li>
                     <li>
-                      <strong>Chiều rộng:</strong> {selectedVehicle.Chieu_rong} m
+                      <strong>Chiều rộng:</strong> {dataFake.Chieu_rong} m
                     </li>
                     <li>
-                      <strong>Chiều cao:</strong> {selectedVehicle.Chieu_cao} m
+                      <strong>Chiều cao:</strong> {dataFake.Chieu_cao} m
                     </li>
                   </ul>
                 </div>
