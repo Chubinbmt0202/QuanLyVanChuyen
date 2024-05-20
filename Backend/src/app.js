@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const database = require("./Configs/database");
 const { createUser, login } = require("./Controllers/UserController.js");
+const { getAllTraffics,addTrafficsController } = require("./Controllers/trafficController.js");
 
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
@@ -15,8 +16,12 @@ try {
   console.error("Unable to connect to the database:", error);
 }
 
-// Middlewares
+// Routes
 app.post("/api/register", createUser);
 app.post("/api/login", login);
+
+// traffic
+app.get("/api/getAllTraffics", getAllTraffics);
+app.post("/api/addTraffics", addTrafficsController);
 
 module.exports = app;
