@@ -1,7 +1,7 @@
 const db = require('../Configs/database');
 
 const getAllTraffics = async () => {
-    const [rows, fields] = await db.query('SELECT Bien_so, Tinh_Trang FROM xe');
+    const [rows, fields] = await db.query('SELECT Bien_so, Tinh_Trang, PK_Id_Xe  FROM xe');
     return rows;
 };
 
@@ -14,8 +14,14 @@ const addTraffics = async (Bien_so, Suc_Chua, Tinh_Trang, Chieu_dai, Ngay_DK, Ng
     return rows;
 };
 
+const getTrafficById = async (id) => {
+    const [results] = await db.query('SELECT * FROM xe WHERE PK_Id_Xe = ?', [id]);
+    return results[0];
+  };
+
 
 module.exports = {
     getAllTraffics,
     addTraffics,
+    getTrafficById
 };

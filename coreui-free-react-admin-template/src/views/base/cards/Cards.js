@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -7,6 +7,7 @@ import {
   CCardFooter,
   CCardGroup,
   CCardHeader,
+  CModalBody,
   CCardImage,
   CCardLink,
   CCardSubtitle,
@@ -46,6 +47,8 @@ import axios from 'axios'
 const Cards = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
+  const [visibleDetailModal, setVisibleDetailModal] = useState(false)
+  const [selectedVehicle, setSelectedVehicle] = useState(null)
   const [formData, setFormData] = useState({
     Bien_so: '',
     Hang_xe: '',
@@ -58,6 +61,21 @@ const Cards = () => {
     Ngay_DK: '',
     Ngay_Het_DK: '',
   })
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    fetchTrafficData()
+  }, [])
+
+  const fetchTrafficData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/getAllTraffics')
+      setData(response.data)
+      console.log('Data:', response.data)
+    } catch (error) {
+      console.error('Error fetching traffic data:', error)
+    }
+  }
 
   const handleChange = (e) => {
     const { id, value } = e.target
@@ -67,43 +85,25 @@ const Cards = () => {
   const handleSubmit = async () => {
     try {
       await axios.post('http://localhost:3001/api/addTraffics', formData)
-      onClose()
+      setVisibleAddVehicle(false)
+      fetchTrafficData() // Fetch the updated data after adding a new vehicle
     } catch (error) {
       console.error('Error adding vehicle:', error)
     }
   }
-  const data = [
-    {
-      id: 1,
-      plate: '43R1 - 67482',
-      route: 'Đà Nẵng - Hà Nội',
-      distance: '567 KM',
-      estimatedTime: '1 ngày 17 giờ',
-      status: 'Đang giao',
-      completionDate: '13/01/2024',
-    },
-    {
-      id: 2,
-      plate: '43R1 - 67482',
-      route: '',
-      distance: '',
-      estimatedTime: '',
-      status: 'Bảo trì',
-      completionDate: '',
-    },
-    {
-      id: 3,
-      plate: '43R1 - 67482',
-      route: '',
-      distance: '',
-      estimatedTime: '',
-      status: 'Đang chờ',
-      completionDate: '',
-    },
-  ]
+
+  const fetchTrafficDetails = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
+      setSelectedVehicle(response.data)
+      setVisibleDetailModal(true)
+    } catch (error) {
+      console.error('Error fetching traffic details:', error)
+    }
+  }
 
   const filteredData =
-    currentStatus === 'Tất cả' ? data : data.filter((item) => item.status === currentStatus)
+    currentStatus === 'Tất cả' ? data : data.filter((item) => item.Tinh_Trang === currentStatus)
 
   return (
     <>
@@ -181,28 +181,30 @@ const Cards = () => {
                   {filteredData.map((item, index) => (
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                      <CTableDataCell>{item.plate}</CTableDataCell>
+                      <CTableDataCell>{item.Bien_so}</CTableDataCell>
                       <CTableDataCell>{item.route}</CTableDataCell>
                       <CTableDataCell>{item.distance}</CTableDataCell>
                       <CTableDataCell>{item.estimatedTime}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:
-                            item.status === 'Đang giao'
+                            item.Tinh_Trang === 'Đang giao'
                               ? 'green'
-                              : item.status === 'Bảo trì'
+                              : item.Tinh_Trang === 'Bảo trì'
                                 ? 'red'
                                 : 'gray',
                         }}
                       >
-                        {item.status}
+                        {item.Tinh_Trang}
                       </CTableDataCell>
                       <CTableDataCell>{item.completionDate}</CTableDataCell>
                       <CTableDataCell>
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem>Xem chi tiết</CDropdownItem>
+                            <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
+                              Xem chi tiết
+                            </CDropdownItem>
                             <CDropdownItem>Chỉnh sửa</CDropdownItem>
                             <CDropdownDivider />
                             <CDropdownItem>Xoá phương tiện</CDropdownItem>
@@ -327,6 +329,74 @@ const Cards = () => {
           </CButton>
           <CButton color="primary" onClick={handleSubmit}>
             Lưu
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      <CModal
+        size="lg"
+        visible={visibleDetailModal}
+        onClose={() => setVisibleDetailModal(false)}
+        aria-labelledby="DetailVehicleModal"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle id="DetailVehicleModal">Chi tiết phương tiện</CModalTitle>
+        </CModalHeader>
+        {selectedVehicle && (
+          <CModalBody>
+            <CRow>
+              <CCol md="6">
+                <div className="detail-info-column">
+                  <p>
+                    <strong>Biển số:</strong> {selectedVehicle.Bien_so}
+                  </p>
+                  <p>
+                    <strong>Sức chứa:</strong> {selectedVehicle.Suc_Chua}
+                  </p>
+                  <p>
+                    <strong>Loại xe:</strong> {selectedVehicle.ten_loai_xe}
+                  </p>
+                  <p>
+                    <strong>Hãng xe:</strong> {selectedVehicle.Hang_xe}
+                  </p>
+                  <p>
+                    <strong>Ngày đăng kiểm:</strong>{' '}
+                    {selectedVehicle.Ngay_DK ? selectedVehicle.Ngay_DK.split('T')[0] : ''}
+                  </p>
+                  <p>
+                    <strong>Ngày hết hạn đăng kiểm:</strong>{' '}
+                    {selectedVehicle.Ngay_Het_DK ? selectedVehicle.Ngay_Het_DK.split('T')[0] : ''}
+                  </p>
+                </div>
+              </CCol>
+              <CCol md="6">
+                <div className="detail-info-column">
+                  <p>
+                    <strong>Tình trạng:</strong> {selectedVehicle.Tinh_Trang}
+                  </p>
+                  <p>
+                    <strong>Kích thước xe:</strong>
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Chiều dài:</strong> {selectedVehicle.Chieu_dai} m
+                    </li>
+                    <li>
+                      <strong>Chiều rộng:</strong> {selectedVehicle.Chieu_rong} m
+                    </li>
+                    <li>
+                      <strong>Chiều cao:</strong> {selectedVehicle.Chieu_cao} m
+                    </li>
+                  </ul>
+                </div>
+              </CCol>
+            </CRow>
+            {/* Add more details as needed */}
+          </CModalBody>
+        )}
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisibleDetailModal(false)}>
+            Đóng
           </CButton>
         </CModalFooter>
       </CModal>

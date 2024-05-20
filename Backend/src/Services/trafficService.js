@@ -20,9 +20,12 @@ const addTrafficsService = async ({ Bien_so, Suc_Chua, Tinh_Trang, Chieu_dai, Ng
   }
 }
 
-
+const getTrafficById = async (id) => {
+  return await trafficModel.getTrafficById(id);
+};
 
 module.exports = {
   getAllTraffics,
-  addTrafficsService
+  addTrafficsService,
+  getTrafficById
 };
