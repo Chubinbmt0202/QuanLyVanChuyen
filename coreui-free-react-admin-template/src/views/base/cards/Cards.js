@@ -41,11 +41,37 @@ import {
 } from '@coreui/react'
 import { DocsExample } from 'src/components'
 import ReactImg from 'src/assets/images/react.jpg'
+import axios from 'axios'
 
 const Cards = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
+  const [formData, setFormData] = useState({
+    Bien_so: '',
+    Hang_xe: '',
+    ten_loai_xe: '',
+    Suc_Chua: '',
+    Tinh_Trang: 'Đang chờ',
+    Chieu_dai: '',
+    Chieu_rong: '',
+    Chieu_cao: '',
+    Ngay_DK: '',
+    Ngay_Het_DK: '',
+  })
 
+  const handleChange = (e) => {
+    const { id, value } = e.target
+    setFormData((prevState) => ({ ...prevState, [id]: value }))
+  }
+
+  const handleSubmit = async () => {
+    try {
+      await axios.post('http://localhost:3001/api/addTraffics', formData)
+      onClose()
+    } catch (error) {
+      console.error('Error adding vehicle:', error)
+    }
+  }
   const data = [
     {
       id: 1,
@@ -213,34 +239,40 @@ const Cards = () => {
           <CFormInput
             type="text"
             style={{ flex: '1 1 45%' }}
-            id="exampleFormControlInput1"
+            id="Bien_so"
+            onChange={handleChange}
             placeholder="Biển số xe"
             aria-describedby="exampleFormControlInputHelpInline"
           />
           <CFormSelect
             style={{ flex: '1 1 45%' }}
+            id="ten_loai_xe"
+            onChange={handleChange}
             aria-label="Default select example"
             options={[
               'Chọn loại phương tiện',
-              { label: 'Xe tải lớn', value: '1' },
-              { label: 'Xe tải nhỏ', value: '2' },
-              { label: 'Xe rơ móoc', value: '3', disabled: true },
+              { label: 'Xe tải lớn', value: 'Xe tải lớn' },
+              { label: 'Xe tải nhỏ', value: 'Xe tải nhỏ' },
+              { label: 'Xe rơ móoc', value: 'Xe rơ móoc', disabled: true },
             ]}
           />
           <CFormSelect
             style={{ flex: '1 1 45%' }}
+            id="Hang_xe"
+            onChange={handleChange}
             aria-label="Default select example"
             options={[
               'Chọn hãng xe',
-              { label: 'Huyndai', value: '1' },
-              { label: 'Suzuki', value: '2' },
-              { label: 'Daewoo', value: '3' },
+              { label: 'Huyndai', value: 'Huyndai' },
+              { label: 'Suzuki', value: 'Suzuki' },
+              { label: 'Daewoo', value: 'Daewoo' },
             ]}
           />
           <CFormInput
             type="number"
             style={{ flex: '1 1 45%' }}
-            id="totalLoad"
+            id="Suc_Chua"
+            onChange={handleChange}
             placeholder="Tổng tải trọng (kg/tấn)"
           />
           <p style={{ flex: '1 1 100%', margin: '0' }}>Kích thước xe</p>
@@ -248,35 +280,54 @@ const Cards = () => {
             <CFormInput
               type="number"
               style={{ flex: '1 1 30%' }}
-              id="vehicleLength"
+              id="Chieu_dai"
+              onChange={handleChange}
               placeholder="Chiều dài (m)"
             />
             <CFormInput
               type="number"
               style={{ flex: '1 1 30%' }}
-              id="vehicleWidth"
+              id="Chieu_rong"
+              onChange={handleChange}
               placeholder="Chiều rộng (m)"
             />
             <CFormInput
               type="number"
               style={{ flex: '1 1 30%' }}
-              id="vehicleHeight"
+              id="Chieu_cao"
+              onChange={handleChange}
               placeholder="Chiều cao (m)"
             />
           </div>
           <CFormInput
-            type="file"
+            type="date"
             style={{ flex: '1 1 45%' }}
-            id="vehicleImage"
-            label="Ảnh chụp tổng quát"
-            accept="image/*"
+            id="Ngay_DK"
+            placeholder="Ngày đăng ký"
+            onChange={handleChange}
           />
+          <CFormInput
+            type="date"
+            style={{ flex: '1 1 45%' }}
+            id="Ngay_Het_DK"
+            placeholder="Ngày hết hạn đăng ký"
+            onChange={handleChange}
+          />
+          {/* <CFormInput
+              type="file"
+              style={{ flex: '1 1 45%' }}
+              id="vehicleImage"
+              label="Ảnh chụp tổng quát"
+              accept="image/*"
+            /> */}
         </CForm>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleAddVehicle(false)}>
             Đóng
           </CButton>
-          <CButton color="primary">Lưu</CButton>
+          <CButton color="primary" onClick={handleSubmit}>
+            Lưu
+          </CButton>
         </CModalFooter>
       </CModal>
     </>
