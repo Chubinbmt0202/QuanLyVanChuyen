@@ -201,16 +201,24 @@ const Cards = () => {
         <CModalHeader>
           <CModalTitle id="AddVehicleModal">Thêm phương tiện</CModalTitle>
         </CModalHeader>
-        <CForm style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+        <CForm
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            padding: '1rem',
+          }}
+        >
           <CFormInput
             type="text"
-            style={{ width: '45%' }}
+            style={{ flex: '1 1 45%' }}
             id="exampleFormControlInput1"
             placeholder="Biển số xe"
             aria-describedby="exampleFormControlInputHelpInline"
           />
           <CFormSelect
-            style={{ width: '45%' }}
+            style={{ flex: '1 1 45%' }}
             aria-label="Default select example"
             options={[
               'Chọn loại phương tiện',
@@ -220,14 +228,48 @@ const Cards = () => {
             ]}
           />
           <CFormSelect
-            style={{ width: '45%' }}
+            style={{ flex: '1 1 45%' }}
             aria-label="Default select example"
             options={[
               'Chọn hãng xe',
-              { label: 'Xe tải lớn', value: '1' },
-              { label: 'Xe tải nhỏ', value: '2' },
-              { label: 'Xe rơ móoc', value: '3', disabled: true },
+              { label: 'Huyndai', value: '1' },
+              { label: 'Suzuki', value: '2' },
+              { label: 'Daewoo', value: '3' },
             ]}
+          />
+          <CFormInput
+            type="number"
+            style={{ flex: '1 1 45%' }}
+            id="totalLoad"
+            placeholder="Tổng tải trọng (kg/tấn)"
+          />
+          <p style={{ flex: '1 1 100%', margin: '0' }}>Kích thước xe</p>
+          <div style={{ display: 'flex', flex: '1 1 100%', gap: '1rem' }}>
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="vehicleLength"
+              placeholder="Chiều dài (m)"
+            />
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="vehicleWidth"
+              placeholder="Chiều rộng (m)"
+            />
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="vehicleHeight"
+              placeholder="Chiều cao (m)"
+            />
+          </div>
+          <CFormInput
+            type="file"
+            style={{ flex: '1 1 45%' }}
+            id="vehicleImage"
+            label="Ảnh chụp tổng quát"
+            accept="image/*"
           />
         </CForm>
         <CModalFooter>
