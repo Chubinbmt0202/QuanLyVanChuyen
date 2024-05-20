@@ -37,7 +37,17 @@ const addTrafficsController = async (req, res) => {
   }
 };
 
+const getTrafficById = async (req, res) => {
+  try {
+    const traffic = await trafficService.getTrafficById(req.params.id);
+    res.json(traffic);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving traffic details", error });
+  }
+};
+
 module.exports = {
   getAllTraffics,
   addTrafficsController,
+  getTrafficById
 };
