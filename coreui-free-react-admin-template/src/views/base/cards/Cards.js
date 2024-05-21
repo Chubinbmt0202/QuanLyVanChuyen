@@ -45,26 +45,10 @@ import ReactImg from 'src/assets/images/react.jpg'
 import axios from 'axios'
 
 const Cards = () => {
-
-
-  const dataFake = {
-    "PK_Id_Xe": 1,
-    "ID_LoaiXe": null,
-    "Bien_so": "47AB - 82421",
-    "Suc_Chua": 213,
-    "Tinh_Trang": "Đang chờ",
-    "Chieu_dai": 1412,
-    "Ngay_DK": "2024-05-01T17:00:00.000Z",
-    "Ngay_Het_DK": "2024-05-15T17:00:00.000Z",
-    "Chieu_rong": 231,
-    "Chieu_cao": 231,
-    "ten_loai_xe": "Xe tải lớn",
-    "Hang_xe": "Suzuki"
-}
-
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
   const [visibleDetailModal, setVisibleDetailModal] = useState(false)
+  const [visibleUpdateModal, setVisibleUpdateModal] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState(null)
   const [formData, setFormData] = useState({
     Bien_so: '',
@@ -111,11 +95,41 @@ const Cards = () => {
 
   const fetchTrafficDetails = async (id) => {
     try {
-     // const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
-      //setSelectedVehicle(response.data)
+      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
+      setSelectedVehicle(response.data)
       setVisibleDetailModal(true)
     } catch (error) {
       console.error('Error fetching traffic details:', error)
+    }
+  }
+
+  const fetchTrafficUpdate = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
+      setSelectedVehicle(response.data)
+      setVisibleDetailModal(true)
+    } catch (error) {
+      console.error('Error fetching traffic details:', error)
+    }
+  }
+  // Xoá phương tiện
+  const deleteTraffic = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/api/deleteTraffic/${id}`)
+      fetchTrafficData() // Cập nhật danh sách sau khi xoá thành công
+    } catch (error) {
+      console.error('Error deleting traffic:', error)
+    }
+  }
+
+  // Cập nhật phương tiện
+  const updateTraffic = async () => {
+    try {
+      await axios.put(`http://localhost:3001/api/updateTraffic/${selectedVehicle.id}`, formData)
+      setVisibleDetailModal(false) // Đóng modal sau khi cập nhật thành công
+      fetchTrafficData() // Cập nhật danh sách sau khi cập nhật thành công
+    } catch (error) {
+      console.error('Error updating traffic:', error)
     }
   }
 
@@ -195,41 +209,45 @@ const Cards = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {/* {dataFake.map((item, index) => ( */}
-                    <CTableRow >
-                      <CTableHeaderCell scope="row">{dataFake.PK_Id_Xe}</CTableHeaderCell>
-                      <CTableDataCell>{dataFake.Bien_so}</CTableDataCell>
-                      <CTableDataCell>{dataFake.route}</CTableDataCell>
-                      <CTableDataCell>{dataFake.distance}</CTableDataCell>
-                      <CTableDataCell>{dataFake.estimatedTime}</CTableDataCell>
+                  {filteredData.map((item, index) => (
+                    <CTableRow key={item.id}>
+                      <CTableHeaderCell scope="row">{item.PK_Id_Xe}</CTableHeaderCell>
+                      <CTableDataCell>{item.Bien_so}</CTableDataCell>
+                      <CTableDataCell>{item.route}</CTableDataCell>
+                      <CTableDataCell>{item.distance}</CTableDataCell>
+                      <CTableDataCell>{item.estimatedTime}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:
-                          dataFake.Tinh_Trang === 'Đang giao'
+                            item.Tinh_Trang === 'Đang giao'
                               ? 'green'
-                              : dataFake.Tinh_Trang === 'Bảo trì'
+                              : item.Tinh_Trang === 'Bảo trì'
                                 ? 'red'
                                 : 'gray',
                         }}
                       >
-                        {dataFake.Tinh_Trang}
+                        {item.Tinh_Trang}
                       </CTableDataCell>
-                      <CTableDataCell>{dataFake.completionDate}</CTableDataCell>
+                      <CTableDataCell>{item.completionDate}</CTableDataCell>
                       <CTableDataCell>
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => fetchTrafficDetails(dataFake.PK_Id_Xe)}>
+                            <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
                               Xem chi tiết
                             </CDropdownItem>
-                            <CDropdownItem>Chỉnh sửa</CDropdownItem>
+                            <CDropdownItem onClick={() => setVisibleUpdateModal(true)}>
+                              Chỉnh sửa
+                            </CDropdownItem>
                             <CDropdownDivider />
-                            <CDropdownItem>Xoá phương tiện</CDropdownItem>
+                            <CDropdownItem onClick={() => deleteTraffic(item.PK_Id_Xe)}>
+                              Xoá phương tiện
+                            </CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </CTableDataCell>
                     </CTableRow>
-                  {/* ))} */}
+                  ))}
                 </CTableBody>
               </CTable>
             </CCardBody>
@@ -352,6 +370,121 @@ const Cards = () => {
 
       <CModal
         size="lg"
+        visible={visibleUpdateModal}
+        onClose={() => setVisibleUpdateModal(false)}
+        aria-labelledby="AddVehicleModal"
+      >
+        <CModalHeader>
+          <CModalTitle id="AddVehicleModal">Cập nhật phương tiện</CModalTitle>
+        </CModalHeader>
+        <CForm
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            padding: '1rem',
+          }}
+        >
+          <CFormInput
+            type="text"
+            style={{ flex: '1 1 45%' }}
+            id="Bien_so"
+            value={formData.Bien_so}
+            onChange={handleChange}
+            placeholder="Biển số xe"
+            aria-describedby="exampleFormControlInputHelpInline"
+          />
+          <CFormSelect
+            style={{ flex: '1 1 45%' }}
+            id="ten_loai_xe"
+            value={formData.ten_loai_xe}
+            onChange={handleChange}
+            aria-label="Default select example"
+            options={[
+              'Chọn loại phương tiện',
+              { label: 'Xe tải lớn', value: 'Xe tải lớn' },
+              { label: 'Xe tải nhỏ', value: 'Xe tải nhỏ' },
+              { label: 'Xe rơ móoc', value: 'Xe rơ móoc', disabled: true },
+            ]}
+          />
+          <CFormSelect
+            style={{ flex: '1 1 45%' }}
+            id="Hang_xe"
+            value={formData.Hang_xe}
+            onChange={handleChange}
+            aria-label="Default select example"
+            options={[
+              'Chọn hãng xe',
+              { label: 'Huyndai', value: 'Huyndai' },
+              { label: 'Suzuki', value: 'Suzuki' },
+              { label: 'Daewoo', value: 'Daewoo' },
+            ]}
+          />
+          <CFormInput
+            type="number"
+            style={{ flex: '1 1 45%' }}
+            id="Suc_Chua"
+            value={formData.Suc_Chua}
+            onChange={handleChange}
+            placeholder="Tổng tải trọng (kg/tấn)"
+          />
+          <p style={{ flex: '1 1 100%', margin: '0' }}>Kích thước xe</p>
+          <div style={{ display: 'flex', flex: '1 1 100%', gap: '1rem' }}>
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="Chieu_dai"
+              value={formData.Chieu_dai}
+              onChange={handleChange}
+              placeholder="Chiều dài (m)"
+            />
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="Chieu_rong"
+              value={formData.Chieu_rong}
+              onChange={handleChange}
+              placeholder="Chiều rộng (m)"
+            />
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="Chieu_cao"
+              value={formData.Chieu_cao}
+              onChange={handleChange}
+              placeholder="Chiều cao (m)"
+            />
+          </div>
+          <CFormInput
+            type="date"
+            style={{ flex: '1 1 45%' }}
+            id="Ngay_DK"
+            value={formData.Ngay_DK}
+            placeholder="Ngày đăng ký"
+            onChange={handleChange}
+          />
+          <CFormInput
+            type="date"
+            style={{ flex: '1 1 45%' }}
+            id="Ngay_Het_DK"
+            value={formData.Ngay_Het_DK}
+            placeholder="Ngày hết hạn đăng ký"
+            onChange={handleChange}
+          />
+        </CForm>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisibleUpdateModal(false)}>
+            Đóng
+          </CButton>
+          <CButton color="primary" onClick={handleSubmit}>
+            Lưu
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      <CModal
+        size="lg"
         visible={visibleDetailModal}
         onClose={() => setVisibleDetailModal(false)}
         aria-labelledby="DetailVehicleModal"
@@ -359,50 +492,50 @@ const Cards = () => {
         <CModalHeader closeButton>
           <CModalTitle id="DetailVehicleModal">Chi tiết phương tiện</CModalTitle>
         </CModalHeader>
-        {dataFake && (
+        {selectedVehicle && (
           <CModalBody>
             <CRow>
               <CCol md="6">
                 <div className="detail-info-column">
                   <p>
-                    <strong>Biển số:</strong> {dataFake.Bien_so}
+                    <strong>Biển số:</strong> {selectedVehicle.Bien_so}
                   </p>
                   <p>
-                    <strong>Sức chứa:</strong> {dataFake.Suc_Chua}
+                    <strong>Sức chứa:</strong> {selectedVehicle.Suc_Chua}
                   </p>
                   <p>
-                    <strong>Loại xe:</strong> {dataFake.ten_loai_xe}
+                    <strong>Loại xe:</strong> {selectedVehicle.ten_loai_xe}
                   </p>
                   <p>
-                    <strong>Hãng xe:</strong> {dataFake.Hang_xe}
+                    <strong>Hãng xe:</strong> {selectedVehicle.Hang_xe}
                   </p>
                   <p>
                     <strong>Ngày đăng kiểm:</strong>{' '}
-                    {dataFake.Ngay_DK ? dataFake.Ngay_DK.split('T')[0] : ''}
+                    {selectedVehicle.Ngay_DK ? selectedVehicle.Ngay_DK.split('T')[0] : ''}
                   </p>
                   <p>
                     <strong>Ngày hết hạn đăng kiểm:</strong>{' '}
-                    {dataFake.Ngay_Het_DK ? dataFake.Ngay_Het_DK.split('T')[0] : ''}
+                    {selectedVehicle.Ngay_Het_DK ? selectedVehicle.Ngay_Het_DK.split('T')[0] : ''}
                   </p>
                 </div>
               </CCol>
               <CCol md="6">
                 <div className="detail-info-column">
                   <p>
-                    <strong>Tình trạng:</strong> {dataFake.Tinh_Trang}
+                    <strong>Tình trạng:</strong> {selectedVehicle.Tinh_Trang}
                   </p>
                   <p>
                     <strong>Kích thước xe:</strong>
                   </p>
                   <ul>
                     <li>
-                      <strong>Chiều dài:</strong> {dataFake.Chieu_dai} m
+                      <strong>Chiều dài:</strong> {selectedVehicle.Chieu_dai} m
                     </li>
                     <li>
-                      <strong>Chiều rộng:</strong> {dataFake.Chieu_rong} m
+                      <strong>Chiều rộng:</strong> {selectedVehicle.Chieu_rong} m
                     </li>
                     <li>
-                      <strong>Chiều cao:</strong> {dataFake.Chieu_cao} m
+                      <strong>Chiều cao:</strong> {selectedVehicle.Chieu_cao} m
                     </li>
                   </ul>
                 </div>

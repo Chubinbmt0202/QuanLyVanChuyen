@@ -1,176 +1,412 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
+  CButton,
   CCard,
   CCardBody,
+  CCardFooter,
+  CCardGroup,
   CCardHeader,
+  CModalBody,
+  CCardImage,
+  CCardLink,
+  CCardSubtitle,
+  CCardText,
+  CCardTitle,
+  CListGroup,
+  CListGroupItem,
+  CNav,
+  CNavItem,
+  CNavLink,
   CCol,
   CRow,
-  CAccordion,
-  CAccordionBody,
-  CAccordionHeader,
-  CAccordionItem,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
+  CTableCaption,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+  CDropdownDivider,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalFooter,
+  CForm,
+  CFormInput,
+  CFormSelect,
 } from '@coreui/react'
 import { DocsExample } from 'src/components'
+import ReactImg from 'src/assets/images/react.jpg'
+import axios from 'axios'
 
 const Accordion = () => {
+  const [currentStatus, setCurrentStatus] = useState('Tất cả')
+  const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
+  const [visibleDetailModal, setVisibleDetailModal] = useState(false)
+  const [selectedVehicle, setSelectedVehicle] = useState(null)
+  const [formData, setFormData] = useState({
+    Bien_so: '',
+    Hang_xe: '',
+    ten_loai_xe: '',
+    Suc_Chua: '',
+    Tinh_Trang: 'Đang chờ',
+    Chieu_dai: '',
+    Chieu_rong: '',
+    Chieu_cao: '',
+    Ngay_DK: '',
+    Ngay_Het_DK: '',
+  })
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    fetchTrafficData()
+  }, [])
+
+  const fetchTrafficData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/getAllTraffics')
+      setData(response.data)
+      console.log('Data:', response.data)
+    } catch (error) {
+      console.error('Error fetching traffic data:', error)
+    }
+  }
+
+  const handleChange = (e) => {
+    const { id, value } = e.target
+    setFormData((prevState) => ({ ...prevState, [id]: value }))
+  }
+
+  const handleSubmit = async () => {
+    try {
+      await axios.post('http://localhost:3001/api/addTraffics', formData)
+      setVisibleAddVehicle(false)
+      fetchTrafficData() // Fetch the updated data after adding a new vehicle
+    } catch (error) {
+      console.error('Error adding vehicle:', error)
+    }
+  }
+
+  const fetchTrafficDetails = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
+      setSelectedVehicle(response.data)
+      setVisibleDetailModal(true)
+    } catch (error) {
+      console.error('Error fetching traffic details:', error)
+    }
+  }
+
+  const filteredData =
+    currentStatus === 'Tất cả' ? data : data.filter((item) => item.Tinh_Trang === currentStatus)
+
+  const dataFake = {
+    maDonHang: 'DH001',
+    KH: 'Nguyễn Văn A',
+    NgayDat: '20/10/2021',
+    NgayGiao: '22/10/2021',
+    trangthai: 'Đã hoàn tất',
+    SL: '10 tấn',
+    tongTien: 1000000,
+  }
   return (
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Accordion</strong>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Click the accordions below to expand/collapse the accordion content.
-            </p>
-            <DocsExample href="components/accordion">
-              <CAccordion activeItemKey={2}>
-                <CAccordionItem itemKey={1}>
-                  <CAccordionHeader>Accordion Item #1</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the first item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem itemKey={2}>
-                  <CAccordionHeader>Accordion Item #2</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the second item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem itemKey={3}>
-                  <CAccordionHeader>Accordion Item #3</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the second item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-              </CAccordion>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Accordion</strong> <small>Flush</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Add <code>flush</code> to remove the default <code>background-color</code>, some
-              borders, and some rounded corners to render accordions edge-to-edge with their parent
-              container.
-            </p>
-            <DocsExample href="components/accordion#flush">
-              <CAccordion flush>
-                <CAccordionItem itemKey={1}>
-                  <CAccordionHeader>Accordion Item #1</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the first item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem itemKey={2}>
-                  <CAccordionHeader>Accordion Item #2</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the second item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem itemKey={3}>
-                  <CAccordionHeader>Accordion Item #3</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the second item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-              </CAccordion>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Accordion</strong> <small>Always open</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Add <code>alwaysOpen</code> property to make accordion items stay open when another
-              item is opened.
-            </p>
-            <DocsExample href="components/accordion#flush">
-              <CAccordion alwaysOpen>
-                <CAccordionItem itemKey={1}>
-                  <CAccordionHeader>Accordion Item #1</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the first item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem itemKey={2}>
-                  <CAccordionHeader>Accordion Item #2</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the second item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem itemKey={3}>
-                  <CAccordionHeader>Accordion Item #3</CAccordionHeader>
-                  <CAccordionBody>
-                    <strong>This is the second item&#39;s accordion body.</strong> It is hidden by
-                    default, until the collapse plugin adds the appropriate classes that we use to
-                    style each element. These classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any of this with custom
-                    CSS or overriding our default variables. It&#39;s also worth noting that just
-                    about any HTML can go within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
-                  </CAccordionBody>
-                </CAccordionItem>
-              </CAccordion>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+    <>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '20px',
+        }}
+      >
+        <CCardHeader style={{ marginBottom: '10px' }}>
+          <strong>Điều phối tài xế</strong>
+        </CCardHeader>
+        <CButton color="primary" onClick={() => setVisibleAddVehicle(true)}>
+          Thêm phương tiện
+        </CButton>
+      </div>
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CNav variant="underline-border">
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Tất cả'}
+                  onClick={() => setCurrentStatus('Tất cả')}
+                >
+                  Tất cả
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Chờ xử lý'}
+                  onClick={() => setCurrentStatus('Chờ xử lý')}
+                >
+                  Chờ xử lý
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Đang giao'}
+                  onClick={() => setCurrentStatus('Đang giao')}
+                >
+                  Đang giao
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Đã hoàn tất'}
+                  onClick={() => setCurrentStatus('Đã hoàn tất')}
+                >
+                  Đã hoàn tất
+                </CNavLink>
+              </CNavItem>
+            </CNav>
+            <CCardBody>
+              <CTable>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Mã đơn hàng</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Khách hàng</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Ngày đặt hàng</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Ngày giao dự kiến</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Trạng thái</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Số lượng</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tổng tiền đơn hàng</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">{dataFake.maDonHang}</CTableHeaderCell>
+                    <CTableDataCell>{dataFake.KH}</CTableDataCell>
+                    <CTableDataCell>{dataFake.NgayDat}</CTableDataCell>
+                    <CTableDataCell>{dataFake.NgayGiao}</CTableDataCell>
+                    <CTableDataCell
+                      style={{
+                        color:
+                          dataFake.trangthai === 'Đã hoàn tất'
+                            ? 'green'
+                            : dataFake.trangthai === 'Đang giao'
+                              ? 'blue'
+                              : 'gray',
+                      }}
+                    >
+                      {dataFake.trangthai}
+                    </CTableDataCell>
+                    <CTableDataCell>{dataFake.SL}</CTableDataCell>
+                    <CTableDataCell>{dataFake.tongTien}</CTableDataCell>
+                    <CTableDataCell>
+                      <CDropdown>
+                        <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
+                        <CDropdownMenu>
+                          <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
+                            Xem chi tiết
+                          </CDropdownItem>
+                          <CDropdownItem>Chỉnh sửa</CDropdownItem>
+                          <CDropdownDivider />
+                          <CDropdownItem>Xoá phương tiện</CDropdownItem>
+                        </CDropdownMenu>
+                      </CDropdown>
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+      <CModal
+        size="lg"
+        visible={visibleAddVehicle}
+        onClose={() => setVisibleAddVehicle(false)}
+        aria-labelledby="AddVehicleModal"
+      >
+        <CModalHeader>
+          <CModalTitle id="AddVehicleModal">Thêm phương tiện</CModalTitle>
+        </CModalHeader>
+        <CForm
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            padding: '1rem',
+          }}
+        >
+          <CFormInput
+            type="text"
+            style={{ flex: '1 1 45%' }}
+            id="Bien_so"
+            onChange={handleChange}
+            placeholder="Biển số xe"
+            aria-describedby="exampleFormControlInputHelpInline"
+          />
+          <CFormSelect
+            style={{ flex: '1 1 45%' }}
+            id="ten_loai_xe"
+            onChange={handleChange}
+            aria-label="Default select example"
+            options={[
+              'Chọn loại phương tiện',
+              { label: 'Xe tải lớn', value: 'Xe tải lớn' },
+              { label: 'Xe tải nhỏ', value: 'Xe tải nhỏ' },
+              { label: 'Xe rơ móoc', value: 'Xe rơ móoc', disabled: true },
+            ]}
+          />
+          <CFormSelect
+            style={{ flex: '1 1 45%' }}
+            id="Hang_xe"
+            onChange={handleChange}
+            aria-label="Default select example"
+            options={[
+              'Chọn hãng xe',
+              { label: 'Huyndai', value: 'Huyndai' },
+              { label: 'Suzuki', value: 'Suzuki' },
+              { label: 'Daewoo', value: 'Daewoo' },
+            ]}
+          />
+          <CFormInput
+            type="number"
+            style={{ flex: '1 1 45%' }}
+            id="Suc_Chua"
+            onChange={handleChange}
+            placeholder="Tổng tải trọng (kg/tấn)"
+          />
+          <p style={{ flex: '1 1 100%', margin: '0' }}>Kích thước xe</p>
+          <div style={{ display: 'flex', flex: '1 1 100%', gap: '1rem' }}>
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="Chieu_dai"
+              onChange={handleChange}
+              placeholder="Chiều dài (m)"
+            />
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="Chieu_rong"
+              onChange={handleChange}
+              placeholder="Chiều rộng (m)"
+            />
+            <CFormInput
+              type="number"
+              style={{ flex: '1 1 30%' }}
+              id="Chieu_cao"
+              onChange={handleChange}
+              placeholder="Chiều cao (m)"
+            />
+          </div>
+          <CFormInput
+            type="date"
+            style={{ flex: '1 1 45%' }}
+            id="Ngay_DK"
+            placeholder="Ngày đăng ký"
+            onChange={handleChange}
+          />
+          <CFormInput
+            type="date"
+            style={{ flex: '1 1 45%' }}
+            id="Ngay_Het_DK"
+            placeholder="Ngày hết hạn đăng ký"
+            onChange={handleChange}
+          />
+          {/* <CFormInput
+              type="file"
+              style={{ flex: '1 1 45%' }}
+              id="vehicleImage"
+              label="Ảnh chụp tổng quát"
+              accept="image/*"
+            /> */}
+        </CForm>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisibleAddVehicle(false)}>
+            Đóng
+          </CButton>
+          <CButton color="primary" onClick={handleSubmit}>
+            Lưu
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      <CModal
+        size="lg"
+        visible={visibleDetailModal}
+        onClose={() => setVisibleDetailModal(false)}
+        aria-labelledby="DetailVehicleModal"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle id="DetailVehicleModal">Chi tiết phương tiện</CModalTitle>
+        </CModalHeader>
+        {selectedVehicle && (
+          <CModalBody>
+            <CRow>
+              <CCol md="6">
+                <div className="detail-info-column">
+                  <p>
+                    <strong>Biển số:</strong> {selectedVehicle.Bien_so}
+                  </p>
+                  <p>
+                    <strong>Sức chứa:</strong> {selectedVehicle.Suc_Chua}
+                  </p>
+                  <p>
+                    <strong>Loại xe:</strong> {selectedVehicle.ten_loai_xe}
+                  </p>
+                  <p>
+                    <strong>Hãng xe:</strong> {selectedVehicle.Hang_xe}
+                  </p>
+                  <p>
+                    <strong>Ngày đăng kiểm:</strong>{' '}
+                    {selectedVehicle.Ngay_DK ? selectedVehicle.Ngay_DK.split('T')[0] : ''}
+                  </p>
+                  <p>
+                    <strong>Ngày hết hạn đăng kiểm:</strong>{' '}
+                    {selectedVehicle.Ngay_Het_DK ? selectedVehicle.Ngay_Het_DK.split('T')[0] : ''}
+                  </p>
+                </div>
+              </CCol>
+              <CCol md="6">
+                <div className="detail-info-column">
+                  <p>
+                    <strong>Tình trạng:</strong> {selectedVehicle.Tinh_Trang}
+                  </p>
+                  <p>
+                    <strong>Kích thước xe:</strong>
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Chiều dài:</strong> {selectedVehicle.Chieu_dai} m
+                    </li>
+                    <li>
+                      <strong>Chiều rộng:</strong> {selectedVehicle.Chieu_rong} m
+                    </li>
+                    <li>
+                      <strong>Chiều cao:</strong> {selectedVehicle.Chieu_cao} m
+                    </li>
+                  </ul>
+                </div>
+              </CCol>
+            </CRow>
+            {/* Add more details as needed */}
+          </CModalBody>
+        )}
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisibleDetailModal(false)}>
+            Đóng
+          </CButton>
+        </CModalFooter>
+      </CModal>
+    </>
   )
 }
 
