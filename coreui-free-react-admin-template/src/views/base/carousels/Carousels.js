@@ -1,212 +1,404 @@
-import React from 'react'
+import React, { useState } from 'react';
+
 import {
+  CButton,
   CCard,
   CCardBody,
+  CCardFooter,
+  CCardGroup,
   CCardHeader,
-  CCarousel,
-  CCarouselCaption,
-  CCarouselItem,
+  CCardImage,
+  CCardLink,
+  CCardSubtitle,
+  CCardText,
+  CCardTitle,
+  CListGroup,
+  CListGroupItem,
+  CNav,
+  CNavItem,
+  CNavLink,
   CCol,
   CRow,
-} from '@coreui/react'
-import { DocsExample } from 'src/components'
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
+  CTableCaption,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+  CDropdownDivider,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalFooter,
+  CForm,
+  CFormInput,
+  CFormSelect,
+} from '@coreui/react';
+import { DocsExample } from 'src/components';
+import ReactImg from 'src/assets/images/react.jpg';
 
-import AngularImg from 'src/assets/images/angular.jpg'
-import ReactImg from 'src/assets/images/react.jpg'
-import VueImg from 'src/assets/images/vue.jpg'
+const Cards = () => {
+  const [currentStatus, setCurrentStatus] = useState('Tất cả');
+  const [visibleAddVehicle, setVisibleAddVehicle] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-const slidesLight = [
-  'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1607923e7e2%20text%20%7B%20fill%3A%23AAA%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1607923e7e2%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23F5F5F5%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22285.9296875%22%20y%3D%22217.75625%22%3EFirst%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E',
-  'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_15ba800aa20%20text%20%7B%20fill%3A%23BBB%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_15ba800aa20%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23EEE%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22247.3203125%22%20y%3D%22218.3%22%3ESecond%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E',
-  'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_15ba800aa21%20text%20%7B%20fill%3A%23999%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_15ba800aa21%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23E5E5E5%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22277%22%20y%3D%22218.3%22%3EThird%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E',
-]
+  const data = [
+    {
+      id: 1,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
+    },
+    {
+      id: 2,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đã nghỉ',
+      Viewmore: 'Xem thêm',
+    },
+    {
+      id: 3,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang rảnh',
+      Viewmore:  'Xem thêm',
+    },
+    {
+      id: 1,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
+    },
+    {
+      id: 1,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
+    },{
+      id: 2,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đã nghỉ',
+      Viewmore: 'Xem thêm',
+    },
+    {
+      id: 1,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
+    },{
+      id: 1,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
+    },{
+      id: 1,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
+    },
+    {
+      id: 3,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang rảnh',
+      Viewmore:  'Xem thêm',
+    },
+    {
+      id: 3,
+      IDNV: 'Nv102312',
+      dayofbirth: '1/1/2003',
+      account: 'something',
+      position: 'Tài xế',
+      status: 'Đang rảnh',
+      Viewmore:  'Xem thêm',
+    },
+  ];
 
-const Carousels = () => {
+  const filteredData =
+    currentStatus === 'Tất cả' ? data : data.filter((item) => item.status === currentStatus);
+
+  const toggleSelectAll = () => {
+    if (selectedItems.length === filteredData.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(filteredData.map((item) => item.id));
+    }
+  };
+
+  const toggleSelectedItem = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
+
+  const isSelected = (id) => {
+    return selectedItems.includes(id);
+  };
+
   return (
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Carousel</strong> <small>Slide only</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">Here’s a carousel with slides</p>
-            <DocsExample href="components/carousel">
-              <CCarousel>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={ReactImg} alt="slide 1" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={AngularImg} alt="slide 2" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={VueImg} alt="slide 3" />
-                </CCarouselItem>
-              </CCarousel>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Carousel</strong> <small>With controls</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Adding in the previous and next controls by <code>controls</code> property.
-            </p>
-            <DocsExample href="components/carousel/#with-controls">
-              <CCarousel controls>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={ReactImg} alt="slide 1" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={AngularImg} alt="slide 2" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={VueImg} alt="slide 3" />
-                </CCarouselItem>
-              </CCarousel>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Carousel</strong> <small>With indicators</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              You can attach the indicators to the carousel, lengthwise the controls, too.
-            </p>
-            <DocsExample href="components/carousel/#with-indicators">
-              <CCarousel controls indicators>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={ReactImg} alt="slide 1" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={AngularImg} alt="slide 2" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={VueImg} alt="slide 3" />
-                </CCarouselItem>
-              </CCarousel>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Carousel</strong> <small>With captions</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              You can add captions to slides with the <code>&lt;CCarouselCaption&gt;</code> element
-              within any <code>&lt;CCarouselItem&gt;</code>. They can be immediately hidden on
-              smaller viewports, as shown below, with optional{' '}
-              <a href="https://coreui.io//utilities/display">display utilities</a>. We hide them
-              with <code>.d-none</code> and draw them back on medium-sized devices with{' '}
-              <code>.d-md-block</code>.
-            </p>
-            <DocsExample href="components/carousel/#with-captions">
-              <CCarousel controls indicators>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={ReactImg} alt="slide 1" />
-                  <CCarouselCaption className="d-none d-md-block">
-                    <h5>First slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                  </CCarouselCaption>
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={AngularImg} alt="slide 2" />
-                  <CCarouselCaption className="d-none d-md-block">
-                    <h5>Second slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                  </CCarouselCaption>
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={VueImg} alt="slide 3" />
-                  <CCarouselCaption className="d-none d-md-block">
-                    <h5>Third slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                  </CCarouselCaption>
-                </CCarouselItem>
-              </CCarousel>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Carousel</strong> <small>Crossfade</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Add <code>transition=&#34;crossfade&#34;</code> to your carousel to animate slides
-              with a fade transition instead of a slide.
-            </p>
-            <DocsExample href="components/carousel/#crossfade">
-              <CCarousel controls transition="crossfade">
-                <CCarouselItem>
-                  <img className="d-block w-100" src={ReactImg} alt="slide 1" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={AngularImg} alt="slide 2" />
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={VueImg} alt="slide 3" />
-                </CCarouselItem>
-              </CCarousel>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Carousel</strong> <small>Dark variant</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Add <code>dark</code> property to the <code>CCarousel</code> for darker controls,
-              indicators, and captions. Controls have been inverted from their default white fill
-              with the <code>filter</code> CSS property. Captions and controls have additional Sass
-              variables that customize the <code>color</code> and <code>background-color</code>.
-            </p>
-            <DocsExample href="components/carousel/#dark-variant">
-              <CCarousel controls indicators dark>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={slidesLight[0]} alt="slide 1" />
-                  <CCarouselCaption className="d-none d-md-block">
-                    <h5>First slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                  </CCarouselCaption>
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={slidesLight[1]} alt="slide 2" />
-                  <CCarouselCaption className="d-none d-md-block">
-                    <h5>Second slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                  </CCarouselCaption>
-                </CCarouselItem>
-                <CCarouselItem>
-                  <img className="d-block w-100" src={slidesLight[2]} alt="slide 3" />
-                  <CCarouselCaption className="d-none d-md-block">
-                    <h5>Third slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                  </CCarouselCaption>
-                </CCarouselItem>
-              </CCarousel>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
-  )
-}
+    <>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '20px',
+        }}
+      >
+        <CCardHeader style={{ marginBottom: '10px' }}>
+          <strong>Tài khoản và phân cấp</strong>
+          <div>
+          <span style={{ marginRight: '200px', fontSize: 'larger' }}>Tổng số nhân viên: <span style={{ color: 'blue', fontSize: 'x-large' }}>560</span></span>
+<span style={{ fontSize: 'larger',  }}>Nhân viên đang làm việc: <span style={{ color: 'green', fontSize: 'x-large' }}>300</span></span>
 
-export default Carousels
+
+          </div>
+        </CCardHeader>
+        <CButton color="primary" onClick={() => setVisibleAddVehicle(true)}>
+          +Thêm tài khoản
+        </CButton>
+      </div>
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CNav variant="underline-border">
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Tất cả'}
+                  onClick={() => setCurrentStatus('Tất cả')}
+                >
+                  Tất cả
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Đang giao'}
+                  onClick={() => setCurrentStatus('Đang giao')}
+                >
+                  Đang giao
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Đang rảnh'}
+                  onClick={() => setCurrentStatus('Đang rảnh')}
+                >
+                  Đang rảnh
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  style={{ cursor: 'pointer' }}
+                  active={currentStatus === 'Đã Nghỉ'}
+                  onClick={() => setCurrentStatus('Đã Nghỉ')}
+                >
+                  Đã nghỉ
+                </CNavLink>
+              </CNavItem>
+            </CNav>
+            <CCardBody>
+              <CTable>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.length === filteredData.length}
+                        onChange={toggleSelectAll}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Mã nhân viên</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Ngày sinh</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tài khoản</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Chức vụ</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Trạng thái</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Xem chi tiết</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {filteredData.map((item, index) => (
+                    <CTableRow key={item.id}>
+                      <CTableHeaderCell scope="row">
+                        <input
+                          type="checkbox"
+                          checked={isSelected(item.id)}
+                          onChange={() => toggleSelectedItem(item.id)}
+                        />
+                      </CTableHeaderCell>
+                      <CTableDataCell>
+                      <span style={{ color: 'blue' }}>{item.IDNV}</span></CTableDataCell>
+                      <CTableDataCell>{item.dayofbirth}</CTableDataCell>
+                      <CTableDataCell>{item.account}</CTableDataCell>
+                      <CTableDataCell style={{ color: 'blue' }}>{item.position}</CTableDataCell>
+
+                      <CTableDataCell
+                        style={{
+                          color:
+                            item.status === 'Đang giao'
+                              ? 'green'
+                              : item.status === 'Đã nghỉ'
+                              ? 'red'
+                              : 'gray',
+                        }}
+                      >
+                        {item.status}
+                      </CTableDataCell>
+                      <CTableDataCell style={{ color: 'blue' }}>{item.Viewmore}</CTableDataCell>
+
+                      <CTableDataCell>
+                        <CDropdown>
+                          <CDropdownToggle color="secondary">Tuỳ chọn</CDropdownToggle>
+                          <CDropdownMenu>
+                            <CDropdownItem>Xem chi tiết</CDropdownItem>
+                            <CDropdownItem>Chỉnh sửa</CDropdownItem>
+                            <CDropdownDivider />
+                            <CDropdownItem>Xoá tài xe</CDropdownItem>
+                          </CDropdownMenu>
+                        </CDropdown>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+      <CModal
+        size="lg"
+        visible={visibleAddVehicle}
+        onClose={() => setVisibleAddVehicle(false)}
+        aria-labelledby="AddVehicleModal"
+      >
+        <CModalHeader>
+  <CModalTitle id="AddVehicleModal">+ Thêm tài khoản</CModalTitle>
+</CModalHeader>
+<CForm style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+  <div style={{ width: '45%' }}>
+    <CFormInput
+      type="text"
+      id="employeeId"
+      placeholder="Mã nhân viên"
+      aria-describedby="employeeIdHelpInline"
+    />
+    <CFormInput
+      type="text"
+      id="employeeName"
+      placeholder="Tên nhân viên"
+      aria-describedby="employeeNameHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+    <CFormInput
+      type="text"
+      id="dateOfBirth"
+      placeholder="Ngày sinh"
+      aria-describedby="dateOfBirthHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+    <CFormInput
+      type="text"
+      id="phoneNumber"
+      placeholder="Số điện thoại"
+      aria-describedby="phoneNumberHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+    <CFormInput
+      type="text"
+      id="email"
+      placeholder="Email"
+      aria-describedby="emailHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+  </div>
+  <div style={{ width: '45%', borderLeft: '1px solid #ccc', paddingLeft: '20px' }}>
+  <CFormInput
+  type="file"
+  id="avatar"
+  placeholder="Av"
+  aria-describedby="avatarHelpInline"
+  onChange={(e) => handleFileChange(e)}
+/>
+
+
+    <CFormInput
+      type="text"
+      id="cccd"
+      placeholder="CCCD"
+      aria-describedby="cccdHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+    <CFormInput
+      type="text"
+      id="position"
+      placeholder="Chức vụ"
+      aria-describedby="positionHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+    <CFormInput
+      type="text"
+      id="account"
+      placeholder="Tài khoản"
+      aria-describedby="accountHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+    <CFormInput
+      type="password"
+      id="password"
+      placeholder="Mật khẩu"
+      aria-describedby="passwordHelpInline"
+      style={{ marginTop: '10px' }}
+    />
+  </div>
+</CForm>
+<CModalFooter>
+  <CButton color="secondary" onClick={() => setVisibleAddVehicle(false)}>
+    Đóng
+  </CButton>
+  <CButton color="primary">Lưu</CButton>
+</CModalFooter>
+
+      </CModal>
+    </>
+  );
+};
+
+export default Cards;

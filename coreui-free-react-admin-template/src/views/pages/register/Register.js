@@ -29,7 +29,7 @@ const Register = () => {
     e.preventDefault();
     // Validate input fields here
     try {
-      const res = await axios.post('http://localhost:3001/api/register', {
+      const res = await axios.post('http://localhost:3002/api/register', {
         Username: Username,
         PassWord: Password,
         SDT: SDT,
