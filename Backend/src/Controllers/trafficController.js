@@ -16,8 +16,7 @@ const addTrafficsController = async (req, res) => {
   const Chieu_rong = parseFloat(req.body.Chieu_rong);
   const Chieu_cao = parseFloat(req.body.Chieu_cao);
 
-  const { Bien_so, Tinh_Trang, Ngay_DK, Ngay_Het_DK, ten_loai_xe, Hang_xe } =
-    req.body;
+  const { Bien_so, Tinh_Trang, Ngay_DK, Ngay_Het_DK, ten_loai_xe, Hang_xe } = req.body;
   try {
     const traffic = await trafficService.addTrafficsService({
       Bien_so: Bien_so,
@@ -46,8 +45,41 @@ const getTrafficById = async (req, res) => {
   }
 };
 
+const deleteTrafficController = async (req, res) => {
+  try {
+    await trafficService.deleteTrafficService(req.params.id);
+    res.json({ message: "Traffic deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting traffic", error });
+  }
+};
+
+const updateTrafficController = async (req, res) => {
+  const { id } = req.params;
+  const updatedTrafficData = req.body;
+  try {
+    await trafficService.updateTrafficService(id, updatedTrafficData);
+    res.json({ message: "Traffic updated successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating traffic", error });
+  }
+};
+
+const searchTrafficByLicensePlateController = async (req, res) => {
+  const licensePlate = req.params.licensePlate;
+  try {
+      const traffics = await trafficService.searchTrafficByLicensePlateService(licensePlate);
+      res.json(traffics);
+  } catch (error) {
+      res.status(500).json({ message: "Error searching traffic by license plate", error });
+  }
+};
+
 module.exports = {
   getAllTraffics,
   addTrafficsController,
-  getTrafficById
+  getTrafficById,
+  deleteTrafficController,
+  updateTrafficController,
+  searchTrafficByLicensePlateController
 };
