@@ -44,12 +44,21 @@ import { DocsExample } from 'src/components'
 import ReactImg from 'src/assets/images/react.jpg'
 import axios from 'axios'
 
+const formatDate = (isoString) => {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const Cards = () => {
-  const [currentStatus, setCurrentStatus] = useState('Tất cả')
-  const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
-  const [visibleDetailModal, setVisibleDetailModal] = useState(false)
-  const [visibleUpdateModal, setVisibleUpdateModal] = useState(false)
-  const [selectedVehicle, setSelectedVehicle] = useState(null)
+  const [currentStatus, setCurrentStatus] = useState('Tất cả');
+  const [visibleAddVehicle, setVisibleAddVehicle] = useState(false);
+  const [visibleDetailModal, setVisibleDetailModal] = useState(false);
+  const [visibleUpdateModal, setVisibleUpdateModal] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  console.log('selectedVehicle:', selectedVehicle);
   const [formData, setFormData] = useState({
     Bien_so: '',
     Hang_xe: '',
@@ -61,80 +70,107 @@ const Cards = () => {
     Chieu_cao: '',
     Ngay_DK: '',
     Ngay_Het_DK: '',
-  })
-  const [data, setData] = useState([])
+  });
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchTrafficData()
-  }, [])
+    fetchTrafficData();
+  }, []);
+
+  useEffect(() => {
+    if (selectedVehicle) {
+      setFormData({
+        Bien_so: selectedVehicle.Bien_so,
+        Hang_xe: selectedVehicle.Hang_xe,
+        ten_loai_xe: selectedVehicle.ten_loai_xe,
+        Suc_Chua: selectedVehicle.Suc_Chua,
+        Tinh_Trang: selectedVehicle.Tinh_Trang,
+        Chieu_dai: selectedVehicle.Chieu_dai,
+        Chieu_rong: selectedVehicle.Chieu_rong,
+        Chieu_cao: selectedVehicle.Chieu_cao,
+        Ngay_DK: formatDate(selectedVehicle.Ngay_DK),
+        Ngay_Het_DK: formatDate(selectedVehicle.Ngay_Het_DK),
+      });
+    }
+  }, [selectedVehicle]);
 
   const fetchTrafficData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/getAllTraffics')
-      setData(response.data)
-      console.log('Data:', response.data)
+      const response = await axios.get('http://localhost:3001/api/getAllTraffics');
+      setData(response.data);
+      console.log('Data:', response.data);
     } catch (error) {
-      console.error('Error fetching traffic data:', error)
+      console.error('Error fetching traffic data:', error);
     }
-  }
+  };
 
   const handleChange = (e) => {
-    const { id, value } = e.target
-    setFormData((prevState) => ({ ...prevState, [id]: value }))
-  }
+    const { id, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [id]: value }));
+  };
 
   const handleSubmit = async () => {
     try {
-      await axios.post('http://localhost:3001/api/addTraffics', formData)
-      setVisibleAddVehicle(false)
-      fetchTrafficData() // Fetch the updated data after adding a new vehicle
+      await axios.post('http://localhost:3001/api/addTraffics', formData);
+      setVisibleAddVehicle(false);
+      alert('Thêm phương tiện thành công');
+      fetchTrafficData(); // Fetch the updated data after adding a new vehicle
     } catch (error) {
-      console.error('Error adding vehicle:', error)
+      console.error('Error adding vehicle:', error);
     }
-  }
+  };
+
+  const handleUpdate = (id) => {
+    fetchTrafficUpdate(id);
+    setVisibleUpdateModal(true);
+  };
 
   const fetchTrafficDetails = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
-      setSelectedVehicle(response.data)
-      setVisibleDetailModal(true)
+      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`);
+      setSelectedVehicle(response.data);
+      setVisibleDetailModal(true);
     } catch (error) {
-      console.error('Error fetching traffic details:', error)
+      console.error('Error fetching traffic details:', error);
     }
-  }
+  };
 
   const fetchTrafficUpdate = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
-      setSelectedVehicle(response.data)
-      setVisibleDetailModal(true)
+      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`);
+      const dataUpdate = response.data;
+      setSelectedVehicle({
+        ...dataUpdate,
+        Ngay_DK: formatDate(dataUpdate.Ngay_DK),
+        Ngay_Het_DK: formatDate(dataUpdate.Ngay_Het_DK),
+      });
     } catch (error) {
-      console.error('Error fetching traffic details:', error)
+      console.error('Error fetching traffic update:', error);
     }
-  }
-  // Xoá phương tiện
+  };
+
   const deleteTraffic = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/api/deleteTraffic/${id}`)
-      fetchTrafficData() // Cập nhật danh sách sau khi xoá thành công
+      await axios.delete(`http://localhost:3001/api/deleteTraffic/${id}`);
+      alert('Xoá thành công');
+      fetchTrafficData(); // Cập nhật danh sách sau khi xoá thành công
     } catch (error) {
-      console.error('Error deleting traffic:', error)
+      console.error('Error deleting traffic:', error);
     }
-  }
+  };
 
-  // Cập nhật phương tiện
   const updateTraffic = async () => {
     try {
-      await axios.put(`http://localhost:3001/api/updateTraffic/${selectedVehicle.id}`, formData)
-      setVisibleDetailModal(false) // Đóng modal sau khi cập nhật thành công
-      fetchTrafficData() // Cập nhật danh sách sau khi cập nhật thành công
+      await axios.put(`http://localhost:3001/api/updateTraffic/${selectedVehicle.PK_Id_Xe}`, formData);
+      setVisibleUpdateModal(false); // Đóng modal sau khi cập nhật thành công
+      alert('Cập nhật thành công');
+      fetchTrafficData(); // Cập nhật danh sách sau khi cập nhật thành công
     } catch (error) {
-      console.error('Error updating traffic:', error)
+      console.error('Error updating traffic:', error);
     }
-  }
+  };
 
-  const filteredData =
-    currentStatus === 'Tất cả' ? data : data.filter((item) => item.Tinh_Trang === currentStatus)
+  const filteredData = currentStatus === 'Tất cả' ? data : data.filter((item) => item.Tinh_Trang === currentStatus);
 
   return (
     <>
@@ -236,7 +272,7 @@ const Cards = () => {
                             <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
                               Xem chi tiết
                             </CDropdownItem>
-                            <CDropdownItem onClick={() => setVisibleUpdateModal(true)}>
+                            <CDropdownItem onClick={() => handleUpdate(item.PK_Id_Xe)}>
                               Chỉnh sửa
                             </CDropdownItem>
                             <CDropdownDivider />
@@ -477,8 +513,8 @@ const Cards = () => {
           <CButton color="secondary" onClick={() => setVisibleUpdateModal(false)}>
             Đóng
           </CButton>
-          <CButton color="primary" onClick={handleSubmit}>
-            Lưu
+          <CButton color="primary" onClick={updateTraffic}>
+            Cập nhật phương tiện
           </CButton>
         </CModalFooter>
       </CModal>
