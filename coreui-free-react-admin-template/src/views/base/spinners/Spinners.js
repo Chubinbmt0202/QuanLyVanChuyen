@@ -1,120 +1,125 @@
-import React from 'react'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CSpinner, CRow } from '@coreui/react'
-import { DocsExample } from 'src/components'
+import React, { useState } from 'react';
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle
+} from '@coreui/react';
 
 const Spinners = () => {
+  const [image, setImage] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // Thêm state cho việc hiển thị popup
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpdate = () => {
+    // Xử lý cập nhật dữ liệu ở đây
+    // Sau khi cập nhật thành công, hiển thị popup thông báo
+    setShowSuccessModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+  };
+
   return (
     <CRow>
-      <CCol xs={12}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>React Spinner</strong> <small>Border</small>
+            <strong>Cập nhật thông tin nhân viên</strong>
           </CCardHeader>
           <CCardBody>
-            <p className="text-body-secondary small">
-              Use the border spinners for a lightweight loading indicator.
-            </p>
-            <DocsExample href="components/spinner">
-              <CSpinner />
-            </DocsExample>
-            <p className="text-body-secondary small">
-              The border spinner uses <code>currentColor</code> for its <code>border-color</code>.
-              You can use any of our text color utilities on the standard spinner.
-            </p>
-            <DocsExample href="components/spinner#colors">
-              <CSpinner color="primary" />
-              <CSpinner color="secondary" />
-              <CSpinner color="success" />
-              <CSpinner color="danger" />
-              <CSpinner color="warning" />
-              <CSpinner color="info" />
-              <CSpinner color="light" />
-              <CSpinner color="dark" />
-            </DocsExample>
+            <div className="mb-3">
+              <label htmlFor="maNhanVien" className="form-label">Mã nhân viên</label>
+              <input type="text" className="form-control" id="maNhanVien" placeholder="Mã nhân viên" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="tenNhanVien" className="form-label">Tên nhân viên</label>
+              <input type="text" className="form-control" id="tenNhanVien" placeholder="Tên nhân viên" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="ngaySinh" className="form-label">Ngày sinh</label>
+              <input type="date" className="form-control" id="ngaySinh" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="soDienThoai" className="form-label">Số điện thoại</label>
+              <input type="tel" className="form-control" id="soDienThoai" placeholder="Số điện thoại" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input type="email" className="form-control" id="email" placeholder="Email" />
+            </div>
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={12}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Spinner</strong> <small>Growing</small>
-          </CCardHeader>
           <CCardBody>
-            <p className="text-body-secondary small">
-              If you don&#39;tfancy a border spinner, switch to the grow spinner. While it
-              doesn&#39;t technically spin, it does repeatedly grow!
-            </p>
-            <DocsExample href="components/spinner#growing-spinner">
-              <CSpinner variant="grow" />
-            </DocsExample>
-            <p className="text-body-secondary small">
-              Once again, this spinner is built with <code>currentColor</code>, so you can easily
-              change its appearance. Here it is in blue, along with the supported variants.
-            </p>
-            <DocsExample href="components/spinner#growing-spinner">
-              <CSpinner color="primary" variant="grow" />
-              <CSpinner color="secondary" variant="grow" />
-              <CSpinner color="success" variant="grow" />
-              <CSpinner color="danger" variant="grow" />
-              <CSpinner color="warning" variant="grow" />
-              <CSpinner color="info" variant="grow" />
-              <CSpinner color="light" variant="grow" />
-              <CSpinner color="dark" variant="grow" />
-            </DocsExample>
+            <div className="mb-3">
+              <label htmlFor="anhNhanVien" className="form-label">Ảnh nhân viên</label>
+              <input type="file" className="form-control" id="anhNhanVien" onChange={handleImageChange} />
+            </div>
+            <div className="mb-3">
+              {image && (
+                <img src={image} alt="Ảnh nhân viên" style={{ maxWidth: '100%', height: 'auto' }} />
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="cccd" className="form-label">CCCD</label>
+              <input type="text" className="form-control" id="cccd" placeholder="CCCD" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="chucVu" className="form-label">Chức vụ</label>
+              <input type="text" className="form-control" id="chucVu" placeholder="Chức vụ" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="taiKhoan" className="form-label">Tài khoản</label>
+              <input type="text" className="form-control" id="taiKhoan" placeholder="Tài khoản" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="matKhau" className="form-label">Mật khẩu</label>
+              <input type="password" className="form-control" id="matKhau" placeholder="Mật khẩu" />
+            </div>
+            <div className="d-grid mb-3">
+              <CButton color="primary" onClick={handleUpdate}>Thêm nhân viên</CButton>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Spinner</strong> <small>Size</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Add <code>size=&#34;sm&#34;</code> property to make a smaller spinner that can quickly
-              be used within other components.
-            </p>
-            <DocsExample href="components/spinner#size">
-              <CSpinner size="sm" />
-              <CSpinner size="sm" variant="grow" />
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Spinner</strong> <small>Buttons</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Use spinners within buttons to indicate an action is currently processing or taking
-              place. You may also swap the text out of the spinner element and utilize button text
-              as needed.
-            </p>
-            <DocsExample href="components/spinner#buttons">
-              <CButton color="primary" disabled>
-                <CSpinner as="span" size="sm" aria-hidden="true" />
-              </CButton>
-              <CButton color="primary" disabled>
-                <CSpinner as="span" size="sm" aria-hidden="true" />
-                Loading...
-              </CButton>
-            </DocsExample>
-            <DocsExample href="components/spinner#buttons">
-              <CButton color="primary" disabled>
-                <CSpinner as="span" size="sm" variant="grow" aria-hidden="true" />
-              </CButton>
-              <CButton color="primary" disabled>
-                <CSpinner as="span" size="sm" variant="grow" aria-hidden="true" />
-                Loading...
-              </CButton>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
-  )
-}
 
-export default Spinners
+      {/* Popup thông báo */}
+      <CModal
+        show={showSuccessModal}
+        onClose={handleCloseModal}
+        size="sm"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Thông báo</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          Cập nhật thông tin nhân viên thành công
+        </CModalBody>
+      </CModal>
+    </CRow>
+  );
+};
+
+export default Spinners;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import {
   CButton,
@@ -31,20 +32,11 @@ import {
   CDropdownMenu,
   CDropdownItem,
   CDropdownDivider,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalFooter,
-  CForm,
-  CFormInput,
-  CFormSelect,
 } from '@coreui/react';
-import { DocsExample } from 'src/components';
 import ReactImg from 'src/assets/images/react.jpg';
 
-const Cards = () => {
+const Carousels = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả');
-  const [visibleAddVehicle, setVisibleAddVehicle] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
 
   const data = [
@@ -63,7 +55,7 @@ const Cards = () => {
       dayofbirth: '1/1/2003',
       account: 'something',
       position: 'Tài xế',
-      status: 'Đã nghỉ',
+      status: 'Đang giao',
       Viewmore: 'Xem thêm',
     },
     {
@@ -72,11 +64,11 @@ const Cards = () => {
       dayofbirth: '1/1/2003',
       account: 'something',
       position: 'Tài xế',
-      status: 'Đang rảnh',
-      Viewmore:  'Xem thêm',
+      status: 'Đang giao',
+      Viewmore: 'Xem thêm',
     },
     {
-      id: 1,
+      id: 4,
       IDNV: 'Nv102312',
       dayofbirth: '1/1/2003',
       account: 'something',
@@ -85,15 +77,7 @@ const Cards = () => {
       Viewmore: 'Xem thêm',
     },
     {
-      id: 1,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },{
-      id: 2,
+      id: 5,
       IDNV: 'Nv102312',
       dayofbirth: '1/1/2003',
       account: 'something',
@@ -101,49 +85,7 @@ const Cards = () => {
       status: 'Đã nghỉ',
       Viewmore: 'Xem thêm',
     },
-    {
-      id: 1,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },{
-      id: 1,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },{
-      id: 1,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },
-    {
-      id: 3,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang rảnh',
-      Viewmore:  'Xem thêm',
-    },
-    {
-      id: 3,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang rảnh',
-      Viewmore:  'Xem thêm',
-    },
+   
   ];
 
   const filteredData =
@@ -182,14 +124,17 @@ const Cards = () => {
         <CCardHeader style={{ marginBottom: '10px' }}>
           <strong>Tài khoản và phân cấp</strong>
           <div>
-          <span style={{ marginRight: '200px', fontSize: 'larger' }}>Tổng số nhân viên: <span style={{ color: 'blue', fontSize: 'x-large' }}>560</span></span>
-<span style={{ fontSize: 'larger',  }}>Nhân viên đang làm việc: <span style={{ color: 'green', fontSize: 'x-large' }}>300</span></span>
-
-
+            <span style={{ marginRight: '200px', fontSize: 'larger' }}>
+              Tổng số nhân viên: <span style={{ color: 'blue', fontSize: 'x-large' }}>560</span>
+            </span>
+            <span style={{ fontSize: 'larger' }}>
+              Nhân viên đang làm việc: <span style={{ color: 'green', fontSize: 'x-large' }}>300</span>
+            </span>
           </div>
         </CCardHeader>
-        <CButton color="primary" onClick={() => setVisibleAddVehicle(true)}>
-          +Thêm tài khoản
+        {/* Giữ nguyên nút thêm tài khoản */}
+        <CButton color="primary">
+          <Link to="/base/Spinners" style={{ color: 'white', textDecoration: 'none' }}>+ Thêm tài khoản</Link>
         </CButton>
       </div>
       <CRow>
@@ -249,7 +194,7 @@ const Cards = () => {
                     <CTableHeaderCell scope="col">Tài khoản</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Chức vụ</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Trạng thái</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Xem chi tiết</CTableHeaderCell>
+                    {/* Xem chi tiết chuyển đến /base/progress */}
                     <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -264,7 +209,8 @@ const Cards = () => {
                         />
                       </CTableHeaderCell>
                       <CTableDataCell>
-                      <span style={{ color: 'blue' }}>{item.IDNV}</span></CTableDataCell>
+                        <span style={{ color: 'blue' }}>{item.IDNV}</span>
+                      </CTableDataCell>
                       <CTableDataCell>{item.dayofbirth}</CTableDataCell>
                       <CTableDataCell>{item.account}</CTableDataCell>
                       <CTableDataCell style={{ color: 'blue' }}>{item.position}</CTableDataCell>
@@ -281,16 +227,18 @@ const Cards = () => {
                       >
                         {item.status}
                       </CTableDataCell>
-                      <CTableDataCell style={{ color: 'blue' }}>{item.Viewmore}</CTableDataCell>
 
+                      {/* Tuỳ chọn */}
                       <CTableDataCell>
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chọn</CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem>Xem chi tiết</CDropdownItem>
-                            <CDropdownItem>Chỉnh sửa</CDropdownItem>
+                            {/* Xem chi tiết chuyển đến /base/progress */}
+                            <CDropdownItem><Link to="/base/progress">Xem chi tiết</Link></CDropdownItem>
+                            {/* Chỉnh sửa chuyển đến /base/progress */}
+                            <CDropdownItem><Link to="/base/progress">Chỉnh sửa</Link></CDropdownItem>
                             <CDropdownDivider />
-                            <CDropdownItem>Xoá tài xe</CDropdownItem>
+                            <CDropdownItem></CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </CTableDataCell>
@@ -302,103 +250,8 @@ const Cards = () => {
           </CCard>
         </CCol>
       </CRow>
-
-      <CModal
-        size="lg"
-        visible={visibleAddVehicle}
-        onClose={() => setVisibleAddVehicle(false)}
-        aria-labelledby="AddVehicleModal"
-      >
-        <CModalHeader>
-  <CModalTitle id="AddVehicleModal">+ Thêm tài khoản</CModalTitle>
-</CModalHeader>
-<CForm style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-  <div style={{ width: '45%' }}>
-    <CFormInput
-      type="text"
-      id="employeeId"
-      placeholder="Mã nhân viên"
-      aria-describedby="employeeIdHelpInline"
-    />
-    <CFormInput
-      type="text"
-      id="employeeName"
-      placeholder="Tên nhân viên"
-      aria-describedby="employeeNameHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-    <CFormInput
-      type="text"
-      id="dateOfBirth"
-      placeholder="Ngày sinh"
-      aria-describedby="dateOfBirthHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-    <CFormInput
-      type="text"
-      id="phoneNumber"
-      placeholder="Số điện thoại"
-      aria-describedby="phoneNumberHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-    <CFormInput
-      type="text"
-      id="email"
-      placeholder="Email"
-      aria-describedby="emailHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-  </div>
-  <div style={{ width: '45%', borderLeft: '1px solid #ccc', paddingLeft: '20px' }}>
-  <CFormInput
-  type="file"
-  id="avatar"
-  placeholder="Av"
-  aria-describedby="avatarHelpInline"
-  onChange={(e) => handleFileChange(e)}
-/>
-
-
-    <CFormInput
-      type="text"
-      id="cccd"
-      placeholder="CCCD"
-      aria-describedby="cccdHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-    <CFormInput
-      type="text"
-      id="position"
-      placeholder="Chức vụ"
-      aria-describedby="positionHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-    <CFormInput
-      type="text"
-      id="account"
-      placeholder="Tài khoản"
-      aria-describedby="accountHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-    <CFormInput
-      type="password"
-      id="password"
-      placeholder="Mật khẩu"
-      aria-describedby="passwordHelpInline"
-      style={{ marginTop: '10px' }}
-    />
-  </div>
-</CForm>
-<CModalFooter>
-  <CButton color="secondary" onClick={() => setVisibleAddVehicle(false)}>
-    Đóng
-  </CButton>
-  <CButton color="primary">Lưu</CButton>
-</CModalFooter>
-
-      </CModal>
     </>
   );
 };
 
-export default Cards;
+export default Carousels;

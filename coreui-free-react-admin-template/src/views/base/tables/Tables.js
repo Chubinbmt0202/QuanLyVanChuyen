@@ -47,6 +47,8 @@ import axios from 'axios'
 const Tables = () => {
 
 
+<<<<<<< HEAD
+=======
   const dataFake = {
     "IdKh":"1",
     "Ten_KH" :"Võ Đăng Vịnh",
@@ -106,6 +108,7 @@ const Tables = () => {
       console.error('Error adding vehicle:', error)
     }
   }
+>>>>>>> 88a8786e8cdc663361522f82d222072a0b58a565
 
 
   const handleSubmitUpdate = async () => {

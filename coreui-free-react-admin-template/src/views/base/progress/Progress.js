@@ -1,186 +1,96 @@
-import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CProgress, CProgressBar, CRow } from '@coreui/react'
-import { DocsExample } from 'src/components'
+import React, { useState } from 'react';
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+} from '@coreui/react';
 
 const Progress = () => {
+  const [image, setImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <CRow>
-      <CCol xs={12}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>React Progress</strong> <small>Basic example</small>
+            <strong>Cập nhật thông tin nhân viên</strong>
           </CCardHeader>
           <CCardBody>
-            <p className="text-body-secondary small">
-              Progress components are built with two HTML elements, some CSS to set the width, and a
-              few attributes. We don&#39;tuse{' '}
-              <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress">
-                the HTML5 <code>&lt;progress&gt;</code> element
-              </a>
-              , ensuring you can stack progress bars, animate them, and place text labels over them.
-            </p>
-            <DocsExample href="components/progress">
-              <CProgress className="mb-3">
-                <CProgressBar value={0} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar value={25} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar value={50} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar value={75} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar value={100} />
-              </CProgress>
-            </DocsExample>
+            <div className="mb-3">
+              <label htmlFor="maNhanVien" className="form-label">Mã nhân viên</label>
+              <input type="text" className="form-control" id="maNhanVien" placeholder="Nv102312" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="tenNhanVien" className="form-label">Tên nhân viên</label>
+              <input type="text" className="form-control" id="tenNhanVien" placeholder="Truong Viet Hoang" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="ngaySinh" className="form-label">Ngày sinh</label>
+              <input type="date" className="form-control" id="11/11/2005" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="soDienThoai" className="form-label">Số điện thoại</label>
+              <input type="tel" className="form-control" id="soDienThoai" placeholder="Số điện thoại" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input type="email" className="form-control" id="email" placeholder="Email" />
+            </div>
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={12}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Progress</strong> <small>Labels</small>
-          </CCardHeader>
           <CCardBody>
-            <p className="text-body-secondary small">
-              Add labels to your progress bars by placing text within the{' '}
-              <code>&lt;CProgressBar&gt;</code>.
-            </p>
-            <DocsExample href="components/progress#labels">
-              <CProgress className="mb-3">
-                <CProgressBar value={25}>25%</CProgressBar>
-              </CProgress>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Progress</strong> <small>Height</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              We only set a <code>height</code> value on the <code>&lt;CProgress&gt;</code>, so if
-              you change that value the inner <code>&lt;CProgressBar&gt;</code> will automatically
-              resize accordingly.
-            </p>
-            <DocsExample href="components/progress#height">
-              <CProgress height={1} className="mb-3">
-                <CProgressBar value={25}></CProgressBar>
-              </CProgress>
-              <CProgress height={20} className="mb-3">
-                <CProgressBar value={25}></CProgressBar>
-              </CProgress>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Progress</strong> <small>Backgrounds</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Use <code>color</code> prop to change the appearance of individual progress bars.
-            </p>
-            <DocsExample href="components/progress#backgrounds">
-              <CProgress className="mb-3">
-                <CProgressBar color="success" value={25} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="info" value={50} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="warning" value={75} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="danger" value={100} />
-              </CProgress>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Progress</strong> <small>Multiple bars</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Include multiple progress bars in a progress component if you need.
-            </p>
-            <DocsExample href="components/progress#multiple-bars">
-              <CProgress className="mb-3">
-                <CProgressBar value={15} />
-                <CProgressBar color="success" value={30} />
-                <CProgressBar color="info" value={20} />
-              </CProgress>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Progress</strong> <small>Striped</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Add <code>variant=&#34;striped&#34;</code> to any <code>&lt;CProgressBar&gt;</code> to
-              apply a stripe via CSS gradient over the progress bar&#39;s background color.
-            </p>
-            <DocsExample href="components/progress#striped">
-              <CProgress className="mb-3">
-                <CProgressBar color="success" variant="striped" value={25} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="info" variant="striped" value={50} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="warning" variant="striped" value={75} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="danger" variant="striped" value={100} />
-              </CProgress>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Progress</strong> <small>Animated stripes</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              The striped gradient can also be animated. Add <code>animated</code> property to{' '}
-              <code>&lt;CProgressBar&gt;</code> to animate the stripes right to left via CSS3
-              animations.
-            </p>
-            <DocsExample href="components/progress#animated-stripes">
-              <CProgress className="mb-3">
-                <CProgressBar color="success" variant="striped" animated value={25} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="info" variant="striped" animated value={50} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="warning" variant="striped" animated value={75} />
-              </CProgress>
-              <CProgress className="mb-3">
-                <CProgressBar color="danger" variant="striped" animated value={100} />
-              </CProgress>
-            </DocsExample>
+            <div className="mb-3">
+              <label htmlFor="anhNhanVien" className="form-label">Ảnh nhân viên</label>
+              <input type="file" className="form-control" id="anhNhanVien" onChange={handleImageChange} />
+            </div>
+            <div className="mb-3">
+              {image && (
+                <img src={image} alt="Ảnh nhân viên" style={{ maxWidth: '100%', height: 'auto' }} />
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="cccd" className="form-label">CCCD</label>
+              <input type="text" className="form-control" id="cccd" placeholder="CCCD" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="chucVu" className="form-label">Chức vụ</label>
+              <input type="text" className="form-control" id="chucVu" placeholder="Chức vụ" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="taiKhoan" className="form-label">Tài khoản</label>
+              <input type="text" className="form-control" id="taiKhoan" placeholder="Tài khoản" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="matKhau" className="form-label">Mật khẩu</label>
+              <input type="password" className="form-control" id="matKhau" placeholder="Mật khẩu" />
+            </div>
+            <div className="d-grid mb-3">
+              <CButton color="primary">Cập Nhật</CButton>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default Progress
+export default Progress;
