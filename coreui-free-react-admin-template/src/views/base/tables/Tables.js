@@ -29,51 +29,7 @@ import { DocsExample } from 'src/components'
 
 const Tables = () => {
 
-  // const [orders, setOrders] = useState([
-  //   {
-  //     id: 1,
-  //     companyName: 'Công ty Lai Châu',
-  //     phoneNumber: '045896521472',
-  //     joinDate: '2024-04-05 08:29',
-  //     orderValue: 1235235000,
-  //     address: '123 Nguyễn Lương Bàng, Mộc Châu, Lai Châu',
-  //   },
-  //   {
-  //     id: 2,
-  //     companyName: 'Vật liệu xây dựng Nguyễn Hoàng',
-  //     phoneNumber: '045896521472',
-  //     joinDate: '2024-04-05 08:29',
-  //     orderValue: 1235235000,
-  //     address: '21 Lê Đuân, Bình Thạnh, Thành phố Hồ Chí Minh',
-  //   },
-  //   {
-  //     id: 3,
-  //     companyName: 'Công ty Daiwa',
-  //     phoneNumber: '045896521472',
-  //     joinDate: '2024-04-05 08:29',
-  //     orderValue: 1235235000,
-  //     address: '234 Ngô Tất Tố, Phố Hàng Bưởi, Hà Nội',
-  //   },
-  //   {
-  //     id: 4,
-  //     companyName: 'Công ty Hoà Xuân',
-  //     phoneNumber: '045896521472',
-  //     joinDate: '2024-04-05 00:29',
-  //     orderValue: 1235235000,
-  //     address: 'Số 234, Điện Bàn, Quảng Nam',
-  //   },
-  // ]);
 
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [pageSize, setPageSize] = useState(5);
-
-  // const start = (currentPage - 1) * pageSize;
-  // const end = start + pageSize;
-  // const paginatedOrders = orders.slice(start, end);
-
-  // const handlePageChange = (newPage) => {
-  //   setCurrentPage(newPage);
-  // };
 
 
 
