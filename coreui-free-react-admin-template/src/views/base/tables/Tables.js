@@ -45,17 +45,15 @@ import ReactImg from 'src/assets/images/react.jpg'
 import axios from 'axios'
 
 const Tables = () => {
-
   const dataFake = {
-    "IdKh":"1",
-    "Ten_KH" :"Võ Đăng Vịnh",
-    "GioiTinh":"Nam",
-    "SDT":"0372254619",
-    "NgaySinh":"07-11-2003",
-    "DiaChi" : "12 Cao Thắng Hải Châu Đà Nẵng",
-    "Email": "lagger07112003@gmail.com",
-    "NgayThamGia":"07-11-2003",
-  
+    IdKh: '1',
+    Ten_KH: 'Võ Đăng Vịnh',
+    GioiTinh: 'Nam',
+    SDT: '0372254619',
+    NgaySinh: '07-11-2003',
+    DiaChi: '12 Cao Thắng Hải Châu Đà Nẵng',
+    Email: 'lagger07112003@gmail.com',
+    NgayThamGia: '07-11-2003',
   }
 
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
@@ -76,6 +74,61 @@ const Tables = () => {
     Ngay_Het_DK: '',
   })
   const [data, setData] = useState([])
+  const [provinces, setProvinces] = useState(null)
+  const [districts, setDistricts] = useState(null)
+  const [wards, setWards] = useState(null)
+  const [formDataAddress, setFormDataAddress] = useState({
+    province: '',
+    district: '',
+    ward: '',
+  })
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await axios.get('https://vapi.vnappmob.com/api/province')
+        setProvinces(response.data.results)
+      } catch (error) {
+        console.error('Error fetching provinces:', error)
+      }
+    }
+
+    fetchProvinces()
+  }, [])
+
+  const fetchDistricts = async (province_Id) => {
+    try {
+      const response = await axios.get(
+        `https://vapi.vnappmob.com/api/province/district/${province_Id}`,
+      )
+      setDistricts(response.data.results)
+    } catch (error) {
+      console.error('Error fetching districts:', error)
+    }
+  }
+
+  const fetchWards = async (district_Id) => {
+    try {
+      const response = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${district_Id}`)
+      setWards(response.data.results)
+    } catch (error) {
+      console.error('Error fetching wards:', error)
+    }
+  }
+
+  const handleChange = (e) => {
+    const { id, value } = e.target
+    setFormData((prevState) => ({ ...prevState, [id]: value }))
+
+    if (id === 'province') {
+      fetchDistricts(value)
+      setFormData((prevState) => ({ ...prevState, district: '', ward: '' }))
+    }
+    if (id === 'district') {
+      fetchWards(value)
+      setFormData((prevState) => ({ ...prevState, ward: '' }))
+    }
+  }
 
   useEffect(() => {
     fetchTrafficData()
@@ -91,11 +144,6 @@ const Tables = () => {
     }
   }
 
-  const handleChange = (e) => {
-    const { id, value } = e.target
-    setFormData((prevState) => ({ ...prevState, [id]: value }))
-  }
-
   const handleSubmit = async () => {
     try {
       await axios.post('http://localhost:3001/api/addTraffics', formData)
@@ -105,7 +153,6 @@ const Tables = () => {
       console.error('Error adding vehicle:', error)
     }
   }
-
 
   const handleSubmitUpdate = async () => {
     try {
@@ -117,15 +164,11 @@ const Tables = () => {
     }
   }
 
-
-const fetchUpdateCustomer = async (id) =>
-  {
-    try{
-        setVisibleUpdateCustomer(true);
-    }
-    catch(error)
-    {
-      console.error("Error when get customer" , error);
+  const fetchUpdateCustomer = async (id) => {
+    try {
+      setVisibleUpdateCustomer(true)
+    } catch (error) {
+      console.error('Error when get customer', error)
     }
   }
 
@@ -172,7 +215,6 @@ const fetchUpdateCustomer = async (id) =>
                   Tất cả
                 </CNavLink>
               </CNavItem>
-
             </CNav>
             <CCardBody>
               <CTable>
@@ -188,7 +230,7 @@ const fetchUpdateCustomer = async (id) =>
                 </CTableHead>
                 <CTableBody>
                   {/* {dataFake.map((item, index) => ( */}
-                  <CTableRow >
+                  <CTableRow>
                     <CTableHeaderCell scope="row">{dataFake.Ten_KH}</CTableHeaderCell>
                     <CTableDataCell>{dataFake.SDT}</CTableDataCell>
                     <CTableDataCell>{dataFake.NgaySinh}</CTableDataCell>
@@ -201,7 +243,9 @@ const fetchUpdateCustomer = async (id) =>
                           <CDropdownItem onClick={() => fetchTrafficDetails(dataFake.IdKh)}>
                             Xem chi tiết
                           </CDropdownItem>
-                          <CDropdownItem onClick={() => fetchUpdateCustomer(dataFake.IdKh)}>Chỉnh sửa</CDropdownItem>
+                          <CDropdownItem onClick={() => fetchUpdateCustomer(dataFake.IdKh)}>
+                            Chỉnh sửa
+                          </CDropdownItem>
                           <CDropdownDivider />
                           <CDropdownItem>Xoá Khách Hàng</CDropdownItem>
                         </CDropdownMenu>
@@ -242,7 +286,7 @@ const fetchUpdateCustomer = async (id) =>
             placeholder="Tên Khách Hàng"
             aria-describedby="exampleFormControlInputHelpInline"
           />
-           <CFormInput
+          <CFormInput
             type="text"
             style={{ flex: '1 1 45%' }}
             id="SDT"
@@ -272,8 +316,6 @@ const fetchUpdateCustomer = async (id) =>
             onChange={handleChange}
             placeholder="Địa Chỉ"
           />
-         
-          
         </CForm>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleAddCustomer(false)}>
@@ -284,9 +326,6 @@ const fetchUpdateCustomer = async (id) =>
           </CButton>
         </CModalFooter>
       </CModal>
-
-
-
 
       <CModal
         size="lg"
@@ -314,7 +353,7 @@ const fetchUpdateCustomer = async (id) =>
             placeholder="Tên Khách Hàng"
             aria-describedby="exampleFormControlInputHelpInline"
           />
-           <CFormInput
+          <CFormInput
             type="text"
             style={{ flex: '1 1 45%' }}
             id="SDT"
@@ -344,8 +383,50 @@ const fetchUpdateCustomer = async (id) =>
             onChange={handleChange}
             placeholder="Địa Chỉ"
           />
-         
-          
+          <select
+            style={{ flex: '1 1 45%' }}
+            id="province"
+            value={formData.province}
+            onChange={handleChange}
+          >
+            <option value="">Chọn Tỉnh</option>
+            {provinces &&
+              provinces.map((province) => (
+                <option key={province.province_id} value={province.province_id}>
+                  {province.province_name}
+                </option>
+              ))}
+          </select>
+          <select
+            style={{ flex: '1 1 45%' }}
+            id="district"
+            value={formData.district}
+            onChange={handleChange}
+            disabled={!formData.province}
+          >
+            <option value="">Chọn Huyện</option>
+            {districts &&
+              districts.map((district) => (
+                <option key={district.district_id} value={district.district_id}>
+                  {district.district_name}
+                </option>
+              ))}
+          </select>
+          <select
+            style={{ flex: '1 1 45%' }}
+            id="ward"
+            value={formData.ward}
+            onChange={handleChange}
+            disabled={!formData.district}
+          >
+            <option value="">Chọn Xã</option>
+            {wards &&
+              wards.map((ward) => (
+                <option key={ward.ward_id} value={ward.ward_id}>
+                  {ward.ward_name}
+                </option>
+              ))}
+          </select>
         </CForm>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleUpdateCustomer(false)}>
@@ -356,8 +437,6 @@ const fetchUpdateCustomer = async (id) =>
           </CButton>
         </CModalFooter>
       </CModal>
-
-
 
       <CModal
         size="lg"
@@ -386,10 +465,10 @@ const fetchUpdateCustomer = async (id) =>
                     <strong>Số Điện Thoại :</strong> {dataFake.SDT}
                   </p>
                   <p>
-                    <strong>Email  :</strong> {dataFake.Email}
+                    <strong>Email :</strong> {dataFake.Email}
                   </p>
                   <p>
-                    <strong>Ngày Tham Gia  :</strong> {dataFake.NgayThamGia}
+                    <strong>Ngày Tham Gia :</strong> {dataFake.NgayThamGia}
                   </p>
                 </div>
               </CCol>
@@ -403,7 +482,7 @@ const fetchUpdateCustomer = async (id) =>
                   </p>
                   <ul>
                     <li>
-                      <strong>Tên Hàng Hóa:</strong> Gấu Bông 
+                      <strong>Tên Hàng Hóa:</strong> Gấu Bông
                     </li>
                     <li>
                       <strong>Tình Trạng:</strong> Đang Giao
