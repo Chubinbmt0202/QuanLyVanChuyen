@@ -234,7 +234,7 @@ const Carousels = () => {
                           <CDropdownToggle color="secondary">Tuỳ chọn</CDropdownToggle>
                           <CDropdownMenu>
                             {/* Xem chi tiết chuyển đến /base/progress */}
-                            <CDropdownItem><Link to="/base/progress">Xem chi tiết</Link></CDropdownItem>
+                            <CDropdownItem><Link to="/base/Paginations">Xem chi tiết</Link></CDropdownItem>
                             {/* Chỉnh sửa chuyển đến /base/progress */}
                             <CDropdownItem><Link to="/base/progress">Chỉnh sửa</Link></CDropdownItem>
                             <CDropdownDivider />
