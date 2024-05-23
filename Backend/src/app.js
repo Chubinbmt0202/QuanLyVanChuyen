@@ -9,8 +9,9 @@ const {
   getTrafficById,
   deleteTrafficController,
   updateTrafficController,
-  searchTrafficByLicensePlateController
+  searchTrafficByLicensePlateController,
 } = require("./Controllers/trafficController.js");
+const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
 
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
@@ -33,7 +34,12 @@ app.post("/api/addTraffics", addTrafficsController);
 app.get("/api/getTraffic/:id", getTrafficById);
 app.delete("/api/deleteTraffic/:id", deleteTrafficController);
 app.put("/api/updateTraffic/:id", updateTrafficController);
-app.get('/api/searchTrafficByLicensePlate/:licensePlate', searchTrafficByLicensePlateController);
+app.get(
+  "/api/searchTrafficByLicensePlate/:licensePlate",
+  searchTrafficByLicensePlateController
+);
 
+// loại xe
+app.get("/api/getAllVehicleTypes", getAllVehicleTypes);
 
 module.exports = app;
