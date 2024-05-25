@@ -1,19 +1,10 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
   CCardBody,
-  CCardFooter,
-  CCardGroup,
   CCardHeader,
-  CModalBody,
-  CCardImage,
-  CCardLink,
-  CCardSubtitle,
-  CCardText,
-  CCardTitle,
-  CListGroup,
-  CListGroupItem,
   CNav,
   CNavItem,
   CNavLink,
@@ -25,94 +16,58 @@ import {
   CTableHeaderCell,
   CTableBody,
   CTableDataCell,
-  CTableCaption,
+  CFormLabel,
   CDropdown,
   CDropdownToggle,
   CDropdownMenu,
   CDropdownItem,
   CDropdownDivider,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalFooter,
   CForm,
   CFormInput,
-  CFormSelect,
 } from '@coreui/react'
-import { DocsExample } from 'src/components'
-import ReactImg from 'src/assets/images/react.jpg'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Accordion = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
-  const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
-  const [visibleDetailModal, setVisibleDetailModal] = useState(false)
-  const [selectedVehicle, setSelectedVehicle] = useState(null)
-  const [formData, setFormData] = useState({
-    Bien_so: '',
-    Hang_xe: '',
-    ten_loai_xe: '',
-    Suc_Chua: '',
-    Tinh_Trang: 'Đang chờ',
-    Chieu_dai: '',
-    Chieu_rong: '',
-    Chieu_cao: '',
-    Ngay_DK: '',
-    Ngay_Het_DK: '',
-  })
-  const [data, setData] = useState([])
+  const [dataOrder, setDataOrder] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
-    fetchTrafficData()
+    fetchData()
   }, [])
 
-  const fetchTrafficData = async () => {
+  const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/getAllTraffics')
-      setData(response.data)
-      console.log('Data:', response.data)
+      const res = await axios.get('http://localhost:3001/api/getAllOrders')
+      setDataOrder(res.data)
     } catch (error) {
-      console.error('Error fetching traffic data:', error)
-    }
-  }
-
-  const handleChange = (e) => {
-    const { id, value } = e.target
-    setFormData((prevState) => ({ ...prevState, [id]: value }))
-  }
-
-  const handleSubmit = async () => {
-    try {
-      await axios.post('http://localhost:3001/api/addTraffics', formData)
-      setVisibleAddVehicle(false)
-      fetchTrafficData() // Fetch the updated data after adding a new vehicle
-    } catch (error) {
-      console.error('Error adding vehicle:', error)
-    }
-  }
-
-  const fetchTrafficDetails = async (id) => {
-    try {
-      const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
-      setSelectedVehicle(response.data)
-      setVisibleDetailModal(true)
-    } catch (error) {
-      console.error('Error fetching traffic details:', error)
+      console.log(error)
     }
   }
 
   const filteredData =
-    currentStatus === 'Tất cả' ? data : data.filter((item) => item.Tinh_Trang === currentStatus)
+    currentStatus === 'Tất cả'
+      ? dataOrder
+      : dataOrder.filter((item) => item.TrangThai === currentStatus)
 
-  const dataFake = {
-    maDonHang: 'DH001',
-    KH: 'Nguyễn Văn A',
-    NgayDat: '20/10/2021',
-    NgayGiao: '22/10/2021',
-    trangthai: 'Đã hoàn tất',
-    SL: '10 tấn',
-    tongTien: 1000000,
+  const handleDetailOrder = (OrderID) => {
+    navigate(`/base/tooltips/${OrderID}`)
   }
+
+  const handleUpdate = (OrderID) => {
+    alert(`Chỉnh sửa đơn hàng ${OrderID}`)
+  }
+
+  const handleProcessOrder = (OrderID) => {
+    alert(`Xử lý đơn hàng ${OrderID}`)
+    navigate(`/base/tooltips/${OrderID}`)
+  }
+
+  const handleViewStatus = (OrderID) => {
+    alert(`Xem trạng thái đơn hàng ${OrderID}`)
+  }
+
   return (
     <>
       <div
@@ -126,9 +81,19 @@ const Accordion = () => {
         <CCardHeader style={{ marginBottom: '10px' }}>
           <strong>Điều phối tài xế</strong>
         </CCardHeader>
-        <CButton color="primary" onClick={() => setVisibleAddVehicle(true)}>
-          Thêm phương tiện
-        </CButton>
+        <CForm className="row g-3">
+          <CCol xs="auto">
+            <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
+              Password
+            </CFormLabel>
+            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" />
+          </CCol>
+          <CCol xs="auto">
+            <CButton color="primary" type="submit" className="mb-3">
+              Tìm kiếm
+            </CButton>
+          </CCol>
+        </CForm>
       </div>
       <CRow>
         <CCol xs={12}>
@@ -146,8 +111,8 @@ const Accordion = () => {
               <CNavItem>
                 <CNavLink
                   style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Chờ xử lý'}
-                  onClick={() => setCurrentStatus('Chờ xử lý')}
+                  active={currentStatus === 'Chưa giao hàng'}
+                  onClick={() => setCurrentStatus('Chưa giao hàng')}
                 >
                   Chờ xử lý
                 </CNavLink>
@@ -155,8 +120,8 @@ const Accordion = () => {
               <CNavItem>
                 <CNavLink
                   style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Đang giao'}
-                  onClick={() => setCurrentStatus('Đang giao')}
+                  active={currentStatus === 'Đang giao hàng'}
+                  onClick={() => setCurrentStatus('Đang giao hàng')}
                 >
                   Đang giao
                 </CNavLink>
@@ -164,8 +129,8 @@ const Accordion = () => {
               <CNavItem>
                 <CNavLink
                   style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Đã hoàn tất'}
-                  onClick={() => setCurrentStatus('Đã hoàn tất')}
+                  active={currentStatus === 'Đã giao hàng'}
+                  onClick={() => setCurrentStatus('Đã giao hàng')}
                 >
                   Đã hoàn tất
                 </CNavLink>
@@ -186,226 +151,61 @@ const Accordion = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">{dataFake.maDonHang}</CTableHeaderCell>
-                    <CTableDataCell>{dataFake.KH}</CTableDataCell>
-                    <CTableDataCell>{dataFake.NgayDat}</CTableDataCell>
-                    <CTableDataCell>{dataFake.NgayGiao}</CTableDataCell>
-                    <CTableDataCell
-                      style={{
-                        color:
-                          dataFake.trangthai === 'Đã hoàn tất'
-                            ? 'green'
-                            : dataFake.trangthai === 'Đang giao'
-                              ? 'blue'
+                  {filteredData.map((item, index) => (
+                    <CTableRow key={item.id}>
+                      <CTableHeaderCell scope="row">{item.MaDH}</CTableHeaderCell>
+                      <CTableDataCell>{item.TenKH}</CTableDataCell>
+                      <CTableDataCell>{item.NgayDatHang}</CTableDataCell>
+                      <CTableDataCell>{item.NgayGiaoHang}</CTableDataCell>
+                      <CTableDataCell
+                        style={{
+                          color:
+                            item.TrangThai === 'Đang giao hàng'
+                              ? 'green'
+                              : item.TrangThai === 'Chưa giao hàng'
+                              ? 'red'
                               : 'gray',
-                      }}
-                    >
-                      {dataFake.trangthai}
-                    </CTableDataCell>
-                    <CTableDataCell>{dataFake.SL}</CTableDataCell>
-                    <CTableDataCell>{dataFake.tongTien}</CTableDataCell>
-                    <CTableDataCell>
-                      <CDropdown>
-                        <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
-                        <CDropdownMenu>
-                          <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
-                            Xem chi tiết
-                          </CDropdownItem>
-                          <CDropdownItem>Chỉnh sửa</CDropdownItem>
-                          <CDropdownDivider />
-                          <CDropdownItem>Xoá phương tiện</CDropdownItem>
-                        </CDropdownMenu>
-                      </CDropdown>
-                    </CTableDataCell>
-                  </CTableRow>
+                        }}
+                      >
+                        {item.TrangThai}
+                      </CTableDataCell>
+                      <CTableDataCell>{item.KhoiLuong}</CTableDataCell>
+                      <CTableDataCell>{item.TongTien}</CTableDataCell>
+                      <CTableDataCell>
+                        <CDropdown>
+                          <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
+                          <CDropdownMenu>
+                            {item.TrangThai === 'Chưa giao hàng' && (
+                              <>
+                                <CDropdownItem onClick={() => handleProcessOrder(item.MaDH)}>
+                                  Xử lý
+                                </CDropdownItem>
+                                <CDropdownItem onClick={() => handleUpdate(item.MaDH)}>
+                                  Chỉnh sửa
+                                </CDropdownItem>
+                              </>
+                            )}
+                            {item.TrangThai === 'Đang giao hàng' && (
+                              <CDropdownItem onClick={() => handleViewStatus(item.MaDH)}>
+                                Xem trạng thái
+                              </CDropdownItem>
+                            )}
+                            {item.TrangThai === 'Đã giao hàng' && (
+                              <CDropdownItem onClick={() => handleDetailOrder(item.MaDH)}>
+                                Xem chi tiết
+                              </CDropdownItem>
+                            )}
+                          </CDropdownMenu>
+                        </CDropdown>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
                 </CTableBody>
               </CTable>
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
-
-      <CModal
-        size="lg"
-        visible={visibleAddVehicle}
-        onClose={() => setVisibleAddVehicle(false)}
-        aria-labelledby="AddVehicleModal"
-      >
-        <CModalHeader>
-          <CModalTitle id="AddVehicleModal">Thêm phương tiện</CModalTitle>
-        </CModalHeader>
-        <CForm
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            padding: '1rem',
-          }}
-        >
-          <CFormInput
-            type="text"
-            style={{ flex: '1 1 45%' }}
-            id="Bien_so"
-            onChange={handleChange}
-            placeholder="Biển số xe"
-            aria-describedby="exampleFormControlInputHelpInline"
-          />
-          <CFormSelect
-            style={{ flex: '1 1 45%' }}
-            id="ten_loai_xe"
-            onChange={handleChange}
-            aria-label="Default select example"
-            options={[
-              'Chọn loại phương tiện',
-              { label: 'Xe tải lớn', value: 'Xe tải lớn' },
-              { label: 'Xe tải nhỏ', value: 'Xe tải nhỏ' },
-              { label: 'Xe rơ móoc', value: 'Xe rơ móoc', disabled: true },
-            ]}
-          />
-          <CFormSelect
-            style={{ flex: '1 1 45%' }}
-            id="Hang_xe"
-            onChange={handleChange}
-            aria-label="Default select example"
-            options={[
-              'Chọn hãng xe',
-              { label: 'Huyndai', value: 'Huyndai' },
-              { label: 'Suzuki', value: 'Suzuki' },
-              { label: 'Daewoo', value: 'Daewoo' },
-            ]}
-          />
-          <CFormInput
-            type="number"
-            style={{ flex: '1 1 45%' }}
-            id="Suc_Chua"
-            onChange={handleChange}
-            placeholder="Tổng tải trọng (kg/tấn)"
-          />
-          <p style={{ flex: '1 1 100%', margin: '0' }}>Kích thước xe</p>
-          <div style={{ display: 'flex', flex: '1 1 100%', gap: '1rem' }}>
-            <CFormInput
-              type="number"
-              style={{ flex: '1 1 30%' }}
-              id="Chieu_dai"
-              onChange={handleChange}
-              placeholder="Chiều dài (m)"
-            />
-            <CFormInput
-              type="number"
-              style={{ flex: '1 1 30%' }}
-              id="Chieu_rong"
-              onChange={handleChange}
-              placeholder="Chiều rộng (m)"
-            />
-            <CFormInput
-              type="number"
-              style={{ flex: '1 1 30%' }}
-              id="Chieu_cao"
-              onChange={handleChange}
-              placeholder="Chiều cao (m)"
-            />
-          </div>
-          <CFormInput
-            type="date"
-            style={{ flex: '1 1 45%' }}
-            id="Ngay_DK"
-            placeholder="Ngày đăng ký"
-            onChange={handleChange}
-          />
-          <CFormInput
-            type="date"
-            style={{ flex: '1 1 45%' }}
-            id="Ngay_Het_DK"
-            placeholder="Ngày hết hạn đăng ký"
-            onChange={handleChange}
-          />
-          {/* <CFormInput
-              type="file"
-              style={{ flex: '1 1 45%' }}
-              id="vehicleImage"
-              label="Ảnh chụp tổng quát"
-              accept="image/*"
-            /> */}
-        </CForm>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setVisibleAddVehicle(false)}>
-            Đóng
-          </CButton>
-          <CButton color="primary" onClick={handleSubmit}>
-            Lưu
-          </CButton>
-        </CModalFooter>
-      </CModal>
-
-      <CModal
-        size="lg"
-        visible={visibleDetailModal}
-        onClose={() => setVisibleDetailModal(false)}
-        aria-labelledby="DetailVehicleModal"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle id="DetailVehicleModal">Chi tiết phương tiện</CModalTitle>
-        </CModalHeader>
-        {selectedVehicle && (
-          <CModalBody>
-            <CRow>
-              <CCol md="6">
-                <div className="detail-info-column">
-                  <p>
-                    <strong>Biển số:</strong> {selectedVehicle.Bien_so}
-                  </p>
-                  <p>
-                    <strong>Sức chứa:</strong> {selectedVehicle.Suc_Chua}
-                  </p>
-                  <p>
-                    <strong>Loại xe:</strong> {selectedVehicle.ten_loai_xe}
-                  </p>
-                  <p>
-                    <strong>Hãng xe:</strong> {selectedVehicle.Hang_xe}
-                  </p>
-                  <p>
-                    <strong>Ngày đăng kiểm:</strong>{' '}
-                    {selectedVehicle.Ngay_DK ? selectedVehicle.Ngay_DK.split('T')[0] : ''}
-                  </p>
-                  <p>
-                    <strong>Ngày hết hạn đăng kiểm:</strong>{' '}
-                    {selectedVehicle.Ngay_Het_DK ? selectedVehicle.Ngay_Het_DK.split('T')[0] : ''}
-                  </p>
-                </div>
-              </CCol>
-              <CCol md="6">
-                <div className="detail-info-column">
-                  <p>
-                    <strong>Tình trạng:</strong> {selectedVehicle.Tinh_Trang}
-                  </p>
-                  <p>
-                    <strong>Kích thước xe:</strong>
-                  </p>
-                  <ul>
-                    <li>
-                      <strong>Chiều dài:</strong> {selectedVehicle.Chieu_dai} m
-                    </li>
-                    <li>
-                      <strong>Chiều rộng:</strong> {selectedVehicle.Chieu_rong} m
-                    </li>
-                    <li>
-                      <strong>Chiều cao:</strong> {selectedVehicle.Chieu_cao} m
-                    </li>
-                  </ul>
-                </div>
-              </CCol>
-            </CRow>
-            {/* Add more details as needed */}
-          </CModalBody>
-        )}
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setVisibleDetailModal(false)}>
-            Đóng
-          </CButton>
-        </CModalFooter>
-      </CModal>
     </>
   )
 }
