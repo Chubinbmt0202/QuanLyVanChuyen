@@ -12,6 +12,7 @@ const {
   searchTrafficByLicensePlateController,
 } = require("./Controllers/trafficController.js");
 const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
+const { getAllOrders, getDetailOrderByID } = require("./Controllers/orderController.js");
 
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
@@ -41,5 +42,9 @@ app.get(
 
 // loại xe
 app.get("/api/getAllVehicleTypes", getAllVehicleTypes);
+
+// Đơn hàng
+app.get("/api/getAllOrders", getAllOrders);
+app.get("/api/getDetailOrderByID/:id", getDetailOrderByID);
 
 module.exports = app;
