@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const database = require("./Configs/database");
-const { createUser, login } = require("./Controllers/UserController.js");
+const { createUser, login, getDriverIdleController } = require("./Controllers/UserController.js");
 const {
   getAllTraffics,
   addTrafficsController,
@@ -42,6 +42,9 @@ app.get(
 
 // loại xe
 app.get("/api/getAllVehicleTypes", getAllVehicleTypes);
+
+// tài xế
+app.get("/api/getAllDriversIdle", getDriverIdleController);
 
 // Đơn hàng
 app.get("/api/getAllOrders", getAllOrders);

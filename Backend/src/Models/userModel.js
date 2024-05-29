@@ -16,8 +16,14 @@ const findUserByUsername = async (username) => {
     return rows[0];
   };
 
+const getDriverModel = async () => {
+    const [rows, fields] = await db.query('SELECT * FROM taixe WHERE Trang_thai = "Đang rảnh"');
+    return rows;
+};
+
 module.exports = {
     getAllUsers,
     addUser,
     findUserByUsername,
+    getDriverModel,
 };
