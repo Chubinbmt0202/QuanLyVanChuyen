@@ -57,6 +57,14 @@ const searchTrafficByLicensePlateService = async (licensePlate) => {
   }
 };
 
+const getVehicleIdleService = async () => {
+  try {
+      const vehicles = await trafficModel.getVehicleIdle();
+      return vehicles;
+  } catch (error) {
+      throw error;
+  }
+}
 
 module.exports = {
   getAllTraffics,
@@ -64,5 +72,6 @@ module.exports = {
   getTrafficById,
   deleteTrafficService,
   updateTrafficService,
-  searchTrafficByLicensePlateService
+  searchTrafficByLicensePlateService,
+  getVehicleIdleService
 };

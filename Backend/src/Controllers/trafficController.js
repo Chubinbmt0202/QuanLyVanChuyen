@@ -75,11 +75,21 @@ const searchTrafficByLicensePlateController = async (req, res) => {
   }
 };
 
+const getVehicleIdleController = async (req, res) => {
+  try {
+    const traffics = await trafficService.getVehicleIdleService();
+    res.json(traffics);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving idle vehicles", error });
+  }
+}
+
 module.exports = {
   getAllTraffics,
   addTrafficsController,
   getTrafficById,
   deleteTrafficController,
   updateTrafficController,
-  searchTrafficByLicensePlateController
+  searchTrafficByLicensePlateController,
+  getVehicleIdleController
 };

@@ -20,7 +20,21 @@ const getDetailOrderByID = async (id) => {
     }
 }
 
+const updateOrder = async (orderId, deliveryDate, driverId, vehicleId) => {
+    try {
+        await orderModel.updateOrderDeliveryDate(orderId, deliveryDate);
+        await orderModel.updateDriverStatus(driverId, 'Đang bận');
+        await orderModel.updateVehicleStatus(vehicleId, 'Đang giao');
+        await orderModel.updateOrder(orderId);
+        await orderModel.updateOrderDateDevivery(deliveryDate, orderId);
+    } catch (error) {
+        console.log("Lỗi truy service updateOrder", error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllOrders,
     getDetailOrderByID,
+    updateOrder
 };

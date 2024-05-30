@@ -24,6 +24,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { DatePicker } from '@mui/x-date-pickers'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Tooltips = () => {
   const { OrderID } = useParams()
@@ -32,6 +33,28 @@ const Tooltips = () => {
   const [vehicleIdle, setVehicleIdle] = useState(null)
   const [selectedDriver, setSelectedDriver] = useState('')
   const [driverPhoneNumber, setDriverPhoneNumber] = useState('')
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedVehicle, setSelectedVehicle] = useState('')
+  const navigate = useNavigate()
+
+  const handleConfirm = async () => {
+    try {
+      const res = await axios.post(`http://localhost:3001/api/updateOrder`, {
+        orderId: OrderID,
+        deliveryDate: selectedDate,
+        driverId: selectedDriver,
+        vehicleId: selectedVehicle,
+      })
+      if (res.status === 200) {
+        alert('Cập nhật đơn hàng thành công')
+        navigate('/base/accordion')
+      }
+      // Handle successful update, e.g., show a success message or navigate to another page
+    } catch (error) {
+      console.log('Update Error:', error)
+      // Handle error, e.g., show an error message
+    }
+  }
 
   const handleLoadData = async () => {
     try {
@@ -43,9 +66,9 @@ const Tooltips = () => {
     }
   }
 
-  const handleGetDriverIlde = async () => {
+  const handleGetDriverIdle = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/api/getAllDriversIdle`)
+      const res = await axios.get('http://localhost:3001/api/getAllDriversIdle')
       console.log('API Response:', res.data)
       setDriverIdle(res.data)
     } catch (error) {
@@ -53,10 +76,10 @@ const Tooltips = () => {
     }
   }
 
-   const handleGetVehicleIdle = async () => {
+  const handleGetVehicleIdle = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/api/getAllVehicles`)
-      console.log('API Response:', res.data)
+      const res = await axios.get('http://localhost:3001/api/getVehicleIdle')
+      console.log('API Response vehicle idle:', res.data)
       setVehicleIdle(res.data)
     } catch (error) {
       console.log('API Error:', error)
@@ -66,7 +89,7 @@ const Tooltips = () => {
   useEffect(() => {
     if (OrderID) {
       handleLoadData()
-      handleGetDriverIlde()
+      handleGetDriverIdle()
       handleGetVehicleIdle()
     }
   }, [OrderID])
@@ -74,9 +97,11 @@ const Tooltips = () => {
   if (!OrderID) {
     return <div>Đơn hàng không tồn tại</div>
   }
-  if (dataOrder === null) {
+
+  if (dataOrder === null || vehicleIdle === null) {
     return <div>Loading...</div> // Show loading state
   }
+
   if (!dataOrder) {
     return <div>Error loading data</div> // Handle error state
   }
@@ -93,10 +118,9 @@ const Tooltips = () => {
     'Các sản phẩm mà khách hàng đặt': productString,
   } = dataOrder
 
-  // Hàm để cắt chuỗi sản phẩm thành các thành phần riêng lẻ
   function parseProductString(productString) {
-    if (productString) {
-      const parts = productString.split(' - ')
+    const products = productString.split(', ').map((product) => {
+      const parts = product.split(' - ')
       if (parts.length === 4) {
         const [productType, productName, pricePart, quantityPart] = parts
         const price = pricePart.replace('Giá: ', '').trim()
@@ -108,12 +132,24 @@ const Tooltips = () => {
           quantity: quantity,
         }
       }
-    }
-    return null // Trả về null nếu chuỗi không khớp định dạng hoặc không tồn tại
+      return null
+    })
+    return products.filter((product) => product !== null)
   }
 
-  // Xử lý chuỗi sản phẩm
-  const parsedProduct = parseProductString(productString)
+  const parsedProducts = parseProductString(productString)
+
+  console.log('vehicleIdle:', vehicleIdle)
+
+  const options = [
+    { label: 'Chọn phương tiện vận chuyển', value: '' },
+    ...(vehicleIdle
+      ? vehicleIdle.map((vehicle) => ({
+          label: `${vehicle.Bien_so} - ${vehicle.ten_loai_xe}`,
+          value: vehicle.PK_Id_Xe,
+        }))
+      : []),
+  ]
 
   return (
     <CRow>
@@ -132,9 +168,11 @@ const Tooltips = () => {
                       <CFormInput id="inputAddress" value={orderDate} readOnly />
                       <div className=" mt-3">
                         <DatePicker
-                          className=" w-auto"
+                          className="w-auto"
                           label="Ngày giao dự kiến"
-                          name="startDate"
+                          value={selectedDate}
+                          onChange={(date) => setSelectedDate(date)}
+                          renderInput={(params) => <CFormInput {...params} />}
                         />
                       </div>
                       <p className="mt-3 mb-1">Tên dịch vụ vận chuyển</p>
@@ -167,14 +205,16 @@ const Tooltips = () => {
                         </CTableRow>
                       </CTableHead>
                       <CTableBody>
-                        {parsedProduct ? (
-                          <CTableRow>
-                            <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                            <CTableDataCell>{parsedProduct.productType}</CTableDataCell>
-                            <CTableDataCell>{parsedProduct.productName}</CTableDataCell>
-                            <CTableDataCell>{parsedProduct.price}</CTableDataCell>
-                            <CTableDataCell>{parsedProduct.quantity}</CTableDataCell>
-                          </CTableRow>
+                        {parsedProducts.length > 0 ? (
+                          parsedProducts.map((product, index) => (
+                            <CTableRow key={index}>
+                              <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                              <CTableDataCell>{product.productType}</CTableDataCell>
+                              <CTableDataCell>{product.productName}</CTableDataCell>
+                              <CTableDataCell>{product.price}</CTableDataCell>
+                              <CTableDataCell>{product.quantity}</CTableDataCell>
+                            </CTableRow>
+                          ))
                         ) : (
                           <CTableRow>
                             <CTableDataCell colSpan="5">
@@ -232,16 +272,8 @@ const Tooltips = () => {
                         <CFormInput id="inputAddress" value={driverPhoneNumber} readOnly />
 
                         <p className="mt-3 mb-1">Phương tiện vận chuyển</p>
-                        <CFormSelect
-                          aria-label="Default select example"
-                          options={[
-                            'Chọn phương tiện vận chuyển',
-                            { label: 'One', value: '1' },
-                            { label: 'Two', value: '2' },
-                            { label: 'Three', value: '3', disabled: true },
-                          ]}
-                        />
-                        <CButton color="primary" className=" m-2">
+                        <CFormSelect aria-label="Default select example" value={selectedVehicle} onChange={(e) => setSelectedVehicle(e.target.value)} options={options} />
+                        <CButton color="primary" className=" m-2" onClick={handleConfirm}>
                           Xác nhận
                         </CButton>
                         <CButton color="secondary">Huỷ</CButton>

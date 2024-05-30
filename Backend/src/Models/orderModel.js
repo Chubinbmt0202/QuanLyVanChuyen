@@ -31,62 +31,106 @@ const getAllOrders = async () => {
 };
 
 const getDetailOrderByID = async (id) => {
-    try {
-        const [rows, fields] = await db.query(`
-        SELECT 
-            don_hang.PK_Id_DonHang AS 'Mã đơn hàng',
-            don_hang.Ngay_DH AS 'Ngày đặt hàng',
-            don_hang.Ngay_GH AS 'Ngày giao',
-            dich_vu_van_chuyen.Ten_dich_vu AS 'Tên dịch vụ vận chuyển',
-            khachhang.Ten_KH AS 'Tên khách hàng',
-            khachhang.SDT AS 'Số điện thoại khách hàng',
-            diachi.Ten_Dia_Chi AS 'Địa chỉ khách hàng',
-            GROUP_CONCAT(
-                DISTINCT CONCAT(
-                    sanpham.Ten_San_Pham, ' - ', 
-                    sanpham.Mo_Ta, ' - Giá: ', 
-                    sanpham.Gia, ' - Số lượng: ', 
-                    chi_tiet_don_hang.So_Luong
-                ) SEPARATOR ', '
-            ) AS 'Các sản phẩm mà khách hàng đặt',
-            taixe.Ten_TX AS 'Tài xế phụ trách',
-            taixe.SDT AS 'Số điện thoại tài xế',
-            SUM(chi_tiet_don_hang.So_Luong) AS 'Tổng số lượng mặt hàng',
-            SUM(chi_tiet_don_hang.Chieu_dai * chi_tiet_don_hang.Chieu_rong * chi_tiet_don_hang.Chieu_cao * chi_tiet_don_hang.So_Luong) AS 'Tổng khối lượng'
-        FROM 
-            don_hang
-            JOIN dich_vu_van_chuyen ON don_hang.ID_DichVu = dich_vu_van_chuyen.PK_Id_DichVu
-            JOIN khachhang ON don_hang.ID_KH = khachhang.PK_Ma_KH
-            JOIN diachi ON diachi.reference_id = khachhang.PK_Ma_KH AND diachi.type = 'customer'
-            JOIN chi_tiet_don_hang ON don_hang.PK_Id_DonHang = chi_tiet_don_hang.PK_Id_DonHang
-            JOIN sanpham ON chi_tiet_don_hang.PK_Id_SanPham = sanpham.PK_Id_SanPham
-            JOIN taixe ON don_hang.ID_TX = taixe.PK_Id_TX
-        WHERE 
-            don_hang.PK_Id_DonHang = 4
-        GROUP BY 
-            don_hang.PK_Id_DonHang, 
-            don_hang.Ngay_DH, 
-            don_hang.Ngay_GH, 
-            dich_vu_van_chuyen.Ten_dich_vu, 
-            khachhang.Ten_KH, 
-            khachhang.SDT, 
-            diachi.Ten_Dia_Chi, 
-            taixe.Ten_TX, 
-            taixe.SDT 
-        LIMIT 0, 1000;
-    
-        `, [id]);
-        
-        return rows;
-    } catch (error) {
-        console.error("Error in getDetailOrderByID: ", error);
-        throw error; // Rethrow the error for handling in upper layers
-    }
+  try {
+    const [rows, fields] = await db.query(
+      `
+          SELECT 
+          don_hang.PK_Id_DonHang AS 'Mã đơn hàng',
+          don_hang.Ngay_DH AS 'Ngày đặt hàng',
+          don_hang.Ngay_GH AS 'Ngày giao',
+          dich_vu_van_chuyen.Ten_dich_vu AS 'Tên dịch vụ vận chuyển',
+          khachhang.Ten_KH AS 'Tên khách hàng',
+          khachhang.SDT AS 'Số điện thoại khách hàng',
+          CONCAT(diachi.Ten_Dia_Chi, ', ', diachi.Xa, ', ', diachi.Quan_huyen, ', ', diachi.Tinh) AS 'Địa chỉ khách hàng',
+          GROUP_CONCAT(
+              DISTINCT CONCAT(
+                  sanpham.Ten_San_Pham, ' - ', 
+                  sanpham.Mo_Ta, ' - Giá: ', 
+                  sanpham.Gia, ' - Số lượng: ', 
+                  chi_tiet_don_hang.So_Luong
+              ) SEPARATOR ', '
+          ) AS 'Các sản phẩm mà khách hàng đặt',
+          taixe.Ten_TX AS 'Tài xế phụ trách',
+          taixe.SDT AS 'Số điện thoại tài xế',
+          SUM(chi_tiet_don_hang.So_Luong) AS 'Tổng số lượng mặt hàng',
+          SUM(chi_tiet_don_hang.Chieu_dai * chi_tiet_don_hang.Chieu_rong * chi_tiet_don_hang.Chieu_cao * chi_tiet_don_hang.So_Luong) AS 'Tổng khối lượng'
+      FROM 
+          don_hang
+          JOIN dich_vu_van_chuyen ON don_hang.ID_DichVu = dich_vu_van_chuyen.PK_Id_DichVu
+          JOIN khachhang ON don_hang.ID_KH = khachhang.PK_Ma_KH
+          JOIN diachi ON diachi.reference_id = khachhang.PK_Ma_KH AND diachi.type = 'customer'
+          JOIN chi_tiet_don_hang ON don_hang.PK_Id_DonHang = chi_tiet_don_hang.PK_Id_DonHang
+          JOIN sanpham ON chi_tiet_don_hang.PK_Id_SanPham = sanpham.PK_Id_SanPham
+          JOIN taixe ON don_hang.ID_TX = taixe.PK_Id_TX
+      WHERE 
+          don_hang.PK_Id_DonHang = ?
+      GROUP BY 
+          don_hang.PK_Id_DonHang, 
+          don_hang.Ngay_DH, 
+          don_hang.Ngay_GH, 
+          dich_vu_van_chuyen.Ten_dich_vu, 
+          khachhang.Ten_KH, 
+          khachhang.SDT, 
+          diachi.Ten_Dia_Chi, 
+          diachi.Xa, 
+          diachi.Quan_huyen, 
+          diachi.Tinh, 
+          taixe.Ten_TX, 
+          taixe.SDT 
+      LIMIT 0, 1000;
+  
+        `,
+      [id]
+    );
+
+    return rows;
+  } catch (error) {
+    console.error("Error in getDetailOrderByID: ", error);
+    throw error; // Rethrow the error for handling in upper layers
+  }
 };
 
+// Order Model
+const updateOrderDeliveryDate = async (PK_Id_DonHang, Ngay_DH) => {
+  const query = "UPDATE don_hang SET Ngay_DH = ? WHERE PK_Id_DonHang = ?";
+  await db.query(query, [Ngay_DH, PK_Id_DonHang]);
+};
 
+// Driver Model
+const updateDriverStatus = async (Trang_thai, PK_Id_TX) => {
+  const query = "UPDATE taixe SET Trang_thai = 'Đang bận' WHERE PK_Id_TX = ?";
+  await db.query(query, [Trang_thai, PK_Id_TX]);
+};
 
+// Vehicle Model
+const updateVehicleStatus = async (PK_Id_Xe, Tinh_Trang) => {
+  const query = "UPDATE xe SET Tinh_Trang = 'Đang giao' WHERE PK_Id_Xe = ?";
+  await db.query(query, [PK_Id_Xe, Tinh_Trang]);
+};
+
+const updateOrder = async (orderId) => {
+  try {
+    const query = "UPDATE don_hang SET Trang_Thai = 2 WHERE PK_Id_DonHang = ?";
+    await db.query(query, [orderId]);
+  } catch (error) {
+    throw error;
+  }
+}
+
+const updateOrderDateDevivery = async (deliveryDate, orderId) => {
+  try {
+    const query = "UPDATE don_hang SET Ngay_GH = ? WHERE PK_Id_DonHang = ?";
+    await db.query(query, [deliveryDate, orderId]);
+  } catch (error) {
+    throw error;
+  }
+}
 module.exports = {
   getAllOrders,
-  getDetailOrderByID, 
+  getDetailOrderByID,
+  updateOrderDeliveryDate,
+  updateDriverStatus,
+  updateVehicleStatus,
+  updateOrder,
+  updateOrderDateDevivery
 };

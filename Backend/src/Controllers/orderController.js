@@ -21,8 +21,23 @@ const getDetailOrderByID = async(req, res) => {
     }
 }
 
+const updateOrderController = async(req, res) => {
+    console.log("body", req.body)
+    const { orderId, deliveryDate, driverId, vehicleId } = req.body;
+    let dateString = deliveryDate.substring(0, 10);
+    console.log('orderId, deliveryDate, driverId, vehicleId:', orderId, dateString, driverId, vehicleId);
+
+    try {
+      await orderService.updateOrder(orderId, dateString, driverId, vehicleId);
+      res.status(200).send({ message: 'Order updated successfully' });
+    } catch (error) {
+      console.error('Error updating order:', error);
+      res.status(500).send({ message: 'Failed to update order' });
+    }
+}
 
 module.exports = {
     getAllOrders,
     getDetailOrderByID,
+    updateOrderController
 };
