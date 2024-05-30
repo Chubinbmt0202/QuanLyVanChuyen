@@ -60,7 +60,6 @@ const Accordion = () => {
   }
 
   const handleProcessOrder = (OrderID) => {
-    alert(`Xử lý đơn hàng ${OrderID}`)
     navigate(`/base/tooltips/${OrderID}`)
   }
 

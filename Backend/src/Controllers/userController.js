@@ -1,6 +1,6 @@
 // src/Controllers/userController.js
 const userService = require("../Services/userService");
-const { registerUser, loginUser } = require("../Services/userService");
+const { registerUser, loginUser, getDriverService } = require("../Services/userService");
 
 const getUsers = async (req, res) => {
   try {
@@ -78,8 +78,18 @@ const login = async (req, res) => {
   }
 };
 
+const getDriverIdleController = async (req, res) => {
+  try {
+    const drivers = await getDriverService();
+    res.json(drivers);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving drivers", error });
+  }
+}
+
 module.exports = {
   getUsers,
   createUser,
-  login
+  login,
+  getDriverIdleController,
 };

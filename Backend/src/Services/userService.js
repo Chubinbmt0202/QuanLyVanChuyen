@@ -1,6 +1,6 @@
 // src/Services/userService.js
 const userModel = require("../Models/userModel");
-const { findUserByUsername } = require("../Models/userModel");
+const { findUserByUsername, getDriverModel } = require("../Models/userModel");
 
 const getUsers = async () => {
   try {
@@ -51,8 +51,18 @@ const loginUser = async ({ Username, PassWord }) => {
   return { id: user.id, Username: user.Username, SDT: user.SDT, ID_role: user.ID_role };
 };
 
+const getDriverService = async () => {
+  try {
+    const drivers = await getDriverModel();
+    return drivers;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getUsers,
   registerUser,
-  loginUser
+  loginUser,
+  getDriverService,
 };

@@ -40,11 +40,18 @@ const searchTrafficByLicensePlate = async (licensePlate) => {
     return rows;
   };
 
+const getVehicleIdle = async () => {
+    const [rows, fields] = await db.query('SELECT * FROM xe WHERE Tinh_Trang = "Đang chờ"');
+    return rows;
+};
+
+
 module.exports = {
     getAllTraffics,
     addTraffics,
     getTrafficById,
     deleteTrafficById,
     updateTrafficById,
-    searchTrafficByLicensePlate
+    searchTrafficByLicensePlate,
+    getVehicleIdle,
 };

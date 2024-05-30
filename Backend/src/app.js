@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const database = require("./Configs/database");
-const { createUser, login } = require("./Controllers/UserController.js");
+const { createUser, login, getDriverIdleController } = require("./Controllers/UserController.js");
 const {
   getAllTraffics,
   addTrafficsController,
@@ -10,9 +10,10 @@ const {
   deleteTrafficController,
   updateTrafficController,
   searchTrafficByLicensePlateController,
+  getVehicleIdleController,
 } = require("./Controllers/trafficController.js");
 const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
-const { getAllOrders, getDetailOrderByID } = require("./Controllers/orderController.js");
+const { getAllOrders, getDetailOrderByID, updateOrderController } = require("./Controllers/orderController.js");
 
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
@@ -39,12 +40,17 @@ app.get(
   "/api/searchTrafficByLicensePlate/:licensePlate",
   searchTrafficByLicensePlateController
 );
+app.get("/api/getVehicleIdle", getVehicleIdleController);
 
 // loại xe
 app.get("/api/getAllVehicleTypes", getAllVehicleTypes);
 
+// tài xế
+app.get("/api/getAllDriversIdle", getDriverIdleController);
+
 // Đơn hàng
 app.get("/api/getAllOrders", getAllOrders);
 app.get("/api/getDetailOrderByID/:id", getDetailOrderByID);
+app.post("/api/updateOrder", updateOrderController);
 
 module.exports = app;
