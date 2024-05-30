@@ -131,12 +131,12 @@ const Tables = () => {
   }
 
   useEffect(() => {
-    fetchTrafficData()
+    fetchCustomerData()
   }, [])
 
-  const fetchTrafficData = async () => {
+  const fetchCustomerData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/getAllTraffics')
+      const response = await axios.get('http://localhost:3001/api/getAllCustomers')
       setData(response.data)
       console.log('Data:', response.data)
     } catch (error) {
@@ -148,7 +148,7 @@ const Tables = () => {
     try {
       await axios.post('http://localhost:3001/api/addTraffics', formData)
       setVisibleAddCustomer(false)
-      fetchTrafficData() // Fetch the updated data after adding a new customer
+      fetchCustomerData() // Fetch the updated data after adding a new customer
     } catch (error) {
       console.error('Error adding vehicle:', error)
     }
@@ -158,7 +158,7 @@ const Tables = () => {
     try {
       await axios.post('http://localhost:3001/api/addTraffics', formData)
       setVisibleUpdateCustomer(false)
-      fetchTrafficData() // Fetch the updated data after adding a new customer
+      fetchCustomerData() // Fetch the updated data after adding a new customer
     } catch (error) {
       console.error('Error adding vehicle:', error)
     }
@@ -220,30 +220,28 @@ const Tables = () => {
               <CTable>
                 <CTableHead>
                   <CTableRow>
-                    <CTableHeaderCell scope="col">Tên Khách Hàng</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Số Điện Thoại</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Ngày Sinh</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Địa Chỉ</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">ID Khách Hàng</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tên khách hàng</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Email</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">SĐT</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {/* {dataFake.map((item, index) => ( */}
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">{dataFake.Ten_KH}</CTableHeaderCell>
-                    <CTableDataCell>{dataFake.SDT}</CTableDataCell>
-                    <CTableDataCell>{dataFake.NgaySinh}</CTableDataCell>
-                    <CTableDataCell>{dataFake.DiaChi}</CTableDataCell>
-                    <CTableDataCell>{dataFake.Email}</CTableDataCell>
+                  {data.map((item, index) => (
+                  <CTableRow key={item.PK_Ma_KH}>
+                    <CTableHeaderCell scope="row">{item.PK_Ma_KH}</CTableHeaderCell>
+                    <CTableDataCell>{item.Ten_KH}</CTableDataCell>
+                    <CTableDataCell>{item.Email}</CTableDataCell>
+                    <CTableDataCell>{item.SDT}</CTableDataCell>
                     <CTableDataCell>
                       <CDropdown>
                         <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
                         <CDropdownMenu>
-                          <CDropdownItem onClick={() => fetchTrafficDetails(dataFake.IdKh)}>
+                          <CDropdownItem onClick={() => fetchTrafficDetails(item.IdKh)}>
                             Xem chi tiết
                           </CDropdownItem>
-                          <CDropdownItem onClick={() => fetchUpdateCustomer(dataFake.IdKh)}>
+                          <CDropdownItem onClick={() => fetchUpdateCustomer(item.IdKh)}>
                             Chỉnh sửa
                           </CDropdownItem>
                           <CDropdownDivider />
@@ -252,7 +250,7 @@ const Tables = () => {
                       </CDropdown>
                     </CTableDataCell>
                   </CTableRow>
-                  {/* ))} */}
+                  ))}
                 </CTableBody>
               </CTable>
             </CCardBody>

@@ -1,15 +1,15 @@
 const customerService = require("../Services/customerService");
 
-const getAllCustomers = async(req, res) => {
-   try
-   {
-    const customers = await customerService.getAllCustomers();
-    res.json(customers);
-   } 
-   catch (error)
-   {
-    res.status(500).json({ message: "Error retrieving customer", error });
-   }
+const getAllCustomersController = async(req , res) => {
+    try
+    {
+        const customers = await customerService.getAllCustomersService();
+        res.json(customers);
+    }
+    catch(error)
+    {
+        res.status(500).json({ message: "Error getting all Customers", error });
+    }
 }
 
 const searchCustomerByNameController = async(req , res) => 
@@ -25,3 +25,8 @@ const searchCustomerByNameController = async(req , res) =>
             res.status(500).json({ message: "Error searching Customer by name", error });
         }
     }
+
+module.exports = {
+    getAllCustomersController,
+    searchCustomerByNameController
+};

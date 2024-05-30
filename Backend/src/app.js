@@ -14,6 +14,7 @@ const {
 } = require("./Controllers/trafficController.js");
 const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
 const { getAllOrders, getDetailOrderByID, updateOrderController } = require("./Controllers/orderController.js");
+const { getAllCustomersController } = require("./Controllers/customerController.js");
 
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
@@ -53,4 +54,6 @@ app.get("/api/getAllOrders", getAllOrders);
 app.get("/api/getDetailOrderByID/:id", getDetailOrderByID);
 app.post("/api/updateOrder", updateOrderController);
 
+// khách hàng
+app.get("/api/getAllCustomers", getAllCustomersController); 
 module.exports = app;

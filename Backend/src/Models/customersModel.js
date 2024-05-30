@@ -2,7 +2,7 @@ const db = require('../Configs/database');
 
 
 const getAllCustomers = async () => {
-    const [rows, fields] = await db.query('SELECT Ten_KH,Email,SDT,ID_Dia_Chi From KhachHang ');
+    const [rows, fields] = await db.query('SELECT PK_Ma_KH,Ten_KH,Email,SDT From khachhang ');
     return rows;
 }
 
