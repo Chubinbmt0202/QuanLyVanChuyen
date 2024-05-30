@@ -23,12 +23,12 @@ const getDetailOrderByID = async(req, res) => {
 
 const updateOrderController = async(req, res) => {
     console.log("body", req.body)
-    const { orderId, deliveryDate, driverId, vehicleId } = req.body;
+    const { orderId, deliveryDate, driverId, vehicleId, addressCustomer } = req.body;
     let dateString = deliveryDate.substring(0, 10);
     console.log('orderId, deliveryDate, driverId, vehicleId:', orderId, dateString, driverId, vehicleId);
 
     try {
-      await orderService.updateOrder(orderId, dateString, driverId, vehicleId);
+      await orderService.updateOrder(orderId, dateString, driverId, vehicleId, addressCustomer );
       res.status(200).send({ message: 'Order updated successfully' });
     } catch (error) {
       console.error('Error updating order:', error);

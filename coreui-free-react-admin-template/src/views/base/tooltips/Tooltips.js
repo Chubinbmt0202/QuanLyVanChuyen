@@ -44,6 +44,7 @@ const Tooltips = () => {
         deliveryDate: selectedDate,
         driverId: selectedDriver,
         vehicleId: selectedVehicle,
+        addressCustomer: dataOrder['Địa chỉ khách hàng'],
       })
       if (res.status === 200) {
         alert('Cập nhật đơn hàng thành công')

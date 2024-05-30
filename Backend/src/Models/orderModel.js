@@ -108,6 +108,15 @@ const updateVehicleStatus = async (PK_Id_Xe, Tinh_Trang) => {
   await db.query(query, [PK_Id_Xe, Tinh_Trang]);
 };
 
+const updateOrderAddress = async (addressCustomer, orderId ) => {
+  try {
+    const query = "UPDATE don_hang SET tuyen_duong = ? WHERE PK_Id_DonHang = ?";
+    await db.query(query, [addressCustomer, orderId]);
+  } catch (error) {
+    throw error;
+  }
+}
+
 const updateOrder = async (orderId) => {
   try {
     const query = "UPDATE don_hang SET Trang_Thai = 2 WHERE PK_Id_DonHang = ?";
@@ -132,5 +141,6 @@ module.exports = {
   updateDriverStatus,
   updateVehicleStatus,
   updateOrder,
-  updateOrderDateDevivery
+  updateOrderDateDevivery,
+  updateOrderAddress 
 };
