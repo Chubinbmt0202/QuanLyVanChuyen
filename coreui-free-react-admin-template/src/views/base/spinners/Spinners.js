@@ -13,25 +13,42 @@ import {
 } from '@coreui/react';
 
 const Spinners = () => {
-  const [image, setImage] = useState(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // Thêm state cho việc hiển thị popup
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImage(reader.result);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [tenNhanVien, setTenNhanVien] = useState('');
+  const [ngaySinh, setNgaySinh] = useState('');
+  const [soDienThoai, setSoDienThoai] = useState('');
+  const [chucVu, setChucVu] = useState('');
+  const [taiKhoan, setTaiKhoan] = useState('');
+  const [matKhau, setMatKhau] = useState('');
 
   const handleUpdate = () => {
-    // Xử lý cập nhật dữ liệu ở đây
-    // Sau khi cập nhật thành công, hiển thị popup thông báo
+    // Kiểm tra điều kiện trước khi thêm nhân viên
+    if (tenNhanVien.trim() === '') {
+      alert('Vui lòng nhập tên nhân viên');
+      return;
+    }
+    if (ngaySinh.trim() === '') {
+      alert('Vui lòng chọn ngày sinh');
+      return;
+    }
+    if (soDienThoai.trim() === '') {
+      alert('Vui lòng nhập số điện thoại');
+      return;
+    }
+    if (chucVu.trim() === '') {
+      alert('Vui lòng chọn chức vụ');
+      return;
+    }
+    if (taiKhoan.trim() === '') {
+      alert('Vui lòng nhập tài khoản');
+      return;
+    }
+    if (matKhau.trim() === '') {
+      alert('Vui lòng nhập mật khẩu');
+      return;
+    }
+
+    // Nếu các điều kiện đều đúng, hiển thị popup thông báo
     setShowSuccessModal(true);
   };
 
@@ -44,59 +61,75 @@ const Spinners = () => {
       <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Cập nhật thông tin nhân viên</strong>
+            <strong>Thêm nhân viên</strong>
           </CCardHeader>
           <CCardBody>
             <div className="mb-3">
-              <label htmlFor="maNhanVien" className="form-label">Mã nhân viên</label>
-              <input type="text" className="form-control" id="maNhanVien" placeholder="Mã nhân viên" />
-            </div>
-            <div className="mb-3">
               <label htmlFor="tenNhanVien" className="form-label">Tên nhân viên</label>
-              <input type="text" className="form-control" id="tenNhanVien" placeholder="Tên nhân viên" />
+              <input 
+                type="text" 
+                className="form-control" 
+                id="tenNhanVien" 
+                placeholder="Tên nhân viên" 
+                value={tenNhanVien}
+                onChange={(e) => setTenNhanVien(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="ngaySinh" className="form-label">Ngày sinh</label>
-              <input type="date" className="form-control" id="ngaySinh" />
+              <input 
+                type="date" 
+                className="form-control" 
+                id="ngaySinh" 
+                value={ngaySinh}
+                onChange={(e) => setNgaySinh(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="soDienThoai" className="form-label">Số điện thoại</label>
-              <input type="tel" className="form-control" id="soDienThoai" placeholder="Số điện thoại" />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
-              <input type="email" className="form-control" id="email" placeholder="Email" />
-            </div>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12} md={6}>
-        <CCard className="mb-4">
-          <CCardBody>
-            <div className="mb-3">
-              <label htmlFor="anhNhanVien" className="form-label">Ảnh nhân viên</label>
-              <input type="file" className="form-control" id="anhNhanVien" onChange={handleImageChange} />
-            </div>
-            <div className="mb-3">
-              {image && (
-                <img src={image} alt="Ảnh nhân viên" style={{ maxWidth: '100%', height: 'auto' }} />
-              )}
-            </div>
-            <div className="mb-3">
-              <label htmlFor="cccd" className="form-label">CCCD</label>
-              <input type="text" className="form-control" id="cccd" placeholder="CCCD" />
+              <input 
+                type="tel" 
+                className="form-control" 
+                id="soDienThoai" 
+                placeholder="Số điện thoại" 
+                value={soDienThoai}
+                onChange={(e) => setSoDienThoai(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="chucVu" className="form-label">Chức vụ</label>
-              <input type="text" className="form-control" id="chucVu" placeholder="Chức vụ" />
+              <select
+                className="form-control"
+                id="chucVu"
+                value={chucVu}
+                onChange={(e) => setChucVu(e.target.value)}
+              >
+                <option value="">Chọn chức vụ</option>
+                <option value="tai-xe">Tài xế</option>
+                <option value="Admin">Admin</option>
+              </select>
             </div>
             <div className="mb-3">
               <label htmlFor="taiKhoan" className="form-label">Tài khoản</label>
-              <input type="text" className="form-control" id="taiKhoan" placeholder="Tài khoản" />
+              <input 
+                type="text" 
+                className="form-control" 
+                id="taiKhoan" 
+                placeholder="Tài khoản" 
+                value={taiKhoan}
+                onChange={(e) => setTaiKhoan(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="matKhau" className="form-label">Mật khẩu</label>
-              <input type="password" className="form-control" id="matKhau" placeholder="Mật khẩu" />
+              <input 
+                type="password" 
+                className="form-control" 
+                id="matKhau" 
+                placeholder="Mật khẩu" 
+                value={matKhau}
+                onChange={(e) => setMatKhau(e.target.value)}
+              />
             </div>
             <div className="d-grid mb-3">
               <CButton color="primary" onClick={handleUpdate}>Thêm nhân viên</CButton>
@@ -104,7 +137,7 @@ const Spinners = () => {
           </CCardBody>
         </CCard>
       </CCol>
-
+      
       {/* Popup thông báo */}
       <CModal
         show={showSuccessModal}
@@ -115,7 +148,7 @@ const Spinners = () => {
           <CModalTitle>Thông báo</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          Cập nhật thông tin nhân viên thành công
+          Thêm nhân viên thành công
         </CModalBody>
       </CModal>
     </CRow>

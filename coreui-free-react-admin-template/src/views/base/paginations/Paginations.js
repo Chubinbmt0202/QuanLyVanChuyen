@@ -1,174 +1,111 @@
-import React from 'react'
+import React, { useState } from 'react';
 import {
+  CButton,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
-  CPagination,
-  CPaginationItem,
   CRow,
-} from '@coreui/react'
-import { DocsExample } from 'src/components'
+} from '@coreui/react';
 
-const Paginations = () => {
+const Progress = () => {
+  const [image, setImage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); // Trạng thái để kiểm soát việc ẩn/hiển thị mật khẩu
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <CRow>
-      <CCol xs={12}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>React Pagination</strong>
+            <strong>Cập nhật thông tin nhân viên</strong>
           </CCardHeader>
           <CCardBody>
-            <p className="text-body-secondary small">
-              We use a large block of connected links for our pagination, making links hard to miss
-              and easily scalable—all while providing large hit areas. Pagination is built with list
-              HTML elements so screen readers can announce the number of available links. Use a
-              wrapping <code>&lt;nav&gt;</code> element to identify it as a navigation section to
-              screen readers and other assistive technologies.
-            </p>
-            <p className="text-body-secondary small">
-              In addition, as pages likely have more than one such navigation section, it&#39;s
-              advisable to provide a descriptive <code>aria-label</code> for the{' '}
-              <code>&lt;nav&gt;</code> to reflect its purpose. For example, if the pagination
-              component is used to navigate between a set of search results, an appropriate label
-              could be <code>aria-label=&#34;Search results pages&#34;</code>.
-            </p>
-            <DocsExample href="components/pagination">
-              <CPagination aria-label="Page navigation example">
-                <CPaginationItem>Previous</CPaginationItem>
-                <CPaginationItem>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem>Next</CPaginationItem>
-              </CPagination>
-            </DocsExample>
+            <div className="mb-3">
+              <label htmlFor="maNhanVien" className="form-label"><strong>Mã nhân viên</strong></label>
+              <div>NV012301</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="tenNhanVien" className="form-label"><strong>Tên nhân viên</strong></label>
+              <div>Trương Việt Hoàng</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="ngaySinh" className="form-label"><strong>Ngày sinh</strong></label>
+              <div>11/11/2005</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="soDienThoai" className="form-label"><strong>Số điện thoại</strong></label>
+              <div>0345678901</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label"><strong>Email</strong></label>
+              <div>Hoang@gmail.com</div>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={12}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Pagination</strong> <small>Working with icons</small>
-          </CCardHeader>
           <CCardBody>
-            <p className="text-body-secondary small">
-              Looking to use an icon or symbol in place of text for some pagination links? Be sure
-              to provide proper screen reader support with <code>aria</code> attributes.
-            </p>
-            <DocsExample href="components/pagination#working-with-icons">
-              <CPagination aria-label="Page navigation example">
-                <CPaginationItem aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </CPaginationItem>
-                <CPaginationItem>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </CPaginationItem>
-              </CPagination>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Pagination</strong> <small>Disabled and active states</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Pagination links are customizable for different circumstances. Use{' '}
-              <code>disabled</code> for links that appear un-clickable and <code>.active</code> to
-              indicate the current page.
-            </p>
-            <p className="text-body-secondary small">
-              While the <code>disabled</code> prop uses <code>pointer-events: none</code> to{' '}
-              <em>try</em> to disable the link functionality of <code>&lt;a&gt;</code>s, that CSS
-              property is not yet standardized and doesn&#39;taccount for keyboard navigation. As
-              such, we always add <code>tabindex=&#34;-1&#34;</code> on disabled links and use
-              custom JavaScript to fully disable their functionality.
-            </p>
-            <DocsExample href="components/pagination#disabled-and-active-states">
-              <CPagination aria-label="Page navigation example">
-                <CPaginationItem aria-label="Previous" disabled>
-                  <span aria-hidden="true">&laquo;</span>
-                </CPaginationItem>
-                <CPaginationItem active>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </CPaginationItem>
-              </CPagination>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Pagination</strong> <small>Sizing</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Fancy larger or smaller pagination? Add <code>size=&#34;lg&#34;</code> or{' '}
-              <code>size=&#34;sm&#34;</code> for additional sizes.
-            </p>
-            <DocsExample href="components/pagination#sizing">
-              <CPagination size="lg" aria-label="Page navigation example">
-                <CPaginationItem>Previous</CPaginationItem>
-                <CPaginationItem>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem>Next</CPaginationItem>
-              </CPagination>
-            </DocsExample>
-            <DocsExample href="components/pagination#sizing">
-              <CPagination size="sm" aria-label="Page navigation example">
-                <CPaginationItem>Previous</CPaginationItem>
-                <CPaginationItem>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem>Next</CPaginationItem>
-              </CPagination>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Pagination</strong> <small>Alignment</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-body-secondary small">
-              Change the alignment of pagination components with{' '}
-              <a href="https://coreui.io/docs/utilities/flex/">flexbox utilities</a>.
-            </p>
-            <DocsExample href="components/pagination#aligment">
-              <CPagination className="justify-content-center" aria-label="Page navigation example">
-                <CPaginationItem disabled>Previous</CPaginationItem>
-                <CPaginationItem>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem>Next</CPaginationItem>
-              </CPagination>
-            </DocsExample>
-            <DocsExample href="components/pagination#aligment">
-              <CPagination className="justify-content-end" aria-label="Page navigation example">
-                <CPaginationItem disabled>Previous</CPaginationItem>
-                <CPaginationItem>1</CPaginationItem>
-                <CPaginationItem>2</CPaginationItem>
-                <CPaginationItem>3</CPaginationItem>
-                <CPaginationItem>Next</CPaginationItem>
-              </CPagination>
-            </DocsExample>
+            <div className="mb-3">
+              <label htmlFor="anhNhanVien" className="form-label">Ảnh nhân viên</label>
+              <input type="file" className="form-control" id="anhNhanVien" onChange={handleImageChange} />
+            </div>
+            <div className="mb-3">
+              {image && (
+                <img src={image} alt="Ảnh nhân viên" style={{ maxWidth: '100%', height: 'auto' }} />
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="cccd" className="form-label"><strong>CCCD</strong></label>
+              <div>1235676578</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="chucVu" className="form-label"><strong>Chức vụ</strong></label>
+              <div>Tài xế</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="taiKhoan" className="form-label"><strong>Tài khoản</strong></label>
+              <div>NVHoang</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="matKhau" className="form-label"><strong>Mật khẩu</strong></label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="matKhau"
+                  placeholder="Mật khẩu"
+                  value={showPassword ? "hoang123" : "*******"} // 
+                  readOnly // Đảm bảo ô text không thể chỉnh sửa
+                />
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)} // Khi ấn vào button, đảo ngược trạng thái hiện tại của showPassword
+                >
+                  {showPassword ? "Ẩn" : "Hiện"}
+                </button>
+              </div>
+            </div>
+           
           </CCardBody>
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default Paginations
+export default Progress;

@@ -57,7 +57,6 @@ const Tables = () => {
   }
 
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
-  const [visibleAddCustomer, setVisibleAddCustomer] = useState(false)
   const [visibleUpdateCustomer, setVisibleUpdateCustomer] = useState(false)
   const [visibleDetailModal, setVisibleDetailModal] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState(null)
@@ -172,7 +171,7 @@ const Tables = () => {
     }
   }
 
-  const fetchTrafficDetails = async (id) => {
+  const fetchCustomerDetails = async (id) => {
     try {
       // const response = await axios.get(`http://localhost:3001/api/getTraffic/${id}`)
       //setSelectedVehicle(response.data)
@@ -198,9 +197,13 @@ const Tables = () => {
         <CCardHeader style={{ marginBottom: '10px' }}>
           <strong>Danh sách Khách Hàng</strong>
         </CCardHeader>
-        <CButton color="primary" onClick={() => setVisibleAddCustomer(true)}>
-          Thêm Khách Hàng
+        <div>
+        <span style={{marginRight:10}}>Tìm Kiếm Khách Hàng</span>
+        <input style={{borderRadius:10 , marginRight:10 , height:30}}  type='text'></input>
+        <CButton     style={{ fontSize:12 }}  color="primary">
+         Tìm
         </CButton>
+        </div>
       </div>
       <CRow>
         <CCol xs={12}>
@@ -258,72 +261,7 @@ const Tables = () => {
         </CCol>
       </CRow>
 
-      <CModal
-        size="lg"
-        visible={visibleAddCustomer}
-        onClose={() => setVisibleAddCustomer(false)}
-        aria-labelledby="AddVehicleModal"
-      >
-        <CModalHeader>
-          <CModalTitle id="AddVehicleModal">Thêm Khách Hàng</CModalTitle>
-        </CModalHeader>
-        <CForm
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            padding: '1rem',
-          }}
-        >
-          <CFormInput
-            type="text"
-            style={{ flex: '1 1 45%' }}
-            id="Ten_KH"
-            onChange={handleChange}
-            placeholder="Tên Khách Hàng"
-            aria-describedby="exampleFormControlInputHelpInline"
-          />
-          <CFormInput
-            type="text"
-            style={{ flex: '1 1 45%' }}
-            id="SDT"
-            onChange={handleChange}
-            placeholder="Số Điện Thoại"
-            aria-describedby="exampleFormControlInputHelpInline"
-          />
-          <CFormInput
-            type="text"
-            style={{ flex: '1 1 45%' }}
-            id="Email"
-            onChange={handleChange}
-            placeholder="Email"
-            aria-describedby="exampleFormControlInputHelpInline"
-          />
-          <CFormInput
-            type="date"
-            style={{ flex: '1 1 45%' }}
-            id="Ngay_Sinh"
-            placeholder="Ngày Sinh"
-            onChange={handleChange}
-          />
-          <CFormInput
-            type="text"
-            style={{ flex: '1 1 45%' }}
-            id="Dia_Chi"
-            onChange={handleChange}
-            placeholder="Địa Chỉ"
-          />
-        </CForm>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setVisibleAddCustomer(false)}>
-            Đóng
-          </CButton>
-          <CButton color="primary" onClick={handleSubmitUpdate}>
-            Lưu
-          </CButton>
-        </CModalFooter>
-      </CModal>
+ 
 
       <CModal
         size="lg"
