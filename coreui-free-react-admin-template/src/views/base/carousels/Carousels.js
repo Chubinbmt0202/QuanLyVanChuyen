@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import {
   CButton,
@@ -39,6 +40,22 @@ import ReactImg from 'src/assets/images/react.jpg';
 const Carousels = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả');
   const [selectedItems, setSelectedItems] = useState([]);
+  const [dataNV, setDataNV] = useState([]);
+
+  const handleFetchData = async () => {
+    // Call API here
+    try {
+      const res = await axios.post('http://localhost:3001/api/addTraffics')
+      console.log('Fetch data successfully: ', res.data);
+      setDataNV(res.data);
+    } catch (error) {
+      console.log('Failed to fetch data:', error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchData();
+  }, []);
 
   const data = [
     {

@@ -10,7 +10,18 @@ const searchCustomerByNameService = async (nameCus) => {
     }
 }
 
+const getAllCustomersService = async () => {
+    try {
+        const customers = await customerModel.getAllCustomers();
+        return customers;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 module.exports =
 {
     searchCustomerByNameService
+    , getAllCustomersService
 };
