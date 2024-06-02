@@ -34,8 +34,21 @@ const updateOrder = async (orderId, deliveryDate, driverId, vehicleId, addressCu
     }
 }
 
+
+const getOrderByIdKH  = async (id) =>
+    {
+        try {
+            const orders = await orderModel.getOrderByIdKH(id);
+            return orders;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }  
+    }
+
 module.exports = {
     getAllOrders,
     getDetailOrderByID,
-    updateOrder
+    updateOrder,
+    getOrderByIdKH
 };

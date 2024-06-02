@@ -108,7 +108,7 @@ const updateVehicleStatus = async (PK_Id_Xe, Tinh_Trang) => {
   await db.query(query, [PK_Id_Xe, Tinh_Trang]);
 };
 
-const updateOrderAddress = async (addressCustomer, orderId ) => {
+const updateOrderAddress = async (addressCustomer, orderId) => {
   try {
     const query = "UPDATE don_hang SET tuyen_duong = ? WHERE PK_Id_DonHang = ?";
     await db.query(query, [addressCustomer, orderId]);
@@ -134,6 +134,25 @@ const updateOrderDateDevivery = async (deliveryDate, orderId) => {
     throw error;
   }
 }
+const getOrderByIdKH = async (id) => {
+  try {
+    const query = `SELECT Ten_Don_Hang,
+    CASE 
+        WHEN dh.Trang_Thai = 0 THEN 'Chưa giao hàng'
+        WHEN dh.Trang_Thai = 1 THEN 'Đã giao hàng'
+        WHEN dh.Trang_Thai = 2 THEN 'Đang giao hàng'
+        ELSE 'Trạng thái không xác định'
+    END AS TrangThai, 
+    ID_KH  
+FROM don_hang dh 
+WHERE ID_KH = ?`;
+
+    const [rows, fields] = await db.query(query, [id]);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
 module.exports = {
   getAllOrders,
   getDetailOrderByID,
@@ -142,5 +161,6 @@ module.exports = {
   updateVehicleStatus,
   updateOrder,
   updateOrderDateDevivery,
-  updateOrderAddress 
+  updateOrderAddress,
+  getOrderByIdKH
 };

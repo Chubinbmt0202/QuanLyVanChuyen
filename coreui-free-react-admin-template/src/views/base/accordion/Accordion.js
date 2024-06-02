@@ -40,6 +40,7 @@ const Accordion = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:3001/api/getAllOrders')
+      console.log(res.data.map((item)=> console.log(item.TongTien)))
       setDataOrder(res.data)
     } catch (error) {
       console.log(error)
