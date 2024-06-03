@@ -48,6 +48,54 @@ const MainChart = () => {
 
 
 
+  function getDayInMonth(month, year) {
+    return new Date(year, month, 0).getDate();
+  }
+
+  function getCurrentMonth() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    return currentMonth;
+  }
+
+  function dataforDay(datas, month) {
+    let dataforday = []
+    let dayofmounth = getDayInMonth(month, 2024)
+    console.log(dayofmounth)
+    for (let i = 1; i <= dayofmounth; i++) {
+      let dataAdd = 0;
+      datas.forEach((item) => {
+        var dateObject = new Date(item.NgayDatHang);
+        var day = dateObject.getDate();
+        if (day === i) {
+          dataAdd += Number(item.TongTien);
+        }
+      })
+      dataforday.push(dataAdd.toFixed(0));
+    }
+    return dataforday;
+  }
+
+  function dataforMonth(datas) {
+    let dataformonth = []
+    for (let i = 1; i <= 12; i++) {
+      let dataAdd = 0;
+      datas.forEach((item) => {
+        var dateObject = new Date(item.NgayDatHang);
+        var month = dateObject.getMonth() + 1;
+        if (month === i) {
+          dataAdd += Number(item.TongTien);
+        }
+      })
+      dataformonth.push(dataAdd.toFixed(0));
+
+    }
+    return dataformonth;
+  }
+
+
+
+
   function getDaysInMonth(year, month) {
     let firstDay = new Date(year, month - 1, 1);
     let lastDay = new Date(year, month, 0);
@@ -60,19 +108,18 @@ const MainChart = () => {
 
 
 
-  const fakeDataChartMonth = [53, 92, 86, 68, 61, 82, 77, 96, 91, 56, 62, 55]
-  const fakeDataChartMonth2 = [274, 189, 471, 327, 102, 230, 417, 392, 162, 292, 203, 478]
-  const fakeDataChartDay = [84, 97, 91, 67, 76, 51, 83, 62, 90, 89, 88, 73, 53, 100, 74, 65, 94, 92, 87, 58, 55, 78, 85, 68, 56, 52, 59, 99, 95, 71]
-  const fakeDataChartDay2 = [56, 92, 77, 70, 73, 74, 63, 61, 92, 54, 84, 96, 95, 59, 67, 66, 94, 97, 71, 98, 86, 60, 52, 57, 53, 98, 81, 79, 69, 62]
 
 
   const DateMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-  const DateDay = getDaysInMonth(2024, 6);
-  const chartRef = useRef(null)
-  const [valueactive, setValueActive] = useState("Month")
-  const [dateShow, setDateShow] = useState(DateDay)
-  const [dataorder, setDataOrder] = useState([])
+  const DateDay = getDaysInMonth(2024, getCurrentMonth());
+  const chartRef = useRef(null);
+  const [valueactive, setValueActive] = useState("Month");
+  const [dateShow, setDateShow] = useState(DateDay);
+  const [dataorder, setDataOrder] = useState([]);
   const [datachart, setDataChart] = useState([]);
+  const [datachartDay, setDataChartDay] = useState([]);
+  const [datachartMonth, setDataChartMonth] = useState([]);
+
   useEffect(() => {
     document.documentElement.addEventListener('ColorSchemeChange', () => {
       if (chartRef.current) {
@@ -92,35 +139,29 @@ const MainChart = () => {
       }
     })
     fetchDataOder();
-  }, [chartRef])
+  }, [chartRef,dataorder,datachart,datachartDay,datachartMonth])
 
   const random = () => Math.round(Math.random() * 100)
 
   const fetchDataOder = async () => {
     const res = await axios.get('http://localhost:3001/api/getAllOrders')
     setDataOrder(res.data);
-    res.data.forEach((item) => {
-      var dateObject = new Date(item.NgayDatHang); 
-      console.log(dateObject)
-      var month = dateObject.getMonth() + 1
-      var day = dateObject.getDate();
-      console.log(month +"" + day)
-    })
+    setDataChartDay(dataforDay(res.data, getCurrentMonth()));
+    setDataChartMonth(dataforMonth(res.data))
   }
-
 
   const handleChangeDate = (event) => {
     const valuActive = event.target.innerText;
     setValueActive(valuActive);
     if (valuActive === 'Month') {
       setDateShow(DateDay);
-      setDataChart(fakeDataChartDay)
-      console.log(datachart)
+      setDataChart(datachartDay)
+
     }
     else {
       setDateShow(DateMonth);
-      setDataChart(fakeDataChartMonth)
-      console.log(datachart)
+      setDataChart(datachartMonth)
+
     }
 
 

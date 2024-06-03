@@ -15,7 +15,7 @@ const {
 const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
 const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH } = require("./Controllers/orderController.js");
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
-
+const {getAllDataShipper} = require("./Controllers/ChartController.js")
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 
@@ -57,6 +57,10 @@ app.get("/api/getOrderByIdKH/:id",getOrderByIdKH)
 
 // khách hàng
 app.get("/api/getAllCustomers", getAllCustomersController); 
-app.get("/api/getinforCustomerByID/:id",getinforCustomerByID)
+app.get("/api/getinforCustomerByID/:id",getinforCustomerByID);
+
+
+//Chart Report
+app.get("/api/getAllReportShipers",getAllDataShipper);
 
 module.exports = app;
