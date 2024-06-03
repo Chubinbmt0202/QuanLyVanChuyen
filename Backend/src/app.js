@@ -13,8 +13,8 @@ const {
   getVehicleIdleController,
 } = require("./Controllers/trafficController.js");
 const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
-const { getAllOrders, getDetailOrderByID, updateOrderController } = require("./Controllers/orderController.js");
-const { getAllCustomersController } = require("./Controllers/customerController.js");
+const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH } = require("./Controllers/orderController.js");
+const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
@@ -53,7 +53,10 @@ app.get("/api/getAllDriversIdle", getDriverIdleController);
 app.get("/api/getAllOrders", getAllOrders);
 app.get("/api/getDetailOrderByID/:id", getDetailOrderByID);
 app.post("/api/updateOrder", updateOrderController);
+app.get("/api/getOrderByIdKH/:id",getOrderByIdKH)
 
 // khách hàng
 app.get("/api/getAllCustomers", getAllCustomersController); 
+app.get("/api/getinforCustomerByID/:id",getinforCustomerByID)
+
 module.exports = app;

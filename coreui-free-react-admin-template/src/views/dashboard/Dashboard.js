@@ -1,5 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
+import axios from 'axios';
 
 import {
   CAvatar,
@@ -179,21 +180,20 @@ const Dashboard = () => {
   return (
     <>
       <WidgetsDropdown className="mb-4" />
-      <CCard className="mb-4">
+       <CCard className="mb-4">
         <CCardBody>
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                Traffic
+                Doanh Thu
               </h4>
-              <div className="small text-body-secondary">January - July 2023</div>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
+              {/* <CButton color="primary" className="float-end">
                 <CIcon icon={cilCloudDownload} />
               </CButton>
               <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
+                {['Month', 'Year'].map((value) => (
                   <CButton
                     color="outline-secondary"
                     key={value}
@@ -203,12 +203,12 @@ const Dashboard = () => {
                     {value}
                   </CButton>
                 ))}
-              </CButtonGroup>
+              </CButtonGroup> */}
             </CCol>
           </CRow>
-          <MainChart />
+           <MainChart /> 
         </CCardBody>
-        <CCardFooter>
+        {/* <CCardFooter>
           <CRow
             xs={{ cols: 1, gutter: 4 }}
             sm={{ cols: 2 }}
@@ -231,9 +231,9 @@ const Dashboard = () => {
               </CCol>
             ))}
           </CRow>
-        </CCardFooter>
-      </CCard>
-      <WidgetsBrand className="mb-4" withCharts />
+        </CCardFooter> */}
+      </CCard> 
+     
       <CRow>
         <CCol xs>
           <CCard className="mb-4">

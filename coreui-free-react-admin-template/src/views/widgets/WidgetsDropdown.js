@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios';
 
 import {
   CRow,
@@ -18,28 +19,56 @@ import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 const WidgetsDropdown = (props) => {
   const widgetChartRef1 = useRef(null)
   const widgetChartRef2 = useRef(null)
+  const [sumtotal,setSumTotal] = useState(0);
+  const [countoder,setCountOder] = useState(0);
+
+
+  const fetchDataTotal = async () =>
+    {
+      const res = await axios.get('http://localhost:3001/api/getAllOrders')
+      
+      let sum = 0;
+      for(var i=0 ;i<res.data.length ;i++)
+        {
+          sum = sum + Number(res.data[i].TongTien);
+         
+        }
+      setSumTotal(sum.toFixed(1));
+      setCountOder(res.data.length);
+   
+    
+    }
+
+    
+
+
+
 
   useEffect(() => {
-    document.documentElement.addEventListener('ColorSchemeChange', () => {
-      if (widgetChartRef1.current) {
-        setTimeout(() => {
-          widgetChartRef1.current.data.datasets[0].pointBackgroundColor = getStyle('--cui-primary')
-          widgetChartRef1.current.update()
-        })
-      }
+    // document.documentElement.addEventListener('ColorSchemeChange', () => {
+    //   if (widgetChartRef1.current) {
+    //     setTimeout(() => {
+    //       widgetChartRef1.current.data.datasets[0].pointBackgroundColor = getStyle('--cui-primary')
+    //       widgetChartRef1.current.update()
+    //     })
+    //     fetchSumTotal();
+    //   }
 
-      if (widgetChartRef2.current) {
-        setTimeout(() => {
-          widgetChartRef2.current.data.datasets[0].pointBackgroundColor = getStyle('--cui-info')
-          widgetChartRef2.current.update()
-        })
-      }
-    })
-  }, [widgetChartRef1, widgetChartRef2])
+    //   if (widgetChartRef2.current) {
+    //     setTimeout(() => {
+    //       widgetChartRef2.current.data.datasets[0].pointBackgroundColor = getStyle('--cui-info')
+    //       widgetChartRef2.current.update()
+    //     })
+    //     fetchSumTotal();
+    //   }
+    //   fetchSumTotal();
+    // })
+    fetchDataTotal()
+  }, [widgetChartRef1, widgetChartRef2,sumtotal])
 
   return (
     <CRow className={props.className} xs={{ gutter: 4 }}>
-      <CCol sm={6} xl={4} xxl={3}>
+       {/* <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="primary"
           value={
@@ -217,19 +246,17 @@ const WidgetsDropdown = (props) => {
             />
           }
         />
-      </CCol>
+      </CCol> */}
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="warning"
           value={
             <>
-              2.49%{' '}
-              <span className="fs-6 fw-normal">
-                (84.7% <CIcon icon={cilArrowTop} />)
-              </span>
+              {countoder}{' Đơn Hàng'}
+             
             </>
           }
-          title="Conversion Rate"
+          title="Số lượng đơn hàng trong quý"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
@@ -289,19 +316,17 @@ const WidgetsDropdown = (props) => {
             />
           }
         />
-      </CCol>
+      </CCol> 
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="danger"
           value={
             <>
-              44K{' '}
-              <span className="fs-6 fw-normal">
-                (-23.6% <CIcon icon={cilArrowBottom} />)
-              </span>
+              {sumtotal}{'   Triệu'}
+
             </>
           }
-          title="Sessions"
+          title="Tổng Doanh Thu trong quý"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="text-white p-0">

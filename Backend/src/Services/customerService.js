@@ -1,14 +1,6 @@
 const customerModel = require("../Models/customersModel");
 
-const searchCustomerByNameService = async (nameCus) => {
-    try {
-        const customers = await customerModel.searchCustomerByName(nameCus);
-        return customers;
-    }
-    catch (error) {
-        throw error;
-    }
-}
+
 
 const getAllCustomersService = async () => {
     try {
@@ -20,8 +12,19 @@ const getAllCustomersService = async () => {
     }
 }
 
+
+const getinforCustomerByID = async (id) => {
+    try {
+        const customer = await customerModel.getinforCustomerByID(id);
+        return customer;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 module.exports =
 {
-    searchCustomerByNameService
-    , getAllCustomersService
+ getAllCustomersService,
+ getinforCustomerByID
 };
