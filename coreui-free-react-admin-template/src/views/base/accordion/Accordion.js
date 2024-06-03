@@ -31,6 +31,8 @@ import { useNavigate } from 'react-router-dom'
 const Accordion = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [dataOrder, setDataOrder] = useState([])
+  const [allOrders, setAllOrders] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -41,25 +43,25 @@ const Accordion = () => {
     try {
       const res = await axios.get('http://localhost:3001/api/getAllOrders')
       const FormatData = res.data.map((item) => {
-        // Check if NgayDatHang and NgayGiaoHang are valid date strings
         const formattedItem = {
           ...item,
-          NgayDatHang: item.NgayDatHang && !isNaN(new Date(item.NgayDatHang)) ? new Date(item.NgayDatHang).toISOString().split('T')[0] : null,
-          NgayGiaoHang: item.NgayGiaoHang && !isNaN(new Date(item.NgayGiaoHang)) ? new Date(item.NgayGiaoHang).toISOString().split('T')[0] : null,
-        };
-        return formattedItem;
-      });
-      setDataOrder(FormatData);
+          NgayDatHang:
+            item.NgayDatHang && !isNaN(new Date(item.NgayDatHang))
+              ? new Date(item.NgayDatHang).toISOString().split('T')[0]
+              : null,
+          NgayGiaoHang:
+            item.NgayGiaoHang && !isNaN(new Date(item.NgayGiaoHang))
+              ? new Date(item.NgayGiaoHang).toISOString().split('T')[0]
+              : null,
+        }
+        return formattedItem
+      })
+      setAllOrders(FormatData)
+      setDataOrder(FormatData)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
-  
-
-  const filteredData =
-    currentStatus === 'Tất cả'
-      ? dataOrder
-      : dataOrder.filter((item) => item.TrangThai === currentStatus)
+  }
 
   const handleDetailOrder = (OrderID) => {
     navigate(`/base/tooltips/${OrderID}`)
@@ -77,6 +79,28 @@ const Accordion = () => {
     alert(`Xem trạng thái đơn hàng ${OrderID}`)
   }
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [searchQuery])
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      const filteredData = allOrders.filter(
+        (item) =>
+          item.TenKH.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.MaDH.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+
+      setDataOrder(filteredData)
+    } else {
+      setDataOrder(allOrders)
+    }
+  }, [searchQuery, allOrders])
+
   return (
     <>
       <div
@@ -92,10 +116,12 @@ const Accordion = () => {
         </CCardHeader>
         <CForm className="row g-3">
           <CCol xs="auto">
-            <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
-              Password
-            </CFormLabel>
-            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" />
+            <CFormInput
+              type="text"
+              id="finOrder"
+              placeholder="Tìm kiếm đơn hàng"
+              onChange={handleSearchChange}
+            />
           </CCol>
           <CCol xs="auto">
             <CButton color="primary" type="submit" className="mb-3">
@@ -160,7 +186,7 @@ const Accordion = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {filteredData.map((item, index) => (
+                  {dataOrder.map((item, index) => (
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{item.MaDH}</CTableHeaderCell>
                       <CTableDataCell>{item.TenKH}</CTableDataCell>

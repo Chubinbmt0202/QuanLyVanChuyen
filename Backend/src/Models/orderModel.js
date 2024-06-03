@@ -117,7 +117,7 @@ const updateOrderAddress = async (addressCustomer, orderId) => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 const updateOrder = async (orderId) => {
   try {
@@ -126,7 +126,7 @@ const updateOrder = async (orderId) => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 const updateOrderDateDevivery = async (deliveryDate, orderId) => {
   try {
@@ -135,7 +135,7 @@ const updateOrderDateDevivery = async (deliveryDate, orderId) => {
   } catch (error) {
     throw error;
   }
-}
+};
 const getOrderByIdKH = async (id) => {
   try {
     const query = `SELECT Ten_Don_Hang,
@@ -154,7 +154,9 @@ WHERE ID_KH = ?`;
   } catch (error) {
     throw error;
   }
-}
+};
+
+
 module.exports = {
   getAllOrders,
   getDetailOrderByID,
@@ -164,5 +166,5 @@ module.exports = {
   updateOrder,
   updateOrderDateDevivery,
   updateOrderAddress,
-  getOrderByIdKH
+  getOrderByIdKH,
 };
