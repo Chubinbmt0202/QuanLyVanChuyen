@@ -293,8 +293,8 @@ const Tables = () => {
                   </p>
                   {dataodercus.map((item, index) =>
                   (
-                    <ul>
-                      <li key={index}>
+                    <ul key={index}>
+                      <li >
                         <strong>Tên Đơn Hàng :</strong> {item.Ten_Don_Hang}
                       </li>
                       <li key={index + 1}>

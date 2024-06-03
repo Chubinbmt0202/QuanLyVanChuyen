@@ -40,12 +40,21 @@ const Accordion = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:3001/api/getAllOrders')
-      console.log(res.data.map((item)=> console.log(item.TongTien)))
-      setDataOrder(res.data)
+      const FormatData = res.data.map((item) => {
+        // Check if NgayDatHang and NgayGiaoHang are valid date strings
+        const formattedItem = {
+          ...item,
+          NgayDatHang: item.NgayDatHang && !isNaN(new Date(item.NgayDatHang)) ? new Date(item.NgayDatHang).toISOString().split('T')[0] : null,
+          NgayGiaoHang: item.NgayGiaoHang && !isNaN(new Date(item.NgayGiaoHang)) ? new Date(item.NgayGiaoHang).toISOString().split('T')[0] : null,
+        };
+        return formattedItem;
+      });
+      setDataOrder(FormatData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
+  
 
   const filteredData =
     currentStatus === 'Tất cả'
@@ -163,8 +172,8 @@ const Accordion = () => {
                             item.TrangThai === 'Đang giao hàng'
                               ? 'green'
                               : item.TrangThai === 'Chưa giao hàng'
-                              ? 'red'
-                              : 'gray',
+                                ? 'red'
+                                : 'gray',
                         }}
                       >
                         {item.TrangThai}

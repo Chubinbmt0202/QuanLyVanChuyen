@@ -25,6 +25,7 @@ import { useParams } from 'react-router-dom'
 import { DatePicker } from '@mui/x-date-pickers'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { format } from 'date-fns'
 
 const Tooltips = () => {
   const { OrderID } = useParams()
@@ -60,8 +61,13 @@ const Tooltips = () => {
   const handleLoadData = async () => {
     try {
       const res = await axios.get(`http://localhost:3001/api/getDetailOrderByID/${OrderID}`)
-      console.log('API Response:', res.data)
-      setDataOrder(res.data[0])
+      console.log('API Response detail:', res.data)
+      const format = {
+        ...res.data[0],
+        'Ngày đặt hàng': res.data[0]['Ngày đặt hàng'].split('T')[0],
+        'Ngày giao': res.data[0]['Ngày giao'].split('T')[0],
+      }
+      setDataOrder(format)
     } catch (error) {
       console.log('API Error:', error)
     }
@@ -169,11 +175,23 @@ const Tooltips = () => {
                       <CFormInput id="inputAddress" value={orderDate} readOnly />
                       <div className=" mt-3">
                         <DatePicker
-                          className="w-auto"
                           label="Ngày giao dự kiến"
                           value={selectedDate}
-                          onChange={(date) => setSelectedDate(date)}
-                          renderInput={(params) => <CFormInput {...params} />}
+                          onChange={(date) => {
+                            setSelectedDate(date)
+                            if (date && date.$d instanceof Date && !isNaN(date.$d)) {
+                              const formattedDate = format(date.$d, 'yyyy-MM-dd')
+                              console.log('Ngày được chọn:', formattedDate)
+                              if (formattedDate < dataOrder['Ngày đặt hàng']) {
+                                alert('Ngày giao hàng không hợp lệ')
+                                setSelectedDate(null)
+                              } else {
+                                console.log('Ngày giao hàng hợp lệ')
+                              }
+                            } else {
+                              console.error('Giá trị ngày không hợp lệ:', date)
+                            }
+                          }}
                         />
                       </div>
                       <p className="mt-3 mb-1">Tên dịch vụ vận chuyển</p>
@@ -235,7 +253,7 @@ const Tooltips = () => {
                           readOnly
                         />
                         <strong className=" mt-5">
-                          Phí vận chuyển ước tính: <span>123.000 vnđ</span>
+                          Phí vận chuyển ước tính: <span>{dataOrder['Giá dịch vụ vận chuyển']} vnđ</span>
                         </strong>
                         <CFormCheck
                           id="flexCheckChecked"
@@ -273,7 +291,12 @@ const Tooltips = () => {
                         <CFormInput id="inputAddress" value={driverPhoneNumber} readOnly />
 
                         <p className="mt-3 mb-1">Phương tiện vận chuyển</p>
-                        <CFormSelect aria-label="Default select example" value={selectedVehicle} onChange={(e) => setSelectedVehicle(e.target.value)} options={options} />
+                        <CFormSelect
+                          aria-label="Default select example"
+                          value={selectedVehicle}
+                          onChange={(e) => setSelectedVehicle(e.target.value)}
+                          options={options}
+                        />
                         <CButton color="primary" className=" m-2" onClick={handleConfirm}>
                           Xác nhận
                         </CButton>
