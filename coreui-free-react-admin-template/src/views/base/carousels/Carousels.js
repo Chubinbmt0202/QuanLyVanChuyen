@@ -41,89 +41,47 @@ const Carousels = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả');
   const [selectedItems, setSelectedItems] = useState([]);
   const [dataNV, setDataNV] = useState([]);
+  const [dataDriver , setDataDriver] = useState([])
+  const [dataEmployer , setDataEmployee] = useState([]);
 
-  const handleFetchData = async () => {
-    // Call API here
-    try {
-      const res = await axios.post('http://localhost:3001/api/addTraffics')
-      console.log('Fetch data successfully: ', res.data);
-      setDataNV(res.data);
-    } catch (error) {
-      console.log('Failed to fetch data:', error);
+
+
+const handelFetchDataDriver = async ()  =>
+  {
+    const res  =await axios.get("http://localhost:3001/api/getAllDriver")
+    console.log(res.data);
+    setDataDriver(res.data)
+  }
+  const handelFetchDataEmployee = async ()  =>
+    {
+      const res  =await axios.get("http://localhost:3001/api/getAllEmployee")
+      console.log(res.data);
+      setDataEmployee(res.data)
     }
-  };
+
+
+
+  const handelDeleteEmployee = async (id) =>
+    {
+      console.log(id);
+      const userConfirmed = confirm(`Bạn có muốn xóa tài khoản với ID : ${id}`);
+
+      if (userConfirmed) {
+        const res  =await axios.delete(`http://localhost:3001/api/deleteEmployee/${id}`)
+        handelFetchDataDriver();
+        handelFetchDataEmployee();
+    } 
+    }
 
   useEffect(() => {
-    handleFetchData();
+    handelFetchDataDriver();
+    handelFetchDataEmployee();
+    
   }, []);
 
-  const data = [
-    {
-      id: 1,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },
-    {
-      id: 2,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },
-    {
-      id: 3,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },
-    {
-      id: 4,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đang giao',
-      Viewmore: 'Xem thêm',
-    },
-    {
-      id: 5,
-      IDNV: 'Nv102312',
-      dayofbirth: '1/1/2003',
-      account: 'something',
-      position: 'Tài xế',
-      status: 'Đã nghỉ',
-      Viewmore: 'Xem thêm',
-    },
-   
-  ];
+  
 
-  const filteredData =
-    currentStatus === 'Tất cả' ? data : data.filter((item) => item.status === currentStatus);
 
-  const toggleSelectAll = () => {
-    if (selectedItems.length === filteredData.length) {
-      setSelectedItems([]);
-    } else {
-      setSelectedItems(filteredData.map((item) => item.id));
-    }
-  };
-
-  const toggleSelectedItem = (id) => {
-    if (selectedItems.includes(id)) {
-      setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
-    } else {
-      setSelectedItems([...selectedItems, id]);
-    }
-  };
 
   const isSelected = (id) => {
     return selectedItems.includes(id);
@@ -143,10 +101,7 @@ const Carousels = () => {
           <strong>Tài khoản và phân cấp</strong>
           <div>
             <span style={{ marginRight: '200px', fontSize: 'larger' }}>
-              Tổng số nhân viên: <span style={{ color: 'blue', fontSize: 'x-large' }}>560</span>
-            </span>
-            <span style={{ fontSize: 'larger' }}>
-              Nhân viên đang làm việc: <span style={{ color: 'green', fontSize: 'x-large' }}>300</span>
+              Tổng số nhân viên: <span style={{ color: 'blue', fontSize: 'x-large' }}>{dataEmployer.length}</span>
             </span>
           </div>
         </CCardHeader>
@@ -159,91 +114,42 @@ const Carousels = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CNav variant="underline-border">
-              <CNavItem>
-                <CNavLink
-                  style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Tất cả'}
-                  onClick={() => setCurrentStatus('Tất cả')}
-                >
-                  Tất cả
-                </CNavLink>
-              </CNavItem>
-              <CNavItem>
-                <CNavLink
-                  style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Đang giao'}
-                  onClick={() => setCurrentStatus('Đang giao')}
-                >
-                  Đang giao
-                </CNavLink>
-              </CNavItem>
-              <CNavItem>
-                <CNavLink
-                  style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Đang rảnh'}
-                  onClick={() => setCurrentStatus('Đang rảnh')}
-                >
-                  Đang rảnh
-                </CNavLink>
-              </CNavItem>
-              <CNavItem>
-                <CNavLink
-                  style={{ cursor: 'pointer' }}
-                  active={currentStatus === 'Đã Nghỉ'}
-                  onClick={() => setCurrentStatus('Đã Nghỉ')}
-                >
-                  Đã nghỉ
-                </CNavLink>
-              </CNavItem>
             </CNav>
             <CCardBody>
               <CTable>
                 <CTableHead>
                   <CTableRow>
-                    <CTableHeaderCell scope="col">
-                      <input
-                        type="checkbox"
-                        checked={selectedItems.length === filteredData.length}
-                        onChange={toggleSelectAll}
-                      />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Mã nhân viên</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Ngày sinh</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Tài khoản</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Chức vụ</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tên Tài Xế</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Số Điện Thoại</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Ngày Sinh</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Email</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Giới Tính</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Trạng thái</CTableHeaderCell>
                     {/* Xem chi tiết chuyển đến /base/progress */}
                     <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {filteredData.map((item, index) => (
-                    <CTableRow key={item.id}>
-                      <CTableHeaderCell scope="row">
-                        <input
-                          type="checkbox"
-                          checked={isSelected(item.id)}
-                          onChange={() => toggleSelectedItem(item.id)}
-                        />
-                      </CTableHeaderCell>
+                  {dataDriver.map((item, index) => (
+                    <CTableRow key={index}>
                       <CTableDataCell>
-                        <span style={{ color: 'blue' }}>{item.IDNV}</span>
+                        <span style={{ color: 'blue' }}>{item.Ten_TX}</span>
                       </CTableDataCell>
-                      <CTableDataCell>{item.dayofbirth}</CTableDataCell>
-                      <CTableDataCell>{item.account}</CTableDataCell>
-                      <CTableDataCell style={{ color: 'blue' }}>{item.position}</CTableDataCell>
-
+                      <CTableDataCell>{item.SDT}</CTableDataCell>
+                      <CTableDataCell>{item.Ngay_Sinh}</CTableDataCell>
+                      <CTableDataCell style={{ color: 'blue' }}>{item.Email}</CTableDataCell>
+                      <CTableDataCell>{item.Gioi_Tinh}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:
-                            item.status === 'Đang giao'
+                            item.Trang_thai === 'Đang rảnh'
                               ? 'green'
-                              : item.status === 'Đã nghỉ'
+                              : item.Trang_thai === 'Đang giao'
                               ? 'red'
                               : 'gray',
                         }}
                       >
-                        {item.status}
+                        {item.Trang_thai}
                       </CTableDataCell>
 
                       {/* Tuỳ chọn */}
@@ -254,7 +160,53 @@ const Carousels = () => {
                             {/* Xem chi tiết chuyển đến /base/progress */}
                             <CDropdownItem><Link to="/base/Paginations">Xem chi tiết</Link></CDropdownItem>
                             {/* Chỉnh sửa chuyển đến /base/progress */}
-                            <CDropdownItem><Link to="/base/progress">Chỉnh sửa</Link></CDropdownItem>
+                            {/* <CDropdownItem><Link to="/base/progress">Chỉnh sửa</Link></CDropdownItem> */}
+                            <CDropdownDivider />
+                          
+                          </CDropdownMenu>
+                        </CDropdown>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CNav variant="underline-border">
+            </CNav>
+            <CCardBody>
+              <CTable>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">ID Tài Khoản</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">UserName</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Số Điện Thoại</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Role</CTableHeaderCell>
+                    {/* Xem chi tiết chuyển đến /base/progress */}
+                    <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {dataEmployer.map((item, index) => (
+                    <CTableRow key={index}>
+                      <CTableDataCell>
+                        <span style={{ color: 'blue' }}>{item.PK_Id_TK}</span>
+                      </CTableDataCell>
+                      <CTableDataCell>{item.Username}</CTableDataCell>
+                      <CTableDataCell>{item.SDT}</CTableDataCell>
+                      <CTableDataCell style={{ color: 'blue' }}>{item.Ten_quyen}</CTableDataCell>
+                      {/* Tuỳ chọn */}
+                      <CTableDataCell>
+                        <CDropdown>
+                          <CDropdownToggle color="secondary">Tuỳ chọn</CDropdownToggle>
+                          <CDropdownMenu>
+                            <CDropdownItem onClick={() => handelDeleteEmployee(item.PK_Id_TK)} >Xóa</CDropdownItem>
                             <CDropdownDivider />
                             <CDropdownItem></CDropdownItem>
                           </CDropdownMenu>

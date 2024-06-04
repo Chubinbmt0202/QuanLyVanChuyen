@@ -60,9 +60,20 @@ const getDriverService = async () => {
   }
 }
 
+const deleteUserAccount = async (id) => {
+  try {
+    await userModel.deleteUserAccount(id);
+    return { message: "Account deleted successfully." };
+  }
+  catch (error) {
+    throw (error)
+  }
+}
+
 module.exports = {
   getUsers,
   registerUser,
   loginUser,
   getDriverService,
+  deleteUserAccount
 };

@@ -42,6 +42,8 @@ const Accordion = () => {
       const res = await axios.get('http://localhost:3001/api/getAllOrders')
       console.log(res.data.map((item)=> console.log(item.TongTien)))
       setDataOrder(res.data)
+
+  
     } catch (error) {
       console.log(error)
     }
@@ -68,6 +70,8 @@ const Accordion = () => {
     alert(`Xem trạng thái đơn hàng ${OrderID}`)
   }
 
+  
+
   return (
     <>
       <div
@@ -86,7 +90,7 @@ const Accordion = () => {
             <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
               Password
             </CFormLabel>
-            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" />
+            <CFormInput type="text" id="inputSearch" placeholder="Tìm kiếm đơn hàng" />
           </CCol>
           <CCol xs="auto">
             <CButton color="primary" type="submit" className="mb-3">
