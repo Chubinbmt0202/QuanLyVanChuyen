@@ -76,6 +76,19 @@ const getInforDriverByID  = async(req,res) =>
         
     }
 
+const deleteDriverByID  = async (req,res) =>
+    {
+        const { id } = req.params;
+        try
+        {
+            await employeeService.seviceDeleteDriverByID(id);
+            res.json({ message: "Employee deleted successfully." });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Error deleting Employee", error });
+          }
+    }
+
 module.exports = 
 {
     getAllDriver,
@@ -83,4 +96,5 @@ module.exports =
     deleteEmployee,
     addDriver,
     getInforDriverByID,
+    deleteDriverByID,
 }

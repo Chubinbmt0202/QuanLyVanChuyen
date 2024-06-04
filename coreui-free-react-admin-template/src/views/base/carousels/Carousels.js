@@ -41,45 +41,71 @@ const Carousels = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả');
   const [selectedItems, setSelectedItems] = useState([]);
   const [dataNV, setDataNV] = useState([]);
-  const [dataDriver , setDataDriver] = useState([])
-  const [dataEmployer , setDataEmployee] = useState([]);
+  const [dataDriver, setDataDriver] = useState([])
+  const [dataEmployer, setDataEmployee] = useState([]);
 
 
 
-const handelFetchDataDriver = async ()  =>
-  {
-    const res  =await axios.get("http://localhost:3001/api/getAllDriver")
+  const handelFetchDataDriver = async () => {
+    const res = await axios.get("http://localhost:3001/api/getAllDriver")
     console.log(res.data);
     setDataDriver(res.data)
   }
-  const handelFetchDataEmployee = async ()  =>
-    {
-      const res  =await axios.get("http://localhost:3001/api/getAllEmployee")
-      console.log(res.data);
-      setDataEmployee(res.data)
-    }
+  const handelFetchDataEmployee = async () => {
+    const res = await axios.get("http://localhost:3001/api/getAllEmployee")
+    console.log(res.data);
+    setDataEmployee(res.data)
+  }
 
 
 
-  const handelDeleteEmployee = async (id) =>
-    {
-      console.log(id);
-      const userConfirmed = confirm(`Bạn có muốn xóa tài khoản với ID : ${id}`);
-
-      if (userConfirmed) {
-        const res  =await axios.delete(`http://localhost:3001/api/deleteEmployee/${id}`)
+  const handelDeleteDriverByID = async (id) => {
+    const userConfirmed = confirm(`Bạn có muốn xóa tài khoản với ID : ${id}`);
+    if (userConfirmed) {
+      try {
+        const res = await axios.delete(`http://localhost:3001/api/deleteDriverByID/${id}`)
+        console.log(res.data)
         handelFetchDataDriver();
         handelFetchDataEmployee();
-    } 
+      }
+      catch (error) {
+        alert("Không thể xóa nhân viên này  vì tài khoản hiện đang được sử dụng")
+
+        console.log(error);
+      }
+
     }
+
+
+
+  }
+
+  const handelDeleteEmployee = async (id) => {
+
+    const userConfirmed = confirm(`Bạn có muốn xóa tài khoản với ID : ${id}`);
+    if (userConfirmed) {
+
+      try {
+        const res = await axios.delete(`http://localhost:3001/api/deleteEmployee/${id}`)
+        handelFetchDataDriver();
+        handelFetchDataEmployee();
+      }
+      catch (error) {
+        alert("Không thể xóa tài khoản này vì tài khoản hiện đang được sử dụng")
+        console.log("delete employee fail ");
+        console.log(error);
+      }
+
+    }
+  }
 
   useEffect(() => {
     handelFetchDataDriver();
     handelFetchDataEmployee();
-    
+
   }, []);
 
-  
+
 
 
 
@@ -145,8 +171,8 @@ const handelFetchDataDriver = async ()  =>
                             item.Trang_thai === 'Đang rảnh'
                               ? 'green'
                               : item.Trang_thai === 'Đang giao'
-                              ? 'red'
-                              : 'gray',
+                                ? 'red'
+                                : 'gray',
                         }}
                       >
                         {item.Trang_thai}
@@ -159,10 +185,11 @@ const handelFetchDataDriver = async ()  =>
                           <CDropdownMenu>
                             {/* Xem chi tiết chuyển đến /base/progress */}
                             <CDropdownItem><Link to="/base/Paginations">Xem chi tiết</Link></CDropdownItem>
+                            <CDropdownItem onClick={()=> handelDeleteDriverByID(item.PK_Id_TX)} > Xóa Tài Xế</CDropdownItem>
                             {/* Chỉnh sửa chuyển đến /base/progress */}
                             {/* <CDropdownItem><Link to="/base/progress">Chỉnh sửa</Link></CDropdownItem> */}
                             <CDropdownDivider />
-                          
+
                           </CDropdownMenu>
                         </CDropdown>
                       </CTableDataCell>

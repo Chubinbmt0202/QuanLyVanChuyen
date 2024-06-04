@@ -16,7 +16,7 @@ const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js"
 const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, getOrderDetailFinishedController } = require("./Controllers/orderController.js");
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
-const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID} = require("./Controllers/employeeController.js")
+const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID,deleteDriverByID} = require("./Controllers/employeeController.js")
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 
@@ -71,6 +71,7 @@ app.get("/api/getAllEmployee",getAllEmployee);
 app.delete("/api/deleteEmployee/:id",deleteEmployee)
 app.post("/api/addDriver",addDriver)
 app.get("/api/getInforDriverByID/:id",getInforDriverByID);
+app.delete("/api/deleteDriverByID/:id",deleteDriverByID);
 
 
 //User

@@ -1,7 +1,5 @@
 const customerModel = require("../Models/customersModel");
 
-
-
 const getAllCustomersService = async () => {
     try {
         const customers = await customerModel.getAllCustomers();
