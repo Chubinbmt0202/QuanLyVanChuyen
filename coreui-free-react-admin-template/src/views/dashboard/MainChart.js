@@ -61,7 +61,6 @@ const MainChart = () => {
   function dataforDay(datas, month) {
     let dataforday = []
     let dayofmounth = getDayInMonth(month, 2024)
-    console.log(dayofmounth)
     for (let i = 1; i <= dayofmounth; i++) {
       let dataAdd = 0;
       datas.forEach((item) => {
@@ -121,23 +120,7 @@ const MainChart = () => {
   const [datachartMonth, setDataChartMonth] = useState([]);
 
   useEffect(() => {
-    document.documentElement.addEventListener('ColorSchemeChange', () => {
-      if (chartRef.current) {
-        setTimeout(() => {
-          chartRef.current.options.scales.x.grid.borderColor = getStyle(
-            '--cui-border-color-translucent',
-          )
-          chartRef.current.options.scales.x.grid.color = getStyle('--cui-border-color-translucent')
-          chartRef.current.options.scales.x.ticks.color = getStyle('--cui-body-color')
-          chartRef.current.options.scales.y.grid.borderColor = getStyle(
-            '--cui-border-color-translucent',
-          )
-          chartRef.current.options.scales.y.grid.color = getStyle('--cui-border-color-translucent')
-          chartRef.current.options.scales.y.ticks.color = getStyle('--cui-body-color')
-          chartRef.current.update()
-        })
-      }
-    })
+    
     fetchDataOder();
   }, [chartRef,dataorder,datachart,datachartDay,datachartMonth])
 

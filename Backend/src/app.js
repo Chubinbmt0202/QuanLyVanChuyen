@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const database = require("./Configs/database");
-const { createUser, login, getDriverIdleController } = require("./Controllers/UserController.js");
+const { createUser, login, getDriverIdleController ,deleteUserAccount} = require("./Controllers/UserController.js");
 const {
   getAllTraffics,
   addTrafficsController,
@@ -16,6 +16,7 @@ const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js"
 const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, getOrderDetailFinishedController } = require("./Controllers/orderController.js");
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
+const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID} = require("./Controllers/employeeController.js")
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 
@@ -64,4 +65,14 @@ app.get("/api/getinforCustomerByID/:id",getinforCustomerByID);
 //Chart Report
 app.get("/api/getAllReportShipers",getAllDataShipper);
 
+//Employee
+app.get("/api/getAllDriver",getAllDriver);
+app.get("/api/getAllEmployee",getAllEmployee);
+app.delete("/api/deleteEmployee/:id",deleteEmployee)
+app.post("/api/addDriver",addDriver)
+app.get("/api/getInforDriverByID/:id",getInforDriverByID);
+
+
+//User
+app.delete("/api/deleteUserAccount/:id",deleteUserAccount)
 module.exports = app;

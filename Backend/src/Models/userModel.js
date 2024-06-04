@@ -21,9 +21,16 @@ const getDriverModel = async () => {
     return rows;
 };
 
+const deleteUserAccount = async (id) => 
+    {
+        const [result] =  await db.query(`delete from taikhoan where PK_Id_TK = ?`,[id]);
+        return result[0];
+    }
+
 module.exports = {
     getAllUsers,
     addUser,
     findUserByUsername,
     getDriverModel,
+    deleteUserAccount,
 };

@@ -51,22 +51,8 @@ const Accordion = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:3001/api/getAllOrders')
-      const FormatData = res.data.map((item) => {
-        const formattedItem = {
-          ...item,
-          NgayDatHang:
-            item.NgayDatHang && !isNaN(new Date(item.NgayDatHang))
-              ? new Date(item.NgayDatHang).toISOString().split('T')[0]
-              : null,
-          NgayGiaoHang:
-            item.NgayGiaoHang && !isNaN(new Date(item.NgayGiaoHang))
-              ? new Date(item.NgayGiaoHang).toISOString().split('T')[0]
-              : null,
-        }
-        return formattedItem
-      })
-      setAllOrders(FormatData)
-      setDataOrder(FormatData)
+      console.log(res.data.map((item)=> console.log(item.TongTien)))
+      setDataOrder(res.data)
     } catch (error) {
       console.log(error)
     }
@@ -125,12 +111,10 @@ const Accordion = () => {
         </CCardHeader>
         <CForm className="row g-3">
           <CCol xs="auto">
-            <CFormInput
-              type="text"
-              id="finOrder"
-              placeholder="Tìm kiếm đơn hàng"
-              onChange={handleSearchChange}
-            />
+            <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
+              Password
+            </CFormLabel>
+            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" />
           </CCol>
           <CCol xs="auto">
             <CButton color="primary" type="submit" className="mb-3">
