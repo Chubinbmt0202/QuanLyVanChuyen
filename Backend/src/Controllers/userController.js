@@ -87,9 +87,24 @@ const getDriverIdleController = async (req, res) => {
   }
 }
 
+
+const deleteUserAccount = async (req,res) =>
+  {
+    const { id } = req.params;
+    try
+    {
+        await userService.deleteUserAccount(id);
+        res.json({ message: "User deleted successfully." });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error deleting User", error });
+      }
+  }
+
 module.exports = {
   getUsers,
   createUser,
   login,
   getDriverIdleController,
+  deleteUserAccount,
 };

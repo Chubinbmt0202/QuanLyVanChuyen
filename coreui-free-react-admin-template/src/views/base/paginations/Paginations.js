@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import {
   CButton,
   CCard,
@@ -11,6 +12,28 @@ import {
 const Progress = () => {
   const [image, setImage] = useState(null);
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để kiểm soát việc ẩn/hiển thị mật khẩu
+
+  const [datadetail, setDataDetail] = useState("");
+
+
+
+  useEffect(() => {
+    fetchDataShow(3)
+  }, [])
+
+  const fetchDataShow = async (id) => {
+    try {
+      const res = await axios.get(`http://localhost:3001/api/getInforDriverByID/${id}`)
+      setDataDetail(res.data)
+      console.log(res.data)
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+
+  }
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -30,28 +53,28 @@ const Progress = () => {
       <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Cập nhật thông tin nhân viên</strong>
+            <strong>Thông tin nhân viên</strong>
           </CCardHeader>
           <CCardBody>
             <div className="mb-3">
               <label htmlFor="maNhanVien" className="form-label"><strong>Mã nhân viên</strong></label>
-              <div>NV012301</div>
+              <div>{datadetail.PK_ID_TX}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="tenNhanVien" className="form-label"><strong>Tên nhân viên</strong></label>
-              <div>Trương Việt Hoàng</div>
+              <div>{datadetail.Ten_TX}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="ngaySinh" className="form-label"><strong>Ngày sinh</strong></label>
-              <div>11/11/2005</div>
+              <div>{datadetail.Ngay_Sinh}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="soDienThoai" className="form-label"><strong>Số điện thoại</strong></label>
-              <div>0345678901</div>
+              <div>{datadetail.SDT}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label"><strong>Email</strong></label>
-              <div>Hoang@gmail.com</div>
+              <div>{datadetail.Email}</div>
             </div>
           </CCardBody>
         </CCard>
@@ -60,8 +83,8 @@ const Progress = () => {
         <CCard className="mb-4">
           <CCardBody>
             <div className="mb-3">
-              <label htmlFor="anhNhanVien" className="form-label">Ảnh nhân viên</label>
-              <input type="file" className="form-control" id="anhNhanVien" onChange={handleImageChange} />
+              <label htmlFor="anhNhanVien" className="form-label"><strong> Giới Tính </strong></label>
+              <div>{datadetail.Gioi_Tinh}</div>
             </div>
             <div className="mb-3">
               {image && (
@@ -69,16 +92,12 @@ const Progress = () => {
               )}
             </div>
             <div className="mb-3">
-              <label htmlFor="cccd" className="form-label"><strong>CCCD</strong></label>
-              <div>1235676578</div>
-            </div>
-            <div className="mb-3">
               <label htmlFor="chucVu" className="form-label"><strong>Chức vụ</strong></label>
               <div>Tài xế</div>
             </div>
             <div className="mb-3">
               <label htmlFor="taiKhoan" className="form-label"><strong>Tài khoản</strong></label>
-              <div>NVHoang</div>
+              <div>{datadetail.Username}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="matKhau" className="form-label"><strong>Mật khẩu</strong></label>
@@ -88,7 +107,7 @@ const Progress = () => {
                   className="form-control"
                   id="matKhau"
                   placeholder="Mật khẩu"
-                  value={showPassword ? "hoang123" : "*******"} // 
+                  value={datadetail.PassWord} // 
                   readOnly // Đảm bảo ô text không thể chỉnh sửa
                 />
                 <button
@@ -100,7 +119,7 @@ const Progress = () => {
                 </button>
               </div>
             </div>
-           
+
           </CCardBody>
         </CCard>
       </CCol>
