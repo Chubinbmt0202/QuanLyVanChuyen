@@ -2,6 +2,11 @@
 import React, { useState, useEffect } from 'react'
 import {
   CButton,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
   CCard,
   CCardBody,
   CCardHeader,
@@ -23,7 +28,10 @@ import {
   CDropdownItem,
   CDropdownDivider,
   CForm,
+  CProgress,
+  CProgressBar,
   CFormInput,
+  CContainer,
 } from '@coreui/react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -33,6 +41,7 @@ const Accordion = () => {
   const [dataOrder, setDataOrder] = useState([])
   const [allOrders, setAllOrders] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [visibleStatus, setVisibleStatus] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -76,7 +85,7 @@ const Accordion = () => {
   }
 
   const handleViewStatus = (OrderID) => {
-    alert(`Xem trạng thái đơn hàng ${OrderID}`)
+    setVisibleStatus(true)
   }
 
   const handleSearchChange = (event) => {
@@ -241,6 +250,35 @@ const Accordion = () => {
           </CCard>
         </CCol>
       </CRow>
+
+      <CModal
+        size="lg"
+        backdrop="static"
+        visible={visibleStatus}
+        onClose={() => setVisibleStatus(false)}
+        aria-labelledby="StaticBackdropExampleLabel"
+      >
+        <CModalHeader>
+          <CModalTitle id="StaticBackdropExampleLabel">Tiến trình giao hàng</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CContainer>
+            <CRow className=" justify-content-between">
+              <CCol sm="auto">Đang lấy hàng</CCol>
+              <CCol sm="auto">Đang di chuyển</CCol>
+              <CCol sm="auto">Giao hàng hoàn tất</CCol>
+            </CRow>
+            <CProgress height={20}>
+              <CProgressBar value={25}></CProgressBar>
+            </CProgress>
+          </CContainer>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisibleStatus(false)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   )
 }
