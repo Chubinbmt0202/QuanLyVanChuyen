@@ -2,6 +2,11 @@
 import React, { useState, useEffect } from 'react'
 import {
   CButton,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
   CCard,
   CCardBody,
   CCardHeader,
@@ -23,7 +28,10 @@ import {
   CDropdownItem,
   CDropdownDivider,
   CForm,
+  CProgress,
+  CProgressBar,
   CFormInput,
+  CContainer,
 } from '@coreui/react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -31,6 +39,9 @@ import { useNavigate } from 'react-router-dom'
 const Accordion = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [dataOrder, setDataOrder] = useState([])
+  const [allOrders, setAllOrders] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [visibleStatus, setVisibleStatus] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -42,20 +53,13 @@ const Accordion = () => {
       const res = await axios.get('http://localhost:3001/api/getAllOrders')
       console.log(res.data.map((item)=> console.log(item.TongTien)))
       setDataOrder(res.data)
-
-  
     } catch (error) {
       console.log(error)
     }
   }
 
-  const filteredData =
-    currentStatus === 'Tất cả'
-      ? dataOrder
-      : dataOrder.filter((item) => item.TrangThai === currentStatus)
-
   const handleDetailOrder = (OrderID) => {
-    navigate(`/base/tooltips/${OrderID}`)
+    navigate(`/base/popovers/${OrderID}`)
   }
 
   const handleUpdate = (OrderID) => {
@@ -67,10 +71,30 @@ const Accordion = () => {
   }
 
   const handleViewStatus = (OrderID) => {
-    alert(`Xem trạng thái đơn hàng ${OrderID}`)
+    setVisibleStatus(true)
   }
 
-  
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [searchQuery])
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      const filteredData = allOrders.filter(
+        (item) =>
+          item.TenKH.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.MaDH.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+
+      setDataOrder(filteredData)
+    } else {
+      setDataOrder(allOrders)
+    }
+  }, [searchQuery, allOrders])
 
   return (
     <>
@@ -90,7 +114,7 @@ const Accordion = () => {
             <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
               Password
             </CFormLabel>
-            <CFormInput type="text" id="inputSearch" placeholder="Tìm kiếm đơn hàng" />
+            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" />
           </CCol>
           <CCol xs="auto">
             <CButton color="primary" type="submit" className="mb-3">
@@ -155,7 +179,7 @@ const Accordion = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {filteredData.map((item, index) => (
+                  {dataOrder.map((item, index) => (
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{item.MaDH}</CTableHeaderCell>
                       <CTableDataCell>{item.TenKH}</CTableDataCell>
@@ -167,8 +191,8 @@ const Accordion = () => {
                             item.TrangThai === 'Đang giao hàng'
                               ? 'green'
                               : item.TrangThai === 'Chưa giao hàng'
-                              ? 'red'
-                              : 'gray',
+                                ? 'red'
+                                : 'gray',
                         }}
                       >
                         {item.TrangThai}
@@ -210,6 +234,35 @@ const Accordion = () => {
           </CCard>
         </CCol>
       </CRow>
+
+      <CModal
+        size="lg"
+        backdrop="static"
+        visible={visibleStatus}
+        onClose={() => setVisibleStatus(false)}
+        aria-labelledby="StaticBackdropExampleLabel"
+      >
+        <CModalHeader>
+          <CModalTitle id="StaticBackdropExampleLabel">Tiến trình giao hàng</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CContainer>
+            <CRow className=" justify-content-between">
+              <CCol sm="auto">Đang lấy hàng</CCol>
+              <CCol sm="auto">Đang di chuyển</CCol>
+              <CCol sm="auto">Giao hàng hoàn tất</CCol>
+            </CRow>
+            <CProgress height={20}>
+              <CProgressBar value={25}></CProgressBar>
+            </CProgress>
+          </CContainer>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisibleStatus(false)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   )
 }

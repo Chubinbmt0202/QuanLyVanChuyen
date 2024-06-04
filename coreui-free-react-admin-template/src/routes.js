@@ -67,6 +67,7 @@ const routes = [
   { path: '/base/paginations', name: 'Paginations', element: Paginations },
   { path: '/base/placeholders/:id', name: 'Placeholders', element: Placeholders },
   { path: '/base/popovers', name: 'Popovers', element: Popovers },
+  { path: '/base/popovers/:OrderID', name: 'Popovers', element: Popovers },
   { path: '/base/progress', name: 'Progress', element: Progress },
   { path: '/base/spinners', name: 'Spinners', element: Spinners },
   { path: '/base/tables', name: 'Tables', element: Tables },
