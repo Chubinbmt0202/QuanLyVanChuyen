@@ -48,9 +48,20 @@ const getOrderByIdKH = async(req,res) =>
         } 
     }
 
+const getOrderDetailFinishedController = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const order = await orderService.getOrderDetailFinisedService(id);
+        res.json(order);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error retrieving order", error });
+    }
+}
 module.exports = {
     getAllOrders,
     getDetailOrderByID,
     updateOrderController,
-    getOrderByIdKH
+    getOrderByIdKH,
+    getOrderDetailFinishedController
 };

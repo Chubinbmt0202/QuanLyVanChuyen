@@ -37,6 +37,7 @@ const Tooltips = () => {
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedVehicle, setSelectedVehicle] = useState('')
   const navigate = useNavigate()
+  console.log('OrderID:', OrderID)
 
   const handleConfirm = async () => {
     try {
@@ -61,7 +62,7 @@ const Tooltips = () => {
   const handleLoadData = async () => {
     try {
       const res = await axios.get(`http://localhost:3001/api/getDetailOrderByID/${OrderID}`)
-      console.log('API Response detail:', res.data)
+      console.log('API Response detail:', res)
       const format = {
         ...res.data[0],
         'Ngày đặt hàng': res.data[0]['Ngày đặt hàng'].split('T')[0],

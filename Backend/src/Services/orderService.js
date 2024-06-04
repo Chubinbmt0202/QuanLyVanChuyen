@@ -46,9 +46,20 @@ const getOrderByIdKH  = async (id) =>
         }  
     }
 
+const getOrderDetailFinisedService = async (id) => {
+    try {
+        const order = await orderModel.getOrderDetailFinished(id);
+        return order;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllOrders,
     getDetailOrderByID,
     updateOrder,
-    getOrderByIdKH
+    getOrderByIdKH,
+    getOrderDetailFinisedService
 };

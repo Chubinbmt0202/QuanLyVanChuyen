@@ -13,7 +13,7 @@ const {
   getVehicleIdleController,
 } = require("./Controllers/trafficController.js");
 const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js");
-const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH } = require("./Controllers/orderController.js");
+const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, getOrderDetailFinishedController } = require("./Controllers/orderController.js");
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
 app.use(express.json());
@@ -54,6 +54,7 @@ app.get("/api/getAllOrders", getAllOrders);
 app.get("/api/getDetailOrderByID/:id", getDetailOrderByID);
 app.post("/api/updateOrder", updateOrderController);
 app.get("/api/getOrderByIdKH/:id",getOrderByIdKH)
+app.get("/api/getOrderDetailFinished/:id", getOrderDetailFinishedController);
 
 // khách hàng
 app.get("/api/getAllCustomers", getAllCustomersController); 

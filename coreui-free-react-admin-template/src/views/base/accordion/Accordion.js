@@ -64,7 +64,7 @@ const Accordion = () => {
   }
 
   const handleDetailOrder = (OrderID) => {
-    navigate(`/base/tooltips/${OrderID}`)
+    navigate(`/base/popovers/${OrderID}`)
   }
 
   const handleUpdate = (OrderID) => {
