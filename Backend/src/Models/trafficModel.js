@@ -2,24 +2,24 @@ const db = require('../Configs/database');
 
 const getAllTraffics = async () => {
     const query = `
-        SELECT 
-            xe.PK_Id_Xe AS 'Id_Xe',
-            xe.Bien_so AS 'Bien_so',
-            CASE 
-                WHEN don_hang.Trang_Thai = 1 THEN don_hang.tuyen_duong
-                ELSE NULL
-            END AS 'Tuyen_Duong',
-            CASE 
-                WHEN don_hang.Trang_Thai = 1 THEN don_hang.Ngay_GH
-                ELSE NULL
-            END AS 'TimeFuture',
-            CASE 
-                WHEN don_hang.Trang_Thai = 1 THEN 'Đang giao'
-                WHEN don_hang.Trang_Thai = 0 THEN 'Đang rảnh'
-                ELSE 'Không xác định'
-            END AS 'Trang_Thai'
-        FROM xe
-        LEFT JOIN don_hang ON xe.PK_Id_Xe = don_hang.FK_Id_Xe;
+    SELECT 
+    xe.PK_Id_Xe AS 'Id_Xe',
+    xe.Bien_so AS 'Bien_so',
+    CASE 
+        WHEN don_hang.Trang_Thai = 2 THEN don_hang.tuyen_duong
+        ELSE NULL
+    END AS 'Tuyen_Duong',
+    CASE 
+        WHEN don_hang.Trang_Thai = 2 THEN don_hang.Ngay_GH
+        ELSE NULL
+    END AS 'TimeFuture',
+    CASE 
+        WHEN don_hang.Trang_Thai = 2 THEN 'Đang giao'
+        WHEN don_hang.Trang_Thai = 0 THEN 'Đang rảnh'
+        ELSE 'Đang chờ'
+    END AS 'Trang_Thai'
+FROM xe
+LEFT JOIN don_hang ON xe.PK_Id_Xe = don_hang.FK_Id_Xe;
     `;
     const [rows, fields] = await db.query(query);
     return rows;
