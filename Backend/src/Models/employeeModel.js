@@ -12,6 +12,7 @@ const getAllEmployee = async () => {
 
 const deleteEmployee = async (id) => 
     {
+        const deleteforeignkey = await db.query ("delete from taixe where  Id_TaiKhoan = ? " ,[id]);
         const [results] =  await db.query("delete from TaiKhoan where Pk_Id_TK = ?",[id]);
         return results[0];
     }
@@ -34,11 +35,20 @@ const getInforDriverByID  = async (id) =>
         return results[0];
         }
 
+
+const deleteDriverByIDModel = async(id) =>
+    {
+        const [result] = await db.query ("delete from taixe where  PK_Id_TX = ? " ,[id]);
+        // const deleteforeignkey=  await db.query("delete from TaiKhoan where Pk_Id_TK = ?",[id]);
+        return result[0];
+    }
+
 module.exports =
 {
     getAllDriver,
     getAllEmployee,
     deleteEmployee,
     addDriver,
-    getInforDriverByID
+    getInforDriverByID,
+    deleteDriverByIDModel,
 }

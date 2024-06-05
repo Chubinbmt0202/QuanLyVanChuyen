@@ -32,6 +32,21 @@ const deleteEmployee = async (id) => {
 }
 
 
+const seviceDeleteDriverByID = async (id) => 
+    {
+        try
+        {
+            await employeeModel.deleteDriverByIDModel(id);
+            return {message : "Delete Employee Successfully"};
+        }
+        catch (error)
+        {
+            throw (error);
+        }
+    }
+
+
+
 
 
 const addDriverService = async ({ Ten_TX, SDT, Email, NgaySinh, GioiTinh, Tinh_Trang, Id_TaiKhoan }) => {
@@ -67,4 +82,5 @@ module.exports =
     deleteEmployee,
     addDriverService,
     getInforDriverByID,
+    seviceDeleteDriverByID,
 }
