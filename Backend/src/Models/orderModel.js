@@ -170,10 +170,16 @@ const updateDriverStatus = async (Trang_thai, PK_Id_TX) => {
 };
 
 // Vehicle Model
-const updateVehicleStatus = async (PK_Id_Xe, Tinh_Trang) => {
+const updateVehicleStatus = async (Tinh_Trang, PK_Id_Xe) => {
   const query = "UPDATE xe SET Tinh_Trang = 'Đang giao' WHERE PK_Id_Xe = ?";
-  await db.query(query, [PK_Id_Xe, Tinh_Trang]);
+  await db.query(query, [Tinh_Trang, PK_Id_Xe]);
 };
+
+// add vehicle id
+const addVehicleId = async (PK_Id_Xe, PK_Id_DonHang) => {
+  const query = "UPDATE don_hang SET FK_Id_Xe = ? WHERE PK_Id_DonHang = ?";
+  await db.query(query, [PK_Id_Xe, PK_Id_DonHang]);
+}
 
 const updateOrderAddress = async (addressCustomer, orderId) => {
   try {
@@ -232,4 +238,5 @@ module.exports = {
   updateOrderAddress,
   getOrderByIdKH,
   getOrderDetailFinished,
+  addVehicleId,
 };

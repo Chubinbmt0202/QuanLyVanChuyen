@@ -44,14 +44,6 @@ import { DocsExample } from 'src/components'
 import ReactImg from 'src/assets/images/react.jpg'
 import axios from 'axios'
 
-const formatDate = (isoString) => {
-  const date = new Date(isoString)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
 const Cards = () => {
   const [currentStatus, setCurrentStatus] = useState('Tất cả')
   const [visibleAddVehicle, setVisibleAddVehicle] = useState(false)
@@ -188,7 +180,13 @@ const Cards = () => {
   }
 
   const filteredData =
-    currentStatus === 'Tất cả' ? data : data.filter((item) => item.Tinh_Trang === currentStatus)
+    currentStatus === 'Tất cả' ? data : data.filter((item) => item.Trang_Thai === currentStatus)
+
+  const formatDate = (dateString) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return date.toISOString().split('T')[0];
+  }
 
   return (
     <>
@@ -254,7 +252,7 @@ const Cards = () => {
                   <CTableRow>
                     <CTableHeaderCell scope="col">STT</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Biển số</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Tuyến đường</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Địa điểm đến</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Thời gian dự kiến</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Trạng thái</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
@@ -266,7 +264,7 @@ const Cards = () => {
                       <CTableHeaderCell scope="row">{item.Id_Xe}</CTableHeaderCell>
                       <CTableDataCell>{item.Bien_so}</CTableDataCell>
                       <CTableDataCell>{item.Tuyen_Duong}</CTableDataCell>
-                      <CTableDataCell>{item.TimeFuture}</CTableDataCell>
+                      <CTableDataCell>{item.TimeFuture ? formatDate(item.TimeFuture) : ' '}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:

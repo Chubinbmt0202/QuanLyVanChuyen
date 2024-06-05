@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import {
   CButton,
   CModal,
@@ -32,55 +32,52 @@ import {
   CProgressBar,
   CFormInput,
   CContainer,
-} from '@coreui/react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+} from '@coreui/react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Accordion = () => {
-  const [currentStatus, setCurrentStatus] = useState('Tất cả')
-  const [dataOrder, setDataOrder] = useState([])
-  const [allOrders, setAllOrders] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [visibleStatus, setVisibleStatus] = useState(false)
-  const navigate = useNavigate()
+  const [currentStatus, setCurrentStatus] = useState('Tất cả');
+  const [dataOrder, setDataOrder] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [visibleStatus, setVisibleStatus] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/api/getAllOrders')
-      console.log(res.data.map((item)=> console.log(item.TongTien)))
-      setDataOrder(res.data)
+      const res = await axios.get('http://localhost:3001/api/getAllOrders');
+      console.log(res.data.map((item) => console.log(item.TongTien)));
+      setDataOrder(res.data);
+      setAllOrders(res.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleDetailOrder = (OrderID) => {
-    navigate(`/base/popovers/${OrderID}`)
-  }
+    navigate(`/base/popovers/${OrderID}`);
+  };
 
   const handleUpdate = (OrderID) => {
-    alert(`Chỉnh sửa đơn hàng ${OrderID}`)
-  }
+    alert(`Chỉnh sửa đơn hàng ${OrderID}`);
+  };
 
   const handleProcessOrder = (OrderID) => {
-    navigate(`/base/tooltips/${OrderID}`)
-  }
+    navigate(`/base/tooltips/${OrderID}`);
+  };
 
   const handleViewStatus = (OrderID) => {
-    setVisibleStatus(true)
-  }
+    setVisibleStatus(true);
+  };
 
   const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value)
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [searchQuery])
+    setSearchQuery(event.target.value);
+  };
 
   useEffect(() => {
     if (searchQuery.trim() !== '') {
@@ -88,13 +85,32 @@ const Accordion = () => {
         (item) =>
           item.TenKH.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.MaDH.toString().toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+      );
 
-      setDataOrder(filteredData)
+      setDataOrder(filteredData);
     } else {
-      setDataOrder(allOrders)
+      setDataOrder(allOrders);
     }
-  }, [searchQuery, allOrders])
+  }, [searchQuery, allOrders]);
+
+  useEffect(() => {
+    filterOrdersByStatus();
+  }, [currentStatus, allOrders]);
+
+  const filterOrdersByStatus = () => {
+    if (currentStatus === 'Tất cả') {
+      setDataOrder(allOrders);
+    } else {
+      const filteredData = allOrders.filter((item) => item.TrangThai === currentStatus);
+      setDataOrder(filteredData);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return ' ';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
 
   return (
     <>
@@ -114,7 +130,7 @@ const Accordion = () => {
             <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
               Password
             </CFormLabel>
-            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" />
+            <CFormInput type="text" id="inputPassword2" placeholder="Tìm kiếm đơn hàng" onChange={handleSearchChange} />
           </CCol>
           <CCol xs="auto">
             <CButton color="primary" type="submit" className="mb-3">
@@ -183,16 +199,16 @@ const Accordion = () => {
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{item.MaDH}</CTableHeaderCell>
                       <CTableDataCell>{item.TenKH}</CTableDataCell>
-                      <CTableDataCell>{item.NgayDatHang}</CTableDataCell>
-                      <CTableDataCell>{item.NgayGiaoHang}</CTableDataCell>
+                      <CTableDataCell>{formatDate(item.NgayDatHang)}</CTableDataCell>
+                      <CTableDataCell>{item.NgayGiaoHang ? formatDate(item.NgayGiaoHang) : ' '}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:
                             item.TrangThai === 'Đang giao hàng'
                               ? 'green'
                               : item.TrangThai === 'Chưa giao hàng'
-                                ? 'red'
-                                : 'gray',
+                              ? 'red'
+                              : 'gray',
                         }}
                       >
                         {item.TrangThai}
@@ -205,23 +221,15 @@ const Accordion = () => {
                           <CDropdownMenu>
                             {item.TrangThai === 'Chưa giao hàng' && (
                               <>
-                                <CDropdownItem onClick={() => handleProcessOrder(item.MaDH)}>
-                                  Xử lý
-                                </CDropdownItem>
-                                <CDropdownItem onClick={() => handleUpdate(item.MaDH)}>
-                                  Chỉnh sửa
-                                </CDropdownItem>
+                                <CDropdownItem onClick={() => handleProcessOrder(item.MaDH)}>Xử lý</CDropdownItem>
+                                <CDropdownItem onClick={() => handleUpdate(item.MaDH)}>Chỉnh sửa</CDropdownItem>
                               </>
                             )}
                             {item.TrangThai === 'Đang giao hàng' && (
-                              <CDropdownItem onClick={() => handleViewStatus(item.MaDH)}>
-                                Xem trạng thái
-                              </CDropdownItem>
+                              <CDropdownItem onClick={() => handleViewStatus(item.MaDH)}>Xem trạng thái</CDropdownItem>
                             )}
                             {item.TrangThai === 'Đã giao hàng' && (
-                              <CDropdownItem onClick={() => handleDetailOrder(item.MaDH)}>
-                                Xem chi tiết
-                              </CDropdownItem>
+                              <CDropdownItem onClick={() => handleDetailOrder(item.MaDH)}>Xem chi tiết</CDropdownItem>
                             )}
                           </CDropdownMenu>
                         </CDropdown>
@@ -264,7 +272,7 @@ const Accordion = () => {
         </CModalFooter>
       </CModal>
     </>
-  )
-}
+  );
+};
 
-export default Accordion
+export default Accordion;

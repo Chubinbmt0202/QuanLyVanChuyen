@@ -28,6 +28,7 @@ const updateOrder = async (orderId, deliveryDate, driverId, vehicleId, addressCu
         await orderModel.updateOrder(orderId);
         await orderModel.updateOrderDateDevivery(deliveryDate, orderId);
         await orderModel.updateOrderAddress(addressCustomer, orderId);
+        await orderModel.addVehicleId(vehicleId, orderId);
     } catch (error) {
         console.log("Lỗi truy service updateOrder", error);
         throw error;
