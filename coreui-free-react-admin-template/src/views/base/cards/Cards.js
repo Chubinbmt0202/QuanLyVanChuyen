@@ -112,7 +112,7 @@ const Cards = () => {
     try {
       const response = await axios.get('http://localhost:3001/api/getAllTraffics')
       setData(response.data)
-      console.log('Data:', response.data)
+      console.log('traffic:', response.data)
     } catch (error) {
       console.error('Error fetching traffic data:', error)
     }
@@ -255,34 +255,30 @@ const Cards = () => {
                     <CTableHeaderCell scope="col">STT</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Biển số</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Tuyến đường</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Khoảng cách</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Thời gian dự kiến</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Trạng thái</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Dự kiến hoàn thành</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
                   {filteredData.map((item, index) => (
                     <CTableRow key={item.id}>
-                      <CTableHeaderCell scope="row">{item.PK_Id_Xe}</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">{item.Id_Xe}</CTableHeaderCell>
                       <CTableDataCell>{item.Bien_so}</CTableDataCell>
-                      <CTableDataCell>{item.route}</CTableDataCell>
-                      <CTableDataCell>{item.distance}</CTableDataCell>
-                      <CTableDataCell>{item.estimatedTime}</CTableDataCell>
+                      <CTableDataCell>{item.Tuyen_Duong}</CTableDataCell>
+                      <CTableDataCell>{item.TimeFuture}</CTableDataCell>
                       <CTableDataCell
                         style={{
                           color:
-                            item.Tinh_Trang === 'Đang giao'
+                            item.Trang_Thai === 'Đang giao'
                               ? 'green'
-                              : item.Tinh_Trang === 'Bảo trì'
+                              : item.Trang_Thai === 'Bảo trì'
                                 ? 'red'
                                 : 'gray',
                         }}
                       >
-                        {item.Tinh_Trang}
+                        {item.Trang_Thai}
                       </CTableDataCell>
-                      <CTableDataCell>{item.completionDate}</CTableDataCell>
                       <CTableDataCell>
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
