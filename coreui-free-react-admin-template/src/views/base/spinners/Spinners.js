@@ -12,7 +12,7 @@ import {
   CModalTitle
 } from '@coreui/react';
 import axios from 'axios'
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 const Spinners = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [tenNhanVien, setTenNhanVien] = useState('');
@@ -24,7 +24,7 @@ const Spinners = () => {
   const [gioitinh, setGioiTinh] = useState('');
   const [email, setEmail] = useState('');
 
-
+  const navigate = useNavigate();
   const [formDataDriver, setFormDataDriver] = useState({
     Ten_TX: '',
     SDT: '',
@@ -102,7 +102,8 @@ const Spinners = () => {
       console.log(formdata);
       try {
         var res = await axios.post('http://localhost:3001/api/addDriver', formdata)
-        alert('Thêm Driver thành công')
+        alert('Thêm nhân viên  thành công')
+        navigate('/base/carousels');
        //Chuyeen ve cai kia
       } catch (error) {
         console.log(error);
@@ -198,7 +199,7 @@ const Spinners = () => {
               >
                 <option value="">Chọn chức vụ</option>
                 <option value="tai-xe">Tài xế</option>
-                <option value="Admin">Admin</option>
+                {/* <option value="Admin">Admin</option> */}
               </select>
             </div>
             <div className="mb-3">

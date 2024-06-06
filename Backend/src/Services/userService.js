@@ -25,6 +25,7 @@ const registerUser = async ({ Username, PassWord, SDT, ID_role }) => {
       PassWord: PassWord,
       SDT: SDT,
       ID_role: ID_role || "1", // Default role
+      Trang_Thai:"1",
     });
 
     return userId;

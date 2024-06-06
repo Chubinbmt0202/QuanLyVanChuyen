@@ -153,9 +153,7 @@ const MainChart = () => {
   return (
     <>
 
-      <CButton color="primary" className="float-end">
-        <CIcon icon={cilCloudDownload} />
-      </CButton>
+      
       <CButtonGroup className="float-end me-3">
         {['Month', 'Year'].map((value) => (
           <CButton
