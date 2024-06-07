@@ -15,7 +15,7 @@ const getAllTraffics = async () => {
     END AS 'TimeFuture',
     CASE 
         WHEN don_hang.Trang_Thai = 2 THEN 'Đang giao'
-        WHEN don_hang.Trang_Thai = 0 THEN 'Đang rảnh'
+        WHEN don_hang.Trang_Thai = 0 THEN 'Đang chờ'
         ELSE 'Đang chờ'
     END AS 'Trang_Thai'
 FROM xe

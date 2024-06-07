@@ -26,6 +26,8 @@ import { DatePicker } from '@mui/x-date-pickers'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
+import { addDoc, collection, getDocs, setDoc, doc } from 'firebase/firestore'
+import { db } from '../../../../firebaseConfig'
 
 const Tooltips = () => {
   const { OrderID } = useParams()
@@ -40,6 +42,16 @@ const Tooltips = () => {
   console.log('OrderID:', OrderID)
 
   const handleConfirm = async () => {
+    const deliveryTimestamp = selectedDate ? selectedDate.$d.getTime() : null;
+
+    const inforOrderFirebase = {
+      orderId: OrderID,
+      deliveryDate: deliveryTimestamp,
+      driverId: selectedDriver,
+      vehicleId: selectedVehicle,
+      addressCustomer: dataOrder['Địa chỉ khách hàng'],
+    }
+
     try {
       const res = await axios.post(`http://localhost:3001/api/updateOrder`, {
         orderId: OrderID,
@@ -48,14 +60,24 @@ const Tooltips = () => {
         vehicleId: selectedVehicle,
         addressCustomer: dataOrder['Địa chỉ khách hàng'],
       })
+
       if (res.status === 200) {
+        // Tạo document với ID của tài xế trong Firestore
+        try {
+          await setDoc(doc(db, 'users', selectedDriver), {
+            message: `Tôi đang gửi yêu cầu nhận đơn tới Driver với ID là ${selectedDriver}`,
+            ...inforOrderFirebase,
+          })
+          alert('Đã gửi yêu cầu nhận đơn')
+        } catch (error) {
+          console.error('Error adding document: ', error)
+        }
+
         alert('Cập nhật đơn hàng thành công')
         navigate('/base/accordion')
       }
-      // Handle successful update, e.g., show a success message or navigate to another page
     } catch (error) {
       console.log('Update Error:', error)
-      // Handle error, e.g., show an error message
     }
   }
 
@@ -254,7 +276,8 @@ const Tooltips = () => {
                           readOnly
                         />
                         <strong className=" mt-5">
-                          Phí vận chuyển ước tính: <span>{dataOrder['Giá dịch vụ vận chuyển']} vnđ</span>
+                          Phí vận chuyển ước tính:{' '}
+                          <span>{dataOrder['Giá dịch vụ vận chuyển']} vnđ</span>
                         </strong>
                         <CFormCheck
                           id="flexCheckChecked"

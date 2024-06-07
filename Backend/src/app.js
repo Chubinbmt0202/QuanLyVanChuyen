@@ -16,7 +16,8 @@ const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js"
 const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, getOrderDetailFinishedController } = require("./Controllers/orderController.js");
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
-const {getAllDriver,getAllEmployee,updateEmployee,addDriver,getInforDriverByID,updateDriverByID} = require("./Controllers/employeeController.js")
+const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID,deleteDriverByID} = require("./Controllers/employeeController.js")
+const {loginDriverController, rejectOrderController, getDetailDriverController, getDetailOrderController, confirmOrderController} = require("./Controllers/driverController.js")
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 
@@ -31,6 +32,8 @@ try {
 // Routes
 app.post("/api/register", createUser);
 app.post("/api/login", login);
+app.post("/api/loginDriver", loginDriverController);
+app.post("/api/getDetailDriver", getDetailDriverController);
 
 // traffic
 app.get("/api/getAllTraffics", getAllTraffics);
@@ -49,6 +52,9 @@ app.get("/api/getAllVehicleTypes", getAllVehicleTypes);
 
 // tài xế
 app.get("/api/getAllDriversIdle", getDriverIdleController);
+app.get("/api/getDetailOrder/:PK_Id_DonHang/:ID_TX", getDetailOrderController);
+app.post("/api/confirmOrder", confirmOrderController);
+app.post("/api/rejectOrder", rejectOrderController);
 
 // Đơn hàng
 app.get("/api/getAllOrders", getAllOrders);
@@ -56,6 +62,7 @@ app.get("/api/getDetailOrderByID/:id", getDetailOrderByID);
 app.post("/api/updateOrder", updateOrderController);
 app.get("/api/getOrderByIdKH/:id",getOrderByIdKH)
 app.get("/api/getOrderDetailFinished/:id", getOrderDetailFinishedController);
+
 
 // khách hàng
 app.get("/api/getAllCustomers", getAllCustomersController); 

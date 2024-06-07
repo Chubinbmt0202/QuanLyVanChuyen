@@ -25,10 +25,11 @@ const updateOrder = async (orderId, deliveryDate, driverId, vehicleId, addressCu
         await orderModel.updateOrderDeliveryDate(orderId, deliveryDate);
         await orderModel.updateDriverStatus(driverId, 'Đang bận');
         await orderModel.updateVehicleStatus(vehicleId, 'Đang giao');
-        await orderModel.updateOrder(orderId);
+        await orderModel.updateOrderDriver(orderId);
         await orderModel.updateOrderDateDevivery(deliveryDate, orderId);
         await orderModel.updateOrderAddress(addressCustomer, orderId);
         await orderModel.addVehicleId(vehicleId, orderId);
+        await orderModel.updateOrderDriverID(driverId, orderId);
     } catch (error) {
         console.log("Lỗi truy service updateOrder", error);
         throw error;
