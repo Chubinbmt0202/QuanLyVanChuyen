@@ -6,11 +6,6 @@ const getAllCustomers = async () => {
     return rows;
 }
 
-
-
-
-
-
 const getinforCustomerByID = async (id) => {
     const [results] = await db.query(`SELECT 
     PK_Ma_KH,

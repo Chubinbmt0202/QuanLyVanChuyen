@@ -36,6 +36,7 @@
     "classnames": "^2.5.1",
     "core-js": "^3.36.1",
     "dayjs": "^1.11.11",
+    "firebase": "^10.12.2",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-datepicker": "^6.9.0",

@@ -17,6 +17,7 @@ const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, 
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
 const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID,deleteDriverByID} = require("./Controllers/employeeController.js")
+const {loginDriverController, getDetailDriverController} = require("./Controllers/driverController.js")
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 
@@ -31,6 +32,8 @@ try {
 // Routes
 app.post("/api/register", createUser);
 app.post("/api/login", login);
+app.post("/api/loginDriver", loginDriverController);
+app.post("/api/getDetailDriver", getDetailDriverController);
 
 // traffic
 app.get("/api/getAllTraffics", getAllTraffics);
