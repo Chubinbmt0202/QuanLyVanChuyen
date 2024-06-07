@@ -95,6 +95,32 @@ const Dashboard = () => {
     downloadLink.remove();
   }
 
+  const handleExportOderData = async () =>
+    {
+      try {
+        
+        const res = await axios.get('http://localhost:3001/api/getAllOrders');
+        console.log(res.data)
+        const worksheet = XLSX.utils.json_to_sheet(res.data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "ReportOrder");
+        const excelBlob = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBlob], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = "report.xlsx";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        URL.revokeObjectURL(url);
+        downloadLink.remove();
+
+      } catch (error) {
+        console.log(error);
+      }
+     
+    }
+
 
   const progressGroupExample1 = [
     { title: 'Monday', value1: 34, value2: 78 },
@@ -221,6 +247,9 @@ const Dashboard = () => {
               </h4>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
+            <CButton onClick={() => handleExportOderData()} color="primary" className="float-end">
+                <CIcon icon={cilCloudDownload} />
+              </CButton>
               {/* <CButton color="primary" className="float-end">
                 <CIcon icon={cilCloudDownload} />
               </CButton>

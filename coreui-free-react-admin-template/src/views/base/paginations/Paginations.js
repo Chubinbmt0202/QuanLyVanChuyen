@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
+import { useParams } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -12,13 +13,15 @@ import {
 const Progress = () => {
   const [image, setImage] = useState(null);
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để kiểm soát việc ẩn/hiển thị mật khẩu
-
   const [datadetail, setDataDetail] = useState("");
 
-
+ 
+  const {DriverID} = useParams();
 
   useEffect(() => {
-    fetchDataShow(3)
+    
+    console.log(DriverID);
+    fetchDataShow(DriverID)
   }, [])
 
   const fetchDataShow = async (id) => {
@@ -94,6 +97,10 @@ const Progress = () => {
             <div className="mb-3">
               <label htmlFor="chucVu" className="form-label"><strong>Chức vụ</strong></label>
               <div>Tài xế</div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="chucVu" className="form-label"><strong>Trạng Thái</strong></label>
+              <div>{datadetail.Trang_Thai}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="taiKhoan" className="form-label"><strong>Tài khoản</strong></label>

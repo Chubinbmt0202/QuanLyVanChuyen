@@ -20,14 +20,14 @@ const getAllEmployee = async (req, res) => {
     }
 }
 
-const deleteEmployee = async (req,res) =>
+const updateEmployee = async (req,res) =>
     {
 
         const { id } = req.params;
         try
         {
-            await employeeService.deleteEmployee(id);
-            res.json({ message: "Employee deleted successfully." });
+            await employeeService.updateEmployee(id);
+            res.json({ message: "Employee update successfully." });
         }
         catch (error) {
             res.status(500).json({ message: "Error deleting Employee", error });
@@ -76,16 +76,16 @@ const getInforDriverByID  = async(req,res) =>
         
     }
 
-const deleteDriverByID  = async (req,res) =>
+const updateDriverByID  = async (req,res) =>
     {
         const { id } = req.params;
         try
         {
-            await employeeService.seviceDeleteDriverByID(id);
-            res.json({ message: "Employee deleted successfully." });
+            await employeeService.sevicUpdateDriverByID(id);
+            res.json({ message: "Employee update successfully." });
         }
         catch (error) {
-            res.status(500).json({ message: "Error deleting Employee", error });
+            res.status(500).json({ message: "Error update Employee", error });
           }
     }
 
@@ -93,8 +93,8 @@ module.exports =
 {
     getAllDriver,
     getAllEmployee,
-    deleteEmployee,
+    updateEmployee,
     addDriver,
     getInforDriverByID,
-    deleteDriverByID,
+    updateDriverByID,
 }
