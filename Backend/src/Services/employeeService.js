@@ -21,9 +21,9 @@ const getAllEmployee = async () => {
     }
 }
 
-const deleteEmployee = async (id) => {
+const updateEmployee = async (id) => {
     try {
-        await employeeModel.deleteEmployee(id);
+        await employeeModel.updateEmployee(id);
         return { message: "Employee deleted successfully." };
     }
     catch (error) {
@@ -32,11 +32,11 @@ const deleteEmployee = async (id) => {
 }
 
 
-const seviceDeleteDriverByID = async (id) => 
+const sevicUpdateDriverByID = async (id) => 
     {
         try
         {
-            await employeeModel.deleteDriverByIDModel(id);
+            await employeeModel.updateDriverByIdModel(id);
             return {message : "Delete Employee Successfully"};
         }
         catch (error)
@@ -79,8 +79,8 @@ module.exports =
 {
     getAllDriver,
     getAllEmployee,
-    deleteEmployee,
+    updateEmployee,
     addDriverService,
     getInforDriverByID,
-    seviceDeleteDriverByID,
+    sevicUpdateDriverByID,
 }

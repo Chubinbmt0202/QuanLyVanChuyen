@@ -75,10 +75,10 @@ app.get("/api/getAllReportShipers",getAllDataShipper);
 //Employee
 app.get("/api/getAllDriver",getAllDriver);
 app.get("/api/getAllEmployee",getAllEmployee);
-app.delete("/api/deleteEmployee/:id",deleteEmployee)
+app.put("/api/updateEmployee/:id",updateEmployee)
 app.post("/api/addDriver",addDriver)
 app.get("/api/getInforDriverByID/:id",getInforDriverByID);
-app.delete("/api/deleteDriverByID/:id",deleteDriverByID);
+app.put("/api/updateDriverByID/:id",updateDriverByID);
 
 
 //User

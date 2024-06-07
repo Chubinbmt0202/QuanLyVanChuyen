@@ -59,12 +59,12 @@ const Carousels = () => {
 
 
 
-  const handelDeleteDriverByID = async (id) => {
-    const userConfirmed = confirm(`Bạn có muốn xóa tài khoản với ID : ${id}`);
+  const handelDeleteDriverByID = async (id,idTK) => {
+    const userConfirmed = confirm(`Bạn có muốn khóa tài xế với ID : ${id}`);
     if (userConfirmed) {
       try {
-        const res = await axios.delete(`http://localhost:3001/api/deleteDriverByID/${id}`)
-        console.log(res.data)
+        const res = await axios.put(`http://localhost:3001/api/updateDriverByID/${id}`)
+        const reshelp = await axios.put(`http://localhost:3001/api/updateEmployee/${idTK}`)
         handelFetchDataDriver();
         handelFetchDataEmployee();
       }
@@ -82,11 +82,11 @@ const Carousels = () => {
 
   const handelDeleteEmployee = async (id) => {
 
-    const userConfirmed = confirm(`Bạn có muốn xóa tài khoản với ID : ${id}`);
+    const userConfirmed = confirm(`Bạn có muốn khóa tài khoản với ID : ${id}`);
     if (userConfirmed) {
 
       try {
-        const res = await axios.delete(`http://localhost:3001/api/deleteEmployee/${id}`)
+        const res = await axios.put(`http://localhost:3001/api/updateEmployee/${id}`)
         handelFetchDataDriver();
         handelFetchDataEmployee();
       }
@@ -184,8 +184,8 @@ const Carousels = () => {
                           <CDropdownToggle color="secondary">Tuỳ chọn</CDropdownToggle>
                           <CDropdownMenu>
                             {/* Xem chi tiết chuyển đến /base/progress */}
-                            <CDropdownItem><Link to="/base/Paginations">Xem chi tiết</Link></CDropdownItem>
-                            <CDropdownItem onClick={()=> handelDeleteDriverByID(item.PK_Id_TX)} > Xóa Tài Xế</CDropdownItem>
+                            <CDropdownItem><Link to ={`/base/Paginations/${item.PK_Id_TX}`} >Xem chi tiết</Link></CDropdownItem>
+                            <CDropdownItem onClick={()=> handelDeleteDriverByID(item.PK_Id_TX, item.Id_TaiKhoan)} > Khóa Tài Xế</CDropdownItem>
                             {/* Chỉnh sửa chuyển đến /base/progress */}
                             {/* <CDropdownItem><Link to="/base/progress">Chỉnh sửa</Link></CDropdownItem> */}
                             <CDropdownDivider />
@@ -215,6 +215,7 @@ const Carousels = () => {
                     <CTableHeaderCell scope="col">UserName</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Số Điện Thoại</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Role</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Trạng Thái</CTableHeaderCell>
                     {/* Xem chi tiết chuyển đến /base/progress */}
                     <CTableHeaderCell scope="col">Tuỳ chọn</CTableHeaderCell>
                   </CTableRow>
@@ -228,12 +229,13 @@ const Carousels = () => {
                       <CTableDataCell>{item.Username}</CTableDataCell>
                       <CTableDataCell>{item.SDT}</CTableDataCell>
                       <CTableDataCell style={{ color: 'blue' }}>{item.Ten_quyen}</CTableDataCell>
+                      <CTableDataCell>{   item.Trang_Thai==1 ? "Đang sử dụng " : "Đã Khóa"  }</CTableDataCell>
                       {/* Tuỳ chọn */}
                       <CTableDataCell>
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chọn</CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => handelDeleteEmployee(item.PK_Id_TK)} >Xóa</CDropdownItem>
+                            <CDropdownItem onClick={() => handelDeleteEmployee(item.PK_Id_TK)} >Khóa Tài Khoản</CDropdownItem>
                             <CDropdownDivider />
                             <CDropdownItem></CDropdownItem>
                           </CDropdownMenu>

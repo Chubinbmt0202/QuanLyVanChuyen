@@ -96,6 +96,7 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
+  { path: '/base/paginations/:DriverID', name: 'Paginations', element: Paginations}
 ]
 
 export default routes
