@@ -58,9 +58,23 @@ const confirmOrderController = async(req, res) => {
       res.status(500).send({ message: 'Failed to update order' });
     }
 }
+
+const rejectOrderController = async(req, res) => {
+    const {PK_Id_DonHang, ID_TX} = req.body;
+    console.log("reject : ", PK_Id_DonHang)
+    console.log("reject : ", ID_TX)
+    try {
+      await driverService.rejectOrderService(PK_Id_DonHang, ID_TX);
+      res.status(200).send({ message: 'Cập nhật lại trạng thái từ chối thành công' });
+    } catch (error) {
+      console.error('Error reject order:', error);
+      res.status(500).send({ message: 'Failed to reject order' });
+    }
+}
 module.exports = {
     loginDriverController,
     getDetailDriverController,
     getDetailOrderController,
-    confirmOrderController
+    confirmOrderController,
+    rejectOrderController
 };

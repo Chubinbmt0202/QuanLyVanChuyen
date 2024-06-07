@@ -1,12 +1,16 @@
-const db = require('../Configs/database');
+const db = require("../Configs/database");
 
 const LoginDriver = async (SDT, PassWord, ID_role) => {
-    const [rows] = await db.query('SELECT SDT, PassWord FROM taikhoan WHERE SDT = ? AND PassWord = ? AND ID_role = ?', [SDT, PassWord, ID_role]);
-    return rows[0];
-}
+  const [rows] = await db.query(
+    "SELECT SDT, PassWord FROM taikhoan WHERE SDT = ? AND PassWord = ? AND ID_role = ?",
+    [SDT, PassWord, ID_role]
+  );
+  return rows[0];
+};
 
 const getDetailDriver = async (SDT) => {
-    const [rows] = await db.query(`
+  const [rows] = await db.query(
+    `
         SELECT 
             taixe.Ten_TX, 
             taikhoan.Username, 
@@ -21,12 +25,15 @@ const getDetailDriver = async (SDT) => {
             taikhoan.PK_Id_TK = taixe.Id_TaiKhoan
         WHERE 
             taikhoan.SDT = ?
-    `, [SDT]);
-    return rows[0];
-}
+    `,
+    [SDT]
+  );
+  return rows[0];
+};
 
 const getDetailOrder = async (PK_Id_DonHang, ID_TX) => {
-    const [rows] = await db.query(`
+  const [rows] = await db.query(
+    `
     SELECT 
         don_hang.PK_Id_DonHang AS 'Mã đơn hàng',
         don_hang.Ngay_DH AS 'Ngày đặt hàng',
@@ -77,23 +84,54 @@ const getDetailOrder = async (PK_Id_DonHang, ID_TX) => {
         taixe.SDT,
         xe.Bien_so
     LIMIT 0, 1000;
-    `, [PK_Id_DonHang, ID_TX]);
-    return rows;
-}
+    `,
+    [PK_Id_DonHang, ID_TX]
+  );
+  return rows;
+};
 
 const updateOrder = async (PK_Id_DonHang) => {
-    try {
-      const query = "UPDATE don_hang SET Trang_Thai = 2 WHERE PK_Id_DonHang = ?";
-      await db.query(query, [PK_Id_DonHang]);
-    } catch (error) {
-        console.log("Lỗi truy vấn");
-      throw error;
-    }
-  };
+  try {
+    const query = "UPDATE don_hang SET Trang_Thai = 2 WHERE PK_Id_DonHang = ?";
+    await db.query(query, [PK_Id_DonHang]);
+  } catch (error) {
+    console.log("Lỗi truy vấn");
+    throw error;
+  }
+};
+
+const rejectOrder = async (PK_Id_DonHang) => {
+  try {
+    const query = "UPDATE don_hang SET Trang_Thai = 0 WHERE PK_Id_DonHang = ?";
+    await db.query(query, [PK_Id_DonHang]);
+  } catch (error) {
+    console.log("Lỗi truy vấn");
+    throw error;
+  }
+};
+
+const rejectOrderTX = async (PK_Id_DonHang) => {
+  try {
+    const query = "UPDATE don_hang SET ID_TX = null WHERE PK_Id_DonHang = ?";
+    await db.query(query, [PK_Id_DonHang]);
+  } catch (error) {
+    console.log("Lỗi truy vấn");
+    throw error;
+  }
+};
+
+// Driver Model
+const updateDriverStatus = async (Trang_thai, PK_Id_TX) => {
+  const query = "UPDATE taixe SET Trang_thai = 'Đang rảnh' WHERE PK_Id_TX = ?";
+  await db.query(query, [Trang_thai, PK_Id_TX]);
+};
 
 module.exports = {
-    LoginDriver,
-    getDetailDriver,
-    getDetailOrder,
-    updateOrder
+  LoginDriver,
+  getDetailDriver,
+  getDetailOrder,
+  updateOrder,
+  rejectOrder,
+  rejectOrderTX,
+  updateDriverStatus,
 };

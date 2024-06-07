@@ -40,9 +40,22 @@ const confirmOrderService = async (PK_Id_DonHang) => {
     }
 }
 
+const rejectOrderService = async (PK_Id_DonHang, ID_TX) => {
+    try {
+        await driverModel.rejectOrder(PK_Id_DonHang);
+        await driverModel.rejectOrderTX(PK_Id_DonHang);
+        await driverModel.updateDriverStatus(ID_TX, 'Đang bận');
+        console.log("Odder đang ở service reject");
+    } catch (error) {
+        console.log("Lỗi truy service rejectOrder", error);
+        throw error;
+    }
+}
+
 module.exports = {
     loginDriverService,
     getDetailDriverService,
     getDetailOrderService,
-    confirmOrderService
+    confirmOrderService,
+    rejectOrderService
 };

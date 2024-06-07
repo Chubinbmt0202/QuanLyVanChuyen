@@ -17,7 +17,7 @@ const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, 
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
 const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID,deleteDriverByID} = require("./Controllers/employeeController.js")
-const {loginDriverController, getDetailDriverController, getDetailOrderController, confirmOrderController} = require("./Controllers/driverController.js")
+const {loginDriverController, rejectOrderController, getDetailDriverController, getDetailOrderController, confirmOrderController} = require("./Controllers/driverController.js")
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 
@@ -54,6 +54,7 @@ app.get("/api/getAllVehicleTypes", getAllVehicleTypes);
 app.get("/api/getAllDriversIdle", getDriverIdleController);
 app.get("/api/getDetailOrder/:PK_Id_DonHang/:ID_TX", getDetailOrderController);
 app.post("/api/confirmOrder", confirmOrderController);
+app.post("/api/rejectOrder", rejectOrderController);
 
 // Đơn hàng
 app.get("/api/getAllOrders", getAllOrders);

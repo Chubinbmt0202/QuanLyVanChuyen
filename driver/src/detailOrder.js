@@ -95,11 +95,62 @@ export default function DetailOrder() {
     }
   };
 
-  const handleDialogSave = () => {
-    console.log("Order rejected with reason:", rejectReason);
-    setOpenDialog(false);
-    // You can send reject reason to backend or perform any other action here
+  const handleDialogSave = async () => {
+    try {
+      const requestData = {
+        PK_Id_DonHang: orderId,
+        ID_TX: driverId,
+      };
+  
+      const response = await fetch('http://localhost:3001/api/rejectOrder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to reject order. Server responded with status: ${response.status}`);
+      }
+  
+      // Order rejected successfully, now delete the document
+      const q = query(
+        collection(db, "users"),
+        where("orderId", "==", orderId),
+        where("driverId", "==", driverId)
+      );
+  
+      const querySnapshot = await getDocs(q);
+  
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (docSnapshot) => {
+          try {
+            const documentId = docSnapshot.id;
+            await deleteDoc(doc(db, "users", documentId));
+            console.log("Document successfully deleted!");
+            setOpenDialog(false); // Close the dialog after successful rejection
+            window.location.href = "/"; // Redirect or do any necessary action
+          } catch (deleteError) {
+            console.error("Error deleting document:", deleteError);
+          }
+        });
+      } else {
+        console.log(
+          "No documents found with orderId:",
+          orderId,
+          "and driverId:",
+          driverId
+        );
+      }
+  
+      alert("Tài xế đã từ chối đơn hàng!");
+    } catch (error) {
+      console.error("Error while rejecting order:", error);
+    }
   };
+  
+  
 
   return (
     <div className="relative isolate overflow-hidden bg-white">
