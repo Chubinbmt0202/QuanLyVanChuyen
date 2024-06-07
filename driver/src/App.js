@@ -7,7 +7,7 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Home />} /> {/* Use element instead of component */}
-        <Route path="/detail-order" element={<DetailOrder />} /> {/* Use element instead of component */}
+        <Route path="/detail-order/:orderId/:driverId" element={<DetailOrder />} />
       </Routes>
     </Router>
   );

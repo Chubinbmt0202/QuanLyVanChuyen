@@ -4,12 +4,23 @@ import {
   DialogPanel,
   Transition,
   TransitionChild,
+  DialogTitle,
 } from "@headlessui/react";
 import axios from "axios";
 import { db } from "../src/firebaseConfig";
-import { collection, query, where, onSnapshot, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  getDoc,
+  deleteDoc
+} from "firebase/firestore";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
+  const [openDialog, setOpenDialog] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [credentials, setCredentials] = useState({ SDT: "", PassWord: "" });
@@ -22,7 +33,7 @@ export default function Home() {
   useEffect(() => {
     const checkLoginStatus = async () => {
       const user = localStorage.getItem("user");
-      console.log("User:", user);
+      console.log(user);
       if (user) {
         const parsedUser = JSON.parse(user);
         setIsLoggedIn(true);
@@ -39,17 +50,16 @@ export default function Home() {
         setOpen(true);
       }
     };
-  
+
     // Initial check
     checkLoginStatus();
-  
+
     // Set an interval to check login status periodically
     const interval = setInterval(checkLoginStatus, 1000); // Check every second
-  
+
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,7 +81,7 @@ export default function Home() {
         setIsLoggedIn(true);
         setOpen(false);
         await fetchDriverDetails(credentials.SDT);
-        await fetchSpecificMessage("8"); // Lấy message từ DocumentID = 8 sau khi đăng nhập
+        // await fetchSpecificMessage(credentials);
       } else {
         setError("Invalid phone number or password");
       }
@@ -121,10 +131,13 @@ export default function Home() {
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
         const userData = docSnapshot.data();
+        setUsers(userData);
+        setOpenDialog(true);
         const specificMessage = userData.message || "No message available.";
         setSpecificMessage(specificMessage);
       } else {
         setSpecificMessage("Không có đơn hàng nào sử lý"); // Document không tồn tại
+        setOpenDialog(false);
       }
     } catch (error) {
       console.error("Error getting document:", error);
@@ -132,9 +145,10 @@ export default function Home() {
   };
 
   const handleMove = () => {
-    window.location.href = "/detail-order";
+    const orderID = users.orderId;
+    const driverID = users.driverId;
+    window.location.href = `/detail-order/${orderID}/${driverID}`;
   };
-
 
   return (
     <div className="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
@@ -149,7 +163,9 @@ export default function Home() {
           <p className="mt-6 text-lg leading-8 text-gray-300">
             {isLoggedIn ? specificMessage : "Chưa có đơn hàng nào được giao"}
           </p>
-          <button onClick={handleMove} className=" text-black bg-slate-50">Di chuyển tới trang chi tiết đơn hàng</button>
+          <button onClick={handleMove} className=" text-black bg-slate-50">
+            Di chuyển tới trang chi tiết đơn hàng
+          </button>
         </div>
       </div>
 
@@ -257,6 +273,64 @@ export default function Home() {
                         </p>
                       )}
                     </div>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <Transition show={openDialog}>
+        <Dialog className="relative z-10" onClose={setOpenDialog}>
+          <TransitionChild
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <TransitionChild
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                        <DialogTitle
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
+                          Thông báo
+                        </DialogTitle>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Có đơn hàng mới di chuyển tới trang chi tiết đơn
+                            hàng
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      onClick={handleMove}
+                    >
+                      Tới trang chi tiết đơn hàng
+                    </button>
                   </div>
                 </DialogPanel>
               </TransitionChild>

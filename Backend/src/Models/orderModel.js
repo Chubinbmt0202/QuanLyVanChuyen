@@ -14,6 +14,7 @@ const getAllOrders = async () => {
                 WHEN dh.Trang_Thai = 0 THEN 'Chưa giao hàng'
                 WHEN dh.Trang_Thai = 1 THEN 'Đã giao hàng'
                 WHEN dh.Trang_Thai = 2 THEN 'Đang giao hàng'
+                WHEN dh.Trang_Thai = 3 THEN 'Chờ tài xế xác nhận'
                 ELSE 'Trạng thái không xác định'
             END AS 'TrangThai',
             SUM(ctdh.KhoiLuongQuyDoi) AS 'KhoiLuong',
@@ -163,6 +164,11 @@ const updateOrderDeliveryDate = async (PK_Id_DonHang, Ngay_DH) => {
   await db.query(query, [Ngay_DH, PK_Id_DonHang]);
 };
 
+const updateOrderDriverID = async (ID_TX, PK_Id_DonHang) => {
+  const query = "UPDATE don_hang SET ID_TX = ? WHERE PK_Id_DonHang = ?";
+  await db.query(query, [ID_TX, PK_Id_DonHang]);
+}
+
 // Driver Model
 const updateDriverStatus = async (Trang_thai, PK_Id_TX) => {
   const query = "UPDATE taixe SET Trang_thai = 'Đang bận' WHERE PK_Id_TX = ?";
@@ -198,6 +204,16 @@ const updateOrder = async (orderId) => {
     throw error;
   }
 };
+
+const updateOrderDriver = async (orderId) => {
+  try {
+    const query = "UPDATE don_hang SET Trang_Thai = 3 WHERE PK_Id_DonHang = ?";
+    await db.query(query, [orderId]);
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 const updateOrderDateDevivery = async (deliveryDate, orderId) => {
   try {
@@ -239,4 +255,6 @@ module.exports = {
   getOrderByIdKH,
   getOrderDetailFinished,
   addVehicleId,
+  updateOrderDriverID,
+  updateOrderDriver
 };
