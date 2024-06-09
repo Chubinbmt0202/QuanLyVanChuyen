@@ -14,6 +14,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
@@ -22,6 +23,7 @@ export default function DetailOrder() {
   const [rejectReason, setRejectReason] = useState("");
   const { orderId, driverId } = useParams();
   const [openDialog, setOpenDialog] = useState(false);
+  const [vehicleId, setVehicleId] = useState(null); // State to store vehicleId
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -34,6 +36,27 @@ export default function DetailOrder() {
         }
         const data = await response.json();
         setOrderData(data[0]); // Assuming you only receive one order
+
+        // Fetch vehicleId from Firestore
+        const q = query(
+          collection(db, "users"),
+          where("orderId", "==", orderId),
+          where("driverId", "==", driverId)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const document = querySnapshot.docs[0].data();
+          setVehicleId(document.vehicleId); // Store vehicleId in state
+        } else {
+          console.log(
+            "No documents found with orderId:",
+            orderId,
+            "and driverId:",
+            driverId
+          );
+        }
       } catch (error) {
         console.error("Error fetching order data:", error);
       }
@@ -62,6 +85,8 @@ export default function DetailOrder() {
 
       const result = await response.json();
       alert(result.message);
+
+      localStorage.setItem('orderId', orderId);
 
       const q = query(
         collection(db, "users"),
@@ -100,7 +125,11 @@ export default function DetailOrder() {
       const requestData = {
         PK_Id_DonHang: orderId,
         ID_TX: driverId,
+        vehicleId: vehicleId, // Include vehicleId in the request payload
+        rejectReason: rejectReason, // Include rejectReason in the request payload
       };
+  
+      console.log("Reject request data:", requestData);
   
       const response = await fetch('http://localhost:3001/api/rejectOrder', {
         method: 'POST',
@@ -114,7 +143,13 @@ export default function DetailOrder() {
         throw new Error(`Failed to reject order. Server responded with status: ${response.status}`);
       }
   
-      // Order rejected successfully, now delete the document
+      // Create a new document in Firestore for the rejected order
+      const rejectCollectionRef = collection(db, "reject");
+      const rejectDocRef = doc(rejectCollectionRef, driverId); // Use driverId as the document ID
+      await setDoc(rejectDocRef, requestData);
+      console.log("New reject document created with ID:", rejectDocRef.id);
+  
+      // Order rejected successfully, now delete the document from the "users" collection
       const q = query(
         collection(db, "users"),
         where("orderId", "==", orderId),
@@ -149,7 +184,6 @@ export default function DetailOrder() {
       console.error("Error while rejecting order:", error);
     }
   };
-  
   
 
   return (

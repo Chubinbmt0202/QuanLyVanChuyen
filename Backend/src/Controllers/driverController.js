@@ -60,11 +60,13 @@ const confirmOrderController = async(req, res) => {
 }
 
 const rejectOrderController = async(req, res) => {
-    const {PK_Id_DonHang, ID_TX} = req.body;
+    const {PK_Id_DonHang, ID_TX, vehicleId} = req.body;
+    console.log("từ chối đơn hàng: ", req.body)
     console.log("reject : ", PK_Id_DonHang)
+    console.log("reject : ", vehicleId)
     console.log("reject : ", ID_TX)
     try {
-      await driverService.rejectOrderService(PK_Id_DonHang, ID_TX);
+      await driverService.rejectOrderService(PK_Id_DonHang, ID_TX, vehicleId);
       res.status(200).send({ message: 'Cập nhật lại trạng thái từ chối thành công' });
     } catch (error) {
       console.error('Error reject order:', error);
