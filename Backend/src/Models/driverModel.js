@@ -120,6 +120,19 @@ const rejectOrderTX = async (PK_Id_DonHang) => {
   }
 };
 
+const rejectVehicleStatus = async (Tinh_Trang, PK_Id_Xe) => {
+  console.log("PK_Id_Xe: Đang ở service", PK_Id_Xe);
+  console.log("Tinh_Trang: Đang ở service", Tinh_Trang);
+  console.log("Tinh_Trang: Đang ở service", PK_Id_Xe);
+  try {
+    const query = "UPDATE xe SET Tinh_Trang = ? WHERE PK_Id_Xe = ?";
+    await db.query(query, [Tinh_Trang ,PK_Id_Xe]);
+  } catch (error) {
+    console.log("Lỗi truy vấn update từ chối xe");
+    throw error;
+  }
+};
+
 // Driver Model
 const updateDriverStatus = async (Trang_thai, PK_Id_TX) => {
   const query = "UPDATE taixe SET Trang_thai = 'Đang rảnh' WHERE PK_Id_TX = ?";
@@ -134,4 +147,5 @@ module.exports = {
   rejectOrder,
   rejectOrderTX,
   updateDriverStatus,
+  rejectVehicleStatus,
 };

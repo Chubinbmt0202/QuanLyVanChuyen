@@ -16,8 +16,9 @@ const { getAllVehicleTypes } = require("./Controllers/typesVehicleController.js"
 const { getAllOrders, getDetailOrderByID, updateOrderController,getOrderByIdKH, getOrderDetailFinishedController } = require("./Controllers/orderController.js");
 const { getAllCustomersController,getinforCustomerByID } = require("./Controllers/CustomerController.js");
 const {getAllDataShipper} = require("./Controllers/ChartController.js")
-const {getAllDriver,getAllEmployee,deleteEmployee,addDriver,getInforDriverByID,deleteDriverByID} = require("./Controllers/employeeController.js")
+const {getAllDriver,getAllEmployee,updateEmployee,addDriver,getInforDriverByID,updateDriverByID} = require("./Controllers/employeeController.js")
 const {loginDriverController, rejectOrderController, getDetailDriverController, getDetailOrderController, confirmOrderController} = require("./Controllers/driverController.js")
+
 app.use(express.json());
 app.use(cors()); // Thêm middleware cors vào ứng dụng Express
 

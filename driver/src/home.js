@@ -15,7 +15,7 @@ import {
   onSnapshot,
   doc,
   getDoc,
-  deleteDoc
+  deleteDoc,
 } from "firebase/firestore";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
@@ -28,7 +28,7 @@ export default function Home() {
   const [driverName, setDriverName] = useState("");
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
-  const [specificMessage, setSpecificMessage] = useState(""); // State để lưu trữ message từ DocumentID cụ thể
+  const [specificMessage, setSpecificMessage] = useState("");
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -125,7 +125,8 @@ export default function Home() {
   };
 
   const fetchSpecificMessage = async (documentId) => {
-    const docRef = doc(db, "users", documentId); // Tham chiếu đến một document cụ thể
+    console.log("Fetching document with ID:", documentId); // Debugging line
+    const docRef = doc(db, "users", documentId);
 
     try {
       const docSnapshot = await getDoc(docRef);
@@ -136,11 +137,13 @@ export default function Home() {
         const specificMessage = userData.message || "No message available.";
         setSpecificMessage(specificMessage);
       } else {
-        setSpecificMessage("Không có đơn hàng nào sử lý"); // Document không tồn tại
+        console.log("Document does not exist"); // Debugging line
+        setSpecificMessage("Không có đơn hàng nào sử lý");
         setOpenDialog(false);
       }
     } catch (error) {
       console.error("Error getting document:", error);
+      setSpecificMessage("Error fetching document data");
     }
   };
 
@@ -161,9 +164,11 @@ export default function Home() {
             Xin chào: {isLoggedIn ? driverName : "Tài xế chưa đăng nhập"}
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-300">
-            {isLoggedIn ? specificMessage : "Chưa có đơn hàng nào được giao"}
+            {isLoggedIn
+              ? specificMessage
+              : `Đang giao đơn hàng với ID là:`}
           </p>
-          <button onClick={handleMove} className=" text-black bg-slate-50">
+          <button onClick={handleMove} className="text-black bg-slate-50">
             Di chuyển tới trang chi tiết đơn hàng
           </button>
         </div>
@@ -219,10 +224,11 @@ export default function Home() {
                               id="SDT"
                               name="SDT"
                               type="text"
+                              autoComplete="phone"
                               required
                               value={credentials.SDT}
                               onChange={handleChange}
-                              className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           </div>
                         </div>
@@ -230,7 +236,7 @@ export default function Home() {
                         <div>
                           <div className="flex items-center justify-between">
                             <label
-                              htmlFor="password"
+                              htmlFor="PassWord"
                               className="block text-sm font-medium leading-6 text-gray-900"
                             >
                               Password
@@ -282,7 +288,7 @@ export default function Home() {
       </Transition>
 
       <Transition show={openDialog}>
-        <Dialog className="relative z-10" onClose={setOpenDialog}>
+        <Dialog className="relative z-10" onClose={() => setOpenDialog(false)}>
           <TransitionChild
             enter="ease-out duration-300"
             enterFrom="opacity-0"
