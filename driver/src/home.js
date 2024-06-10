@@ -15,9 +15,7 @@ import {
   onSnapshot,
   doc,
   getDoc,
-  deleteDoc,
 } from "firebase/firestore";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -88,6 +86,15 @@ export default function Home() {
     } catch (error) {
       setError("An error occurred. Please try again.");
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setOpen(true);
+    setDriverName("");
+    setMessage("");
+    setSpecificMessage("");
   };
 
   const handleCloseModal = () => {
@@ -168,6 +175,11 @@ export default function Home() {
               ? specificMessage
               : `Đang giao đơn hàng với ID là:`}
           </p>
+          {isLoggedIn && (
+            <button onClick={handleLogout} className="text-black bg-slate-50 mr-4">
+              Đăng xuất
+            </button>
+          )}
           <button onClick={handleMove} className="text-black bg-slate-50">
             Di chuyển tới trang chi tiết đơn hàng
           </button>

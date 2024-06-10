@@ -106,7 +106,11 @@ const Carousels = () => {
   }, []);
 
 
-
+  const formatDate = (dateString) => {
+    if (!dateString) return ' ';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
 
 
   const isSelected = (id) => {
@@ -162,7 +166,7 @@ const Carousels = () => {
                         <span style={{ color: 'blue' }}>{item.Ten_TX}</span>
                       </CTableDataCell>
                       <CTableDataCell>{item.SDT}</CTableDataCell>
-                      <CTableDataCell>{item.Ngay_Sinh}</CTableDataCell>
+                      <CTableDataCell>{formatDate(item.Ngay_Sinh)}</CTableDataCell>
                       <CTableDataCell style={{ color: 'blue' }}>{item.Email}</CTableDataCell>
                       <CTableDataCell>{item.Gioi_Tinh}</CTableDataCell>
                       <CTableDataCell

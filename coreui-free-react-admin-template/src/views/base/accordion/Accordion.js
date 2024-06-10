@@ -258,9 +258,6 @@ const Accordion = () => {
                                 <CDropdownItem onClick={() => handleProcessOrder(item.MaDH)}>
                                   Xử lý
                                 </CDropdownItem>
-                                <CDropdownItem onClick={() => handleUpdate(item.MaDH)}>
-                                  Chỉnh sửa
-                                </CDropdownItem>
                               </>
                             )}
                             {item.TrangThai === 'Đang giao hàng' && (

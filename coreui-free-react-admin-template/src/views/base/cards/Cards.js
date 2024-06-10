@@ -116,6 +116,7 @@ const Cards = () => {
   }
 
   const handleSubmit = async () => {
+    if (!validateDates()) return
     try {
       await axios.post('http://localhost:3001/api/addTraffics', formData)
       setVisibleAddVehicle(false)
@@ -158,6 +159,7 @@ const Cards = () => {
   const deleteTraffic = async (id) => {
     try {
       await axios.delete(`http://localhost:3001/api/deleteTraffic/${id}`)
+      console.log('delete:', id)
       alert('Xoá thành công')
       fetchTrafficData() // Cập nhật danh sách sau khi xoá thành công
     } catch (error) {
@@ -166,6 +168,7 @@ const Cards = () => {
   }
 
   const updateTraffic = async () => {
+    if (!validateDates()) return
     try {
       await axios.put(
         `http://localhost:3001/api/updateTraffic/${selectedVehicle.PK_Id_Xe}`,
@@ -177,6 +180,20 @@ const Cards = () => {
     } catch (error) {
       console.error('Error updating traffic:', error)
     }
+  }
+
+  const validateDates = () => {
+    const { Ngay_DK, Ngay_Het_DK } = formData
+    const startDate = new Date(Ngay_DK)
+    const endDate = new Date(Ngay_Het_DK)
+    const twoYearsLater = new Date(startDate)
+    twoYearsLater.setFullYear(startDate.getFullYear() + 2)
+
+    if (endDate.getTime() <= twoYearsLater.getTime()) {
+      alert('Ngày hết hạn đăng kiểm phải cách ngày đăng kiểm đúng 2 năm.')
+      return false
+    }
+    return true
   }
 
   const filteredData =
@@ -281,14 +298,14 @@ const Cards = () => {
                         <CDropdown>
                           <CDropdownToggle color="secondary">Tuỳ chỉnh</CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => fetchTrafficDetails(item.PK_Id_Xe)}>
+                            <CDropdownItem onClick={() => fetchTrafficDetails(item.Id_Xe)}>
                               Xem chi tiết
                             </CDropdownItem>
-                            <CDropdownItem onClick={() => handleUpdate(item.PK_Id_Xe)}>
+                            <CDropdownItem onClick={() => handleUpdate(item.Id_Xe)}>
                               Chỉnh sửa
                             </CDropdownItem>
                             <CDropdownDivider />
-                            <CDropdownItem onClick={() => deleteTraffic(item.PK_Id_Xe)}>
+                            <CDropdownItem onClick={() => deleteTraffic(item.Id_Xe)}>
                               Xoá phương tiện
                             </CDropdownItem>
                           </CDropdownMenu>
@@ -499,6 +516,7 @@ const Cards = () => {
               placeholder="Chiều cao (m)"
             />
           </div>
+          <p>Nhập ngày đăng kiểm</p>
           <CFormInput
             type="date"
             style={{ flex: '1 1 45%' }}
@@ -507,6 +525,7 @@ const Cards = () => {
             placeholder="Ngày đăng ký"
             onChange={handleChange}
           />
+          Nhập ngày hết hạn đăng kiểm
           <CFormInput
             type="date"
             style={{ flex: '1 1 45%' }}

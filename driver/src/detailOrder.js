@@ -299,7 +299,7 @@ export default function DetailOrder() {
             </Transition>
           </div>
         ) : (
-          <p>Loading...</p>
+          <p>Không có dữ liệu</p>
         )}
       </div>
     </div>
